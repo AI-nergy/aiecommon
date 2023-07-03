@@ -1,4 +1,4 @@
-class AinException(Exception):
+class AieException(Exception):
 
     NO_BUILDING_POLYGON_WIDER_AREA = "NO_BUILDING_POLYGON_WIDER_AREA"
     CONSUMPTION_TOO_LOW = "CONSUMPTION_TOO_LOW"
