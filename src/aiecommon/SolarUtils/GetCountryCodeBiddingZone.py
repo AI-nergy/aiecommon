@@ -3,7 +3,7 @@
 import json
 import numpy as np
 import matplotlib.path as mpltPath
-from aiecommon.Models import RequestBody
+from aiecommon.Models import InputData
 import logging
 import pkgutil
 
@@ -22,13 +22,13 @@ aiecommon_resources = importlib_resources.files("aiecommon")
 # check that the country is supported
 # with open("modules/aiesolar/rooftop/data/supportedCountries.json") as data:
 #     supportedCountries = json.load(data)
-#     if SolarUtils.getCountryCode(RequestBody(**orchestratorInput["inputData"])) not in supportedCountries["supportedCountries"]:
+#     if SolarUtils.getCountryCode(InputData(**orchestratorInput["inputData"])) not in supportedCountries["supportedCountries"]:
 #         return Utils.ErrorResponse("Country not supported", Utils.ERROR_RESPONSE_INPUT_VALIDATION, 400)
 #
 #
 
 class GetCountryCodeBiddingZone:
-    def __init__(self, request: RequestBody) -> None:
+    def __init__(self, request: InputData) -> None:
         self.request = request
 
         logging.info("PKG DEBUG:")

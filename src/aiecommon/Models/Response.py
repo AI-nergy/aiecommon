@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel
 
-from .Request import RequestBody
+from .Request import InputData
 from .Rooftop import Rooftop
 
 

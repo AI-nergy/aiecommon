@@ -1,5 +1,5 @@
 from .GetCountryCodeBiddingZone import GetCountryCodeBiddingZone
-from ..Models import RequestBody
+from ..Models import InputData
 
 import json
 import logging
@@ -11,5 +11,5 @@ class SolarUtils:
         pass
     
     @staticmethod
-    def getCountryCode(inputData: RequestBody):
+    def getCountryCode(inputData: InputData):
         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
