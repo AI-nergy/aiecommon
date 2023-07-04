@@ -5,15 +5,10 @@ import numpy as np
 import matplotlib.path as mpltPath
 from aiecommon.Models import InputData
 import logging
-import pkgutil
+import importlib.resources
 
 import azure.functions as func
 import azure.durable_functions as df
-
-
-import importlib_resources
-
-aiecommon_resources = importlib_resources.files("aiecommon")
 
 #         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
 
@@ -29,24 +24,15 @@ aiecommon_resources = importlib_resources.files("aiecommon")
 
 class GetCountryCodeBiddingZone:
     def __init__(self, request: InputData) -> None:
+
         self.request = request
 
-        logging.info("PKG DEBUG:")
-        logging.info(__name__)
-        logging.info(aiecommon_resources)
-        logging.info((aiecommon_resources / "data" / "biddingZonesPolygonsFiltered.json"))
-        logging.info("PKG DEBUG END")
-
-        #data = (aiecommon_resources / "data" / "biddingZonesPolygonsFiltered.json").read_text()
-        #data = pkgutil.get_data(__name__, "data/biddingZonesPolygonsFiltered.json")
-        #self.polygons = json.loads(data)
-
-        self.polygons = json.load((aiecommon_resources / "data" / "biddingZonesPolygonsFiltered.json").open())
+        self.polygons = json.load(importlib.resources.files("aiecommon").joinpath("data/biddingZonesPolygonsFiltered.json").open())
         #self.polygons = json.load(open("modules/aiesolar/rooftop/data/biddingZonesPolygonsFiltered.json"))
         
         # crs is only metadata and not a polygon, so we need to delete it for calculations
         del self.polygons["crs"]
-        self.countryCodeBiddingZone = json.load((aiecommon_resources / "data" / "countryCodeBiddingZone.json").open())
+        self.countryCodeBiddingZone = json.load(importlib.resources.files("aiecommon").joinpath("data/countryCodeBiddingZone.json").open())
         #self.countryCodeBiddingZone = json.load(open("modules/aiesolar/rooftop/data/countryCodeBiddingZone.json"))
 
     # this function returns bidding zone based on coordinates, and 501 error if the requested location is not implemented yet
