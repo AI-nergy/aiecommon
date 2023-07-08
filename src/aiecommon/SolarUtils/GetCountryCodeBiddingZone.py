@@ -7,9 +7,6 @@ from aiecommon.Models import InputData
 import logging
 import importlib.resources
 
-import azure.functions as func
-import azure.durable_functions as df
-
 #         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
 
 # TODO: what to do with this:
