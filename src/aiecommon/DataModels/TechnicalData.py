@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Dict, Optional
-from ..Entities import Photovoltaic, Battery, ElectricVehicle, Inverter
+from ..Models import Photovoltaic, Battery, ElectricVehicle, Inverter
 from .RequestData import RequestData
 import json 
 

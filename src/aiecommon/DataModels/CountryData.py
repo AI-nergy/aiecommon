@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from ..Entities import BiddingRegion, PricesTechnologies
+from ..Models import BiddingRegion, PricesTechnologies
 from typing import Optional
 from .RequestData import RequestData
 import json

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from ..Entities import Rooftop
+from ..Models import Rooftop
 from aiecommon.Models import Location
 from typing import Optional
 from aiecommon.Exceptions import AieException
