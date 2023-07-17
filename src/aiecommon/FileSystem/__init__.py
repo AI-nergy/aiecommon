@@ -1,7 +1,8 @@
 import logging
 
 from .GoogleDrive import GoogleDrive
-from .LocalFile import LocalFile
+from .local_runtime_files import LocalRuntimeFiles
+from .local_data_files import LocalDataFiles
 from .file_system_base import FileSystemBase
 
 
@@ -10,14 +11,15 @@ class FileSystem:
 #    file_system_list = {
 #        "googledrive": GoogleDrive    
 #    }
-    file_system_list = [GoogleDrive, LocalFile]
+    file_system_list = [GoogleDrive, LocalRuntimeFiles, LocalDataFiles]
     GoogleDrive = GoogleDrive
-    LocalFile = LocalFile
+    LocalRuntimeFiles = LocalRuntimeFiles
+    LocalDataFiles = LocalDataFiles
 
     __file_system_objects = {}
 
     @staticmethod
-    def get_file_path(file:str, fileSystemClass:FileSystemBase = LocalFile, init_params = {}, params = {}):
+    def get_file_path(file:str, fileSystemClass:FileSystemBase = LocalRuntimeFiles, init_params = {}, params = {}):
         
 #        fileSystemObject = None
 
@@ -30,7 +32,7 @@ class FileSystem:
 #                    break
 
         if fileSystemClass in FileSystem.__file_system_objects:
-            filesystem_object = FileSystem.__file_system_objects[file_system_identifier]
+            filesystem_object = FileSystem.__file_system_objects[fileSystemClass]
         else:
             try:
                 filesystem_object = fileSystemClass(**init_params)
@@ -48,5 +50,5 @@ class FileSystem:
         return filesystem_object.get_file(file, **params)
 
     @staticmethod
-    def open_file(file:str, file_system_identifier:str = "localfile", mode:str = "r", init_params:dict = {}, params:dict = {}):
-        return open(FileSystem.get_file_path(file, file_system_identifier, init_params, params), mode)
+    def open_file(file:str, fileSystemClass:FileSystemBase = LocalDataFiles, mode:str = "r", init_params:dict = {}, params:dict = {}):
+        return open(FileSystem.get_file_path(file, fileSystemClass, init_params, params), mode)
