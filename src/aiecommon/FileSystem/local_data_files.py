@@ -31,3 +31,6 @@ class LocalDataFiles(FileSystemBase):
         return None
 #        self.polygons = json.load(importlib.resources.files("aiecommon").joinpath("data/biddingZonesPolygonsFiltered.json").open())
 
+    #@classmethod
+    def open_file(filePath, mode):
+        return open(filePath, "r")

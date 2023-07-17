@@ -17,3 +17,7 @@ class FileSystemBase:
     @classmethod
     def get_storage_directory(cls):
         return os.path.join(cls.STORAGE_DIRECTORY, cls.FILESYSTEM_IDENTIFIER)
+    
+    #@classmethod
+    def open_file(filePath, mode):
+        return open(filePath, mode)

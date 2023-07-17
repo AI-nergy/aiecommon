@@ -51,4 +51,4 @@ class FileSystem:
 
     @staticmethod
     def open_file(file:str, fileSystemClass:FileSystemBase = LocalDataFiles, mode:str = "r", init_params:dict = {}, params:dict = {}):
-        return open(FileSystem.get_file_path(file, fileSystemClass, init_params, params), mode)
+        return fileSystemClass.open_file(FileSystem.get_file_path(file, fileSystemClass, init_params, params), mode)
