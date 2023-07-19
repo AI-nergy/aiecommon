@@ -1,4 +1,4 @@
-import io, os, logging
+import os, logging, json
 from .file_system_base import FileSystemBase
 
 class LocalRuntimeFiles(FileSystemBase):
@@ -17,11 +17,7 @@ class LocalRuntimeFiles(FileSystemBase):
             base_directory = LocalRuntimeFiles._get_cache_directory()
 
         fullFilePath = os.path.join(base_directory, filePath)
-        fullFileDir = os.path.dirname(fullFilePath)
-
-        if not os.path.exists(fullFileDir):
-            os.makedirs(fullFileDir, exist_ok = True)
-
+  
         return fullFilePath
 
     @classmethod

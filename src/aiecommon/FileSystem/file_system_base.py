@@ -33,6 +33,10 @@ class FileSystemBase:
         resolvedFilePath = object.get_file(filePath, *args, **kwargs)
 
         if (resolvedFilePath):
+            fullFileDir = os.path.dirname(resolvedFilePath)
+            if not os.path.exists(fullFileDir):
+                os.makedirs(fullFileDir, exist_ok = True)
+
             return open(resolvedFilePath, mode)
         else:
             return None
