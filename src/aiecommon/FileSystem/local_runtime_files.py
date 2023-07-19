@@ -32,6 +32,6 @@ class LocalRuntimeFiles(FileSystemBase):
     def load_json(cls, filePath, usePermanentStorage = False):
         return super().load_json(filePath, "r", usePermanentStorage = usePermanentStorage)
 
-#    @classmethod
-#    def save_json(cls, filePath, usePermanentStorage = False):
-#        return super().load_json(filePath, "r", usePermanentStorage = usePermanentStorage)
+    @classmethod
+    def save_json(cls, filePath, data, usePermanentStorage = False):
+        return json.dump(data, cls.open_file(filePath, "w", usePermanentStorage))
