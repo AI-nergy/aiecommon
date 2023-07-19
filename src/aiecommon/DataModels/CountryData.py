@@ -36,9 +36,6 @@ class CountryData(DataModelBase):
             logging.error(f"Country code {key} not supported for optimisation")
             raise AieException(AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION)
 
-    # Define function: from_json
-    # This function reads a JSON file and returns an object of CountryData class.
-
     def from_json_old(path: str, request: RequestData = None):
         # Open the specified JSON file
         with open(path, 'r') as f:
