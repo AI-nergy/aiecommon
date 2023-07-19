@@ -1,14 +1,19 @@
 import logging
 import json
 import importlib.resources
+from .FileSystem  import LocalDataFiles
+import aiecommon
 
 class AieError():
     
     ERROR_EXCEPTION_AINERGY: str = "errorAinergy"
     ERROR_EXCEPTION_PYTHON: str = "errorPython"
     ERROR_INPUT_VALIDATION: str = "inputValidation"
-        
-    translations = json.load(importlib.resources.files("aiecommon").joinpath("data/translations.json").open())
+
+#    translations = json.load(importlib.resources.files("aiecommon").joinpath("data/translations.json").open())
+#    translations = json.load(FileSystem.open_file("translations.json", FileSystem.LocalDataFiles))
+#    translations = json.load(FileSystem.LocalDataFiles.open_file("data/translations.json", "aiecommon"))
+    translations = LocalDataFiles.load_json("data/translations.json", aiecommon)
 
     def __init__(self, error, code, message, source = "NO SET"):
 

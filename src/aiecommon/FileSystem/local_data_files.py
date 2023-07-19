@@ -4,33 +4,47 @@ import importlib.resources
 
 from .file_system_base import FileSystemBase
 import aiecommon
+from aiecommon import Exceptions
 
 class LocalDataFiles(FileSystemBase):
-
-    DATA_SUB_DIRECTORY = "data" 
-    APP_DATA_DIRECTORY = os.path.join(os.getcwd(), DATA_SUB_DIRECTORY)
 
     def __init__(self):
             
         logging.info(f"LocalFile constructor")
 
-    def get_file(self, filePath):
+    def get_file(self, filePath, package = None):
 
-        path = os.path.join(LocalDataFiles.APP_DATA_DIRECTORY, filePath)
-        if (os.path.exists(path) and os.path.isfile(path) ):
-           return path
-# "data/biddingZonesPolygonsFiltered.json"
-        path = importlib.resources.files("aiecommon").joinpath(LocalDataFiles.DATA_SUB_DIRECTORY, filePath)
-        if (os.path.exists(path) and os.path.isfile(path) ):
-           return path
+        suggestedPackages = ["aiecommon"]
+        suggestedFiles = []
+
+        if package:
+            path = importlib.resources.files(package).joinpath(filePath)
+            if (os.path.exists(path) and os.path.isfile(path) ):
+                return path
+        else:  
+            path = filePath
+            if (os.path.exists(path) and os.path.isfile(path) ):
+                return path
 
         path = filePath
         if (os.path.exists(path) and os.path.isfile(path) ):
-           return path
+            suggestedFiles.append(path)
 
-        return None
-#        self.polygons = json.load(importlib.resources.files("aiecommon").joinpath("data/biddingZonesPolygonsFiltered.json").open())
+        for suggestedPackage in suggestedPackages:
+            path = importlib.resources.files(suggestedPackage).joinpath(filePath)
+            if (os.path.exists(path) and os.path.isfile(path) ):
+                suggestedFiles.append(f"{str(suggestedPackage)}:{str(filePath)}")
 
-    #@classmethod
-    def open_file(filePath, mode):
-        return open(filePath, "r")
+        if suggestedFiles:
+            logging.info("Suggested files:")
+            logging.info(suggestedFiles)
+
+        raise Exceptions.AieException(f"LocalDataFiles, file not found filePath={filePath}, package={package} suggestedFiles={suggestedFiles}")
+
+    @classmethod
+    def open_file(cls, filePath, package = None):
+        return super().open_file(filePath, "r", package = package)
+
+    @classmethod
+    def load_json(cls, filePath, package = None):
+        return super().load_json(filePath, package = package)
