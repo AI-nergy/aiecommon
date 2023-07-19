@@ -28,18 +28,19 @@ class LocalDataFiles(FileSystemBase):
 
         path = filePath
         if (os.path.exists(path) and os.path.isfile(path) ):
-            suggestedFiles.append(path)
+            suggestedFiles.append(f"{path} (project root)")
 
         for suggestedPackage in suggestedPackages:
             path = importlib.resources.files(suggestedPackage).joinpath(filePath)
             if (os.path.exists(path) and os.path.isfile(path) ):
-                suggestedFiles.append(f"{str(suggestedPackage)}:{str(filePath)}")
+                suggestedFiles.append(f"{str(filePath)} ({str(suggestedPackage)})")
 
         if suggestedFiles:
-            logging.info("Suggested files:")
-            logging.info(suggestedFiles)
+            logging.error(f"File {filePath} ({package if package else 'project root'}) not found, suggested alternatives:")
+            for suggestedFile in suggestedFiles:
+                logging.error(suggestedFile)
 
-        raise Exceptions.AieException(f"LocalDataFiles, file not found filePath={filePath}, package={package} suggestedFiles={suggestedFiles}")
+        raise Exceptions.AieException(Exceptions.AieException.GENERIC_PYTHON_ERROR, f"LocalDataFiles, file not found filePath={filePath}, package={package} suggestedFiles={suggestedFiles}")
 
     @classmethod
     def open_file(cls, filePath, package = None):
