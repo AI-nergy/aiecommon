@@ -44,7 +44,7 @@ class Scenario:
         logging.info(f"finished getting solar production data from external API")
         self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
         self.TimeWindow = range(len(self.Demand)) # one year houly data
-        self.TechnicalData = TechnicalData.from_json(path= "modules/aiesolar/optimizer/data/TechnicalData.json", request= request)
+        self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/TechnicalData.json")
         self.InvestmentData = GetInvestmentData(
                     countryData=self.CountryData, technicalData=self.TechnicalData
                 )
