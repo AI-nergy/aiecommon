@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiecommon"
-version = "0.1.9"
+version = "0.1.9.1"
 description = ""
 authors = ["Pepe Una <pepe@ai-nergy.net>"]
 readme = "README.md"

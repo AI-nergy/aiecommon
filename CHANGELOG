@@ -1,6 +1,12 @@
+0.1.9.1
+
+bu0fgix: close file in LocalDataFile.save_json() and FileSystemBase.load_json()
+
 0.1.9 
 
-Implement FileSystem module, use it in DataModelBase, refactor TechnicalData and CountryData to inherit from DataModelBase 
+- implement FileSystem module
+- use FileSystem module in DataModelBase
+- refactor TechnicalData and CountryData to inherit from DataModelBase 
 
 0.1.8 (latest stable)
 
