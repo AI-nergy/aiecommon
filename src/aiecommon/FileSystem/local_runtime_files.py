@@ -30,4 +30,7 @@ class LocalRuntimeFiles(FileSystemBase):
 
     @classmethod
     def save_json(cls, filePath, data, usePermanentStorage = False):
-        return json.dump(data, cls.open_file(filePath, "w", usePermanentStorage))
+        
+        file = cls.open_file(filePath, "w", usePermanentStorage)
+        json.dump(data, file)
+        file.close();

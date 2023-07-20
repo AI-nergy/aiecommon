@@ -43,4 +43,10 @@ class FileSystemBase:
 
     @classmethod
     def load_json(cls, filePath, *args, **kwargs):
-        return json.load(cls.open_file(filePath, *args, **kwargs))
+        
+        file = cls.open_file(filePath, *args, **kwargs)
+        
+        result = json.load(file)
+        file.close()
+
+        return result
