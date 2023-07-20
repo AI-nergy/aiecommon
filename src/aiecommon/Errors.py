@@ -11,8 +11,7 @@ class AieError():
     ERROR_INPUT_VALIDATION: str = "inputValidation"
 
 #    translations = json.load(importlib.resources.files("aiecommon").joinpath("data/translations.json").open())
-#    translations = json.load(FileSystem.open_file("translations.json", FileSystem.LocalDataFiles))
-#    translations = json.load(FileSystem.LocalDataFiles.open_file("data/translations.json", "aiecommon"))
+#    translations = json.load(LocalDataFiles.open_file("data/translations.json", "aiecommon"))
     translations = LocalDataFiles.load_json("data/translations.json", aiecommon)
 
     def __init__(self, error, code, message, source = "NO SET"):
