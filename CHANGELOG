@@ -1,6 +1,12 @@
+0.1.9.2
+
+start of FileSystem documentation with quick examples
+bugfix: add check of empty fullFileDir in FileSystemBase
+switch loading of json files in GetCountryCodeBiddingZone to LocalDataFiles
+
 0.1.9.1
 
-bu0fgix: close file in LocalDataFile.save_json() and FileSystemBase.load_json()
+bugfix: close file in LocalDataFile.save_json() and FileSystemBase.load_json()
 
 0.1.9 
 
