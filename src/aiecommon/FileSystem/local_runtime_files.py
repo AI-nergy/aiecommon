@@ -33,4 +33,4 @@ class LocalRuntimeFiles(FileSystemBase):
         
         file = cls.open_file(filePath, "w", usePermanentStorage)
         json.dump(data, file)
-        file.close();
+        file.close()
