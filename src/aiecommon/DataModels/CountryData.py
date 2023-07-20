@@ -28,13 +28,24 @@ class CountryData(DataModelBase):
     feeForSupportingEfficencyImprovements : Optional[float]
     feeForAvailablePowerInstallation : Optional[float]
 
+    @classmethod
+    def _validate(cls, data, key):
+        """
+        Validate the data after loading from file, raises an exception if validation doesn't pass.
 
-    def __validate(data, key):
+        Args:
+            data: dict Data to validate
+            key: str Key of the country 
+        Returns:
+            None
+        """
+
         # Check if input countryCode is present in the loaded data or not.
         if key.upper() not in data:
             # If not raise an AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION exception
             logging.error(f"Country code {key} not supported for optimisation")
             raise AieException(AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION)
+
 
     def from_json_old(path: str, request: RequestData = None):
         # Open the specified JSON file

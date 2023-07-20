@@ -1,17 +1,15 @@
 from pydantic import BaseModel
 from aiecommon.FileSystem import LocalDataFiles
+import logging
 
 class DataModelBase(BaseModel):
-        
-    # Define function: from_json
-    # This function reads a JSON file and returns an object of CountryData class.
 
-    @classmethod 
-    def __validate(data, key = None):
+    @classmethod
+    def _validate(cls, data, key = None):
         """
         DO NOT USE THIS FUNCTION, create a @classmethod override instead.
         Called for validation of the data after loading from file.
-        Throw an exception if validation doesn't pass. Return value of this function is discarded.
+        You should raise an exception if validation doesn't pass. Return value of this function is discarded.
 
         Args:
             data: data to validate
@@ -19,6 +17,7 @@ class DataModelBase(BaseModel):
         Returns:
             None
         """
+        logging.info("DataModelBase _validate() called. This function does nothing, implement override in parent class if needed")
         return None
     
     @classmethod
@@ -39,7 +38,7 @@ class DataModelBase(BaseModel):
         data = LocalDataFiles.load_json(path, package)
 
         # Run validation function on the loaded data
-        cls.__validate(data, key)
+        cls._validate(data, key)
 
         # Return an instance of class representing data
         if key is None:
