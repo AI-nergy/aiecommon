@@ -1,0 +1,8 @@
+0.1.9 
+
+Implement FileSystem module, use it in DataModelBase, refactor TechnicalData and CountryData to inherit from DataModelBase 
+
+0.1.8 (latest stable)
+
+Move entities and Data models from ainergy-main to aiecommon
+
