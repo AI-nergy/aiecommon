@@ -34,7 +34,7 @@ class FileSystemBase:
 
         if (resolvedFilePath):
             fullFileDir = os.path.dirname(resolvedFilePath)
-            if not os.path.exists(fullFileDir):
+            if fullFileDir and not os.path.exists(fullFileDir):
                 os.makedirs(fullFileDir, exist_ok = True)
 
             return open(resolvedFilePath, mode)
