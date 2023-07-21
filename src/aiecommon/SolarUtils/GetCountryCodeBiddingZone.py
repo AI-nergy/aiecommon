@@ -15,8 +15,7 @@ import importlib.resources
 # with open("modules/aiesolar/rooftop/data/supportedCountries.json") as data:
 #     supportedCountries = json.load(data)
 #     if SolarUtils.getCountryCode(InputData(**orchestratorInput["inputData"])) not in supportedCountries["supportedCountries"]:
-#         return Utils.ErrorResponse("Country not supported", Utils.ERROR_RESPONSE_INPUT_VALIDATION, 400)
-#
+#         return Utils.ErrorResponse(AieError.error(AieError.ERROR_INPUT_VALIDATION, AieException.COUNTRY_NOT_SUPPORTED, "GetCountryCodeBiddingZone"), 400)
 #
 
 class GetCountryCodeBiddingZone:

@@ -1,4 +1,8 @@
 {
+    "INVALID_INPUT_DATA": {
+        "en": "Input data is invalid, please check your inputs",
+        "da": "Input data is invalid, please check your inputs"
+    },
     "NO_BUILDING_POLYGON_WIDER_AREA": {
         "en": "We couldn’t find your house on OpenStreetMap within 15 meters from the marked location point",
         "da": "Vi kunne ikke finde dit hus på OpenStreetMap inden for 15 meter fra den markerede lokation"
