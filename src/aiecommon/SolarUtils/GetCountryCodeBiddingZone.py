@@ -3,9 +3,11 @@
 import json
 import numpy as np
 import matplotlib.path as mpltPath
-from aiecommon.Models import InputData
 import logging
-import importlib.resources
+
+
+from aiecommon.Models import InputData
+from aiecommon.FileSystem import LocalDataFiles
 
 #         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
 
@@ -23,13 +25,15 @@ class GetCountryCodeBiddingZone:
 
         self.request = request
 
-        self.polygons = json.load(importlib.resources.files("aiecommon").joinpath("data/biddingZonesPolygonsFiltered.json").open())
         #self.polygons = json.load(open("modules/aiesolar/rooftop/data/biddingZonesPolygonsFiltered.json"))
-        
+        #self.polygons = json.load(importlib.resources.files("aiecommon").joinpath("data/biddingZonesPolygonsFiltered.json").open())
+        self.polygons = LocalDataFiles.load_json("data/biddingZonesPolygonsFiltered.json", "aiecommon")
+
         # crs is only metadata and not a polygon, so we need to delete it for calculations
         del self.polygons["crs"]
-        self.countryCodeBiddingZone = json.load(importlib.resources.files("aiecommon").joinpath("data/countryCodeBiddingZone.json").open())
         #self.countryCodeBiddingZone = json.load(open("modules/aiesolar/rooftop/data/countryCodeBiddingZone.json"))
+        #self.countryCodeBiddingZone = json.load(importlib.resources.files("aiecommon").joinpath("data/countryCodeBiddingZone.json").open())
+        self.countryCodeBiddingZone = LocalDataFiles.load_json("data/countryCodeBiddingZone.json", "aiecommon")
 
     # this function returns bidding zone based on coordinates, and 501 error if the requested location is not implemented yet
     def _getPolygonBiddingZone(self):  # sourcery skip: raise-specific-error        

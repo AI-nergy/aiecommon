@@ -33,7 +33,9 @@ class Scenario:
             request (RequestData): The request data to generate the scenario.
         """
         self.RequestData = request
-        self.CountryData = CountryData.from_json(path = "modules/aiesolar/optimizer/data/CountryData.json", request= request)
+        #self.CountryData = CountryData.from_json(path = "modules/aiesolar/optimizer/data/CountryData.json", request= request)
+        self.CountryData = CountryData.from_json(path="modules/aiesolar/optimizer/data/CountryData.json", key=request.location.countryCode)
+
         self.Location = request.location
         self.RoofTopsides = list(range(len(self.RequestData.rooftopSummaryTable)))
         self.Demand = GetDemandData(path="modules/aiesolar/optimizer/data", request= self.RequestData).Demand
@@ -42,7 +44,7 @@ class Scenario:
         logging.info(f"finished getting solar production data from external API")
         self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
         self.TimeWindow = range(len(self.Demand)) # one year houly data
-        self.TechnicalData = TechnicalData.from_json(path= "modules/aiesolar/optimizer/data/TechnicalData.json", request= request)
+        self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/TechnicalData.json")
         self.InvestmentData = GetInvestmentData(
                     countryData=self.CountryData, technicalData=self.TechnicalData
                 )

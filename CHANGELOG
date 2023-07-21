@@ -1,0 +1,20 @@
+0.1.9.2
+
+start of FileSystem documentation with quick examples
+bugfix: add check of empty fullFileDir in FileSystemBase
+switch loading of json files in GetCountryCodeBiddingZone to LocalDataFiles
+
+0.1.9.1
+
+bugfix: close file in LocalDataFile.save_json() and FileSystemBase.load_json()
+
+0.1.9 
+
+- implement FileSystem module
+- use FileSystem module in DataModelBase
+- refactor TechnicalData and CountryData to inherit from DataModelBase 
+
+0.1.8 (latest stable)
+
+Move entities and Data models from ainergy-main to aiecommon
+

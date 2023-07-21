@@ -5,32 +5,34 @@ from .file_system_base import FileSystemBase
 
 class GoogleDrive(FileSystemBase):
  
-    FILESYSTEM_IDENTIFIER = "googledrive"
+    _FILESYSTEM_IDENTIFIER = "google_drive"
     # TODO: move these to functions in FileSystemBase
 #    CACHE_DIRECTORY = os.path(FileSystemBase.CONFIG_DATA_DIRECTORY, FILEYSTEM_IDENTIFIER)
 #    STORAGE_DIRECTORY = os.path(FileSystemBase.CONFIG_STORAGE_DIRECTORY, FILEYSTEM_IDENTIFIER)
 
-    API_KEY = "AIzaSyBhOrmr3zbXxgPun535888qk9Bb0E7Ln5s"  # get from API->Credentials page in console.cloud.googl.com
+    # TODO: move API_KEY into env settings
+    _API_KEY = "AIzaSyBhOrmr3zbXxgPun535888qk9Bb0E7Ln5s"  # get from API->Credentials page in console.cloud.googl.com
 
     def __init__(self):
 
-        self.service = build("drive", "v3", developerKey=GoogleDrive.API_KEY)
+        self.service = build("drive", "v3", developerKey=GoogleDrive._API_KEY)
         logging.info(f"GoogleDrive constructor")
 
-    def get_file(self, fileId, localFileName = None, usePermanentStorage = False):
+    def get_file(self, fileId:str, localFileName:str = None, usePermanentStorage:bool = False):
 
         if self.service is None:
             return None
 
         if usePermanentStorage:
-            download_directory = GoogleDrive.get_storage_directory()
+            download_directory = GoogleDrive._get_storage_directory()
         else:
-            download_directory = GoogleDrive.get_cache_directory()
+            download_directory = GoogleDrive._get_cache_directory()
 
         if not os.path.exists(download_directory):
             os.makedirs(download_directory)
             
-        #localFileName = fileId
+        if localFileName is None:
+            localFileName = fileId
 
         localFilePath = os.path.join(download_directory, localFileName)
 
@@ -49,3 +51,7 @@ class GoogleDrive(FileSystemBase):
         fh.close()
         
         return localFilePath
+
+    @classmethod
+    def open_file(cls, fileId:str, localFileName:str = None, usePermanentStorage:bool = False):
+        return super().open_file(fileId, "r", localFileName, usePermanentStorage)

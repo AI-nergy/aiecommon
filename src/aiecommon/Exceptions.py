@@ -1,3 +1,5 @@
+import logging
+
 class AieException(Exception):
 
     INVALID_INPUT_DATA = "INVALID_INPUT_DATA"
@@ -12,3 +14,15 @@ class AieException(Exception):
     BUILDING_NOT_FOUND_ON_OSM = "BUILDING_NOT_FOUND_ON_OSM"
     COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION = "COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION"
     COUNTRY_NOT_SUPPORTED = "COUNTRY_NOT_SUPPORTED"
+
+    logMessage: str
+
+    def __init__(self, message, logMessage = None):
+        super().__init__(message)
+
+        if (logMessage is None):
+             self.logMessage = message
+        else:
+            self.logMessage = logMessage
+
+        logging.info(f"AinException: {self.logMessage}")

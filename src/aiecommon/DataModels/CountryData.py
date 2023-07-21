@@ -1,12 +1,14 @@
 from pydantic import BaseModel, validator
-from ..Models import BiddingRegion, PricesTechnologies
 from typing import Optional
-from .RequestData import RequestData
 import json
-from aiecommon.Exceptions import AieException
 import logging
 
-class CountryData(BaseModel):
+from ..Models import BiddingRegion, PricesTechnologies
+from ..Exceptions import AieException
+from .RequestData import RequestData
+from .data_model_base import DataModelBase
+
+class CountryData(DataModelBase):
     investmentSubsidy: float
     biddingRegions: list[BiddingRegion]
     priceTechnology: PricesTechnologies
@@ -25,11 +27,27 @@ class CountryData(BaseModel):
     feeExciseDutyOfElectricity : Optional[float] 
     feeForSupportingEfficencyImprovements : Optional[float]
     feeForAvailablePowerInstallation : Optional[float]
-        
-    # Define function: from_json
-    # This function reads a JSON file and returns an object of CountryData class.
 
-    def from_json(path: str, request: RequestData = None):
+    @classmethod
+    def _validate(cls, data, key):
+        """
+        Validate the data after loading from file, raises an exception if validation doesn't pass.
+
+        Args:
+            data: dict Data to validate
+            key: str Key of the country 
+        Returns:
+            None
+        """
+
+        # Check if input countryCode is present in the loaded data or not.
+        if key.upper() not in data:
+            # If not raise an AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION exception
+            logging.error(f"Country code {key} not supported for optimisation")
+            raise AieException(AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION)
+
+
+    def from_json_old(path: str, request: RequestData = None):
         # Open the specified JSON file
         with open(path, 'r') as f:
             # Load the contents of the file into a Python object using json library
