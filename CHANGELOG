@@ -1,3 +1,7 @@
+0.1.9.3
+
+add INVALID_INPUT_DATA exception code (needs translation)
+
 0.1.9.2
 
 start of FileSystem documentation with quick examples
