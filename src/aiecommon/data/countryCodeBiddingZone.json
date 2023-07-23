@@ -7,5 +7,17 @@
     "EE": "EE",
     "LV": "LV",
     "NL": "NL",
-    "PL": "PL"
+    "PL": "PL",
+    "DE": [
+        "DE_BERLIN",
+        "DE_NRW",
+        "DE_SAXONY",
+        "DE_THURINGEN"
+    ],
+    "AD": "AD",
+    "AT": [
+        "AT_WIEN",
+        "AT_VORARLBERG"
+    ],
+    "LU": "LU"
 }
