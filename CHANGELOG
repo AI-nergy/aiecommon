@@ -1,3 +1,7 @@
+0.1.9.4
+
+translate INVALID_INPUT_DATA error message to danish
+
 0.1.9.3
 
 add INVALID_INPUT_DATA exception code (needs translation)
