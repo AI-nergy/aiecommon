@@ -4,6 +4,7 @@
 
 - in your JIRA task create a new branch from the **dev** branch (we’ll call the new branch “**task branch**”) in your project repo:  
     - either `ainergy-main` or `ainergy-rooftop-planner` (we’ll call it “**project repo**”)
+    - example task branch: **SOLP-135-write-development-protocol**
 - pull the new task branch of **project repo** to your local machine
 - if task requires work on `aiecommon` package, then in the same JIRA task create a branch also in `aiecommon` repo from **main** branch
     - pull the new task branch of `aiecommon` to your local machine
@@ -20,7 +21,8 @@
 - changes which are related to the algorithm and don't affect the API part implemented in Azure you can test them during development by running `python main.py`
 - changes which are related to of somehow affect the API part implemented in Azure should be tested during th development by locally running the Azure functions server or by 
 [deploying the code to the developer slot](#deploying-the-code-to-the-developer-slot)
-- if you have changes which are not commited or pushed in `aiecommon` repo, do not run `poetry install` in your **project repo** (it will reinstall the `aiecommon` package to the version stated in the `pyproject.toml` of your **project repo** and delete your changes in `aiecommon` repo)
+- if you have changes which are not commited or pushed in `aiecommon` repo, **DO NOT RUN `poetry install`** in your **project repo**!!!
+    - it will reinstall the `aiecommon` package to the version stated in the `pyproject.toml` of your **project repo** and delete your changes in `aiecommon` repo
 
 
 ### 2.2. Deploying the code to the developer slot
@@ -31,10 +33,10 @@ Each developer has its own deplyoment slot, where it can test directly on Azure 
 - click "Actions" tab
 - on the left there is a list of deyploments, some od them begin with "Deploy to DEV"
 - among them choose the one corresponding to your slot
-- click "Run workflow" dropdown, and choose your **task branch** from the branch dropdown
+- click "Run workflow" dropdown, and choose your **task branch** from the branch dropdown (e.g. **SOLP-135-write-development-protocol**)
 - click "Run workflow" button and wait for the deplyoment to finish (approx. 4 minutes)
 
-Once the deyploment is finished, you can test the deployed code via [solarplanner.eu](https://solarplanner.eu) website, by choosing "`Custom`" in the domain dropdown and entering your slot's domain, eg.:
+Once the deyploment is finished, you can test the deployed code via [solarplanner.eu](https://solarplanner.eu) (or .dk) website, by choosing "`Custom`" in the domain dropdown and entering your slot's domain, eg.:
 
     ainergy-main-pepe.azurewebsites.net
 
