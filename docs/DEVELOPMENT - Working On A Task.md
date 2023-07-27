@@ -21,7 +21,7 @@
 - changes which are related to the algorithm and don't affect the API part implemented in Azure you can test them during development by running `python main.py`
 - changes which are related to of somehow affect the API part implemented in Azure should be tested during th development by locally running the Azure functions server or by 
 [deploying the code to the developer slot](#deploying-the-code-to-the-developer-slot)
-- if you have changes which are not commited or pushed in `aiecommon` repo, **DO NOT RUN `poetry install`** in your **project repo**!!!
+- **if you have changes which are not commited or pushed in `aiecommon` repo, DO NOT RUN `poetry install` in your project repo!!!**
     - it will reinstall the `aiecommon` package to the version stated in the `pyproject.toml` of your **project repo** and delete your changes in `aiecommon` repo
 
 
@@ -52,7 +52,7 @@ Once the deyploment is finished, you can test the deployed code via [solarplanne
 
 ## 4. Finishing the task - b) with changes in `aiecommon`
 
-In this case you need to finish the task in two steps, one in the `aiecommon` repo, the other in the `project repo`.
+In this case you need to finish the task in two steps, one in the `aiecommon` repo, the other in the **project repo**.
 
 ### 4.1. In the `aiecommon` repo:
 
@@ -86,7 +86,7 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
 
 ### 4.2. In the **project repo**:
 
-- change rev for aiecommon in pyproyect.toml to the new version (e.g. 0.1.9.7):
+- change rev for aiecommon in `pyproyect.toml` to the new version (e.g. 0.1.9.7):
     ```python
     aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "0.1.9.7", develop = true}
     in project repo run poetry lock:
