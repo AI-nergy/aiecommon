@@ -1,6 +1,15 @@
+
 0.1.9.8
 
 Rename paths to match new data folder structures
+
+0.1.9.6 stable latest
+
+update biddingZonesPolygonsFiltered.json and countryCodeBiddingZone.json with the correct versions (SI FIX)
+
+0.1.9.5
+
+upgrade pvlib to 0.10.1
 
 0.1.9.4
 
