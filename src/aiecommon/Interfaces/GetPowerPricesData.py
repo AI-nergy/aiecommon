@@ -76,7 +76,7 @@ class GetPowerPricesData:
         List[float]
             A list of distribution prices.
         """
-        dist_prices = pd.read_csv(f"{self.path}/DistributionPrice{self.location.countryCode}.csv", header=0, index_col=0, parse_dates=True)
+        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}.csv", header=0, index_col=0, parse_dates=True)
         return [prices.item() for prices in dist_prices.values]
 
     def _calculate_buying_price(self) -> List[float]:
