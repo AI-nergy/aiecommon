@@ -34,7 +34,7 @@ with open("CHANGELOG", "r") as file:
 
 merge_source_branch = run("git rev-parse --abbrev-ref HEAD")
 merge_source_branch = merge_source_branch.strip()
-merge_target_branch = "mainn"
+merge_target_branch = "main"
 
 print()
 print("Current branch:", merge_source_branch)
@@ -65,8 +65,11 @@ if result != 0:
 
 print("DONE")
 
-
-#os.system(f"git merge {merge_source_branch}")
-#print("DONE")
+print(f"Merge source branch into target, {merge_source_branch} -> {merge_target_branch}...", end="")
+result = os.system(f"git merge {merge_source_branch}")
+if result != 0:
+    print(f"ERROR, Cannot merge {merge_source_branch} into {merge_target_branch}, result={result}")
+    exit()
+print("DONE")
 
 
