@@ -61,7 +61,7 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
     scripts/update_version.cmd
     # Use backslash on Windows: scripts\update_version.cmd
     ```
-    - _the script will update `pyproject.toml` and `CHANGELOG` with new version and open `CHANGELOG` in vscode [^1]_ 
+    _the script will update `pyproject.toml` and `CHANGELOG` with new version and open `CHANGELOG` in vscode [^1]_ 
 - in the opened `CHANGELOG` describe the changes under the new version, e.g.:
     ```
     0.1.9.9
@@ -73,28 +73,30 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
     Rename paths to match new data folder structures
     ...
     ```
-- commit your changes and tag your latest commit with the new version (e.g. 0.1.9.7)
-- switch to **main** branch and merge your task branch into it
+- commit the changes to your task branch
+- run tag_version script:
+    ```
+    scripts/tag_version.cmd
+    # Use backslash on Windows: scripts\tag_version.cmd
+    ```
+    _the script will tag the current commit with new version tag and merge current branch into main_ 
+
 - push your **main** branch
 
 ### 4.2. In the **project repo**:
 
-- change rev for aiecommon in `pyproyect.toml` to the new version (e.g. 0.1.9.7):
+- change rev for aiecommon in `pyproyect.toml` to the new version (e.g. 0.1.9.9):
     ```python
-    aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "0.1.9.7", develop = true}
-    in project repo run poetry lock:
+    aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "0.1.9.9", develop = true}
     ```
-- do all the steps listed in ["3. Finishing the task - a) changes only in **project repo**](#3-finishing-the-task---a-changes-only-in-project-repo)
-"
+- do all the steps listed in ["3. Finishing the task - a) changes only in **project repo**](#3-finishing-the-task---a-changes-only-in-project-repo)"
 
-
---
 
 ## Footnotes
 
 [^1] the update_version script automates several tasks:
 
-- get the latest version tags and generate a new version tag
+- fetch the latest version tags from remote and generate a new version tag
 - update pyproject.toml with the new version tag
 - add new version tag to CHANGELOG and open it in vscode
 
