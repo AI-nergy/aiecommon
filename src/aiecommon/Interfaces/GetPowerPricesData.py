@@ -63,7 +63,7 @@ class GetPowerPricesData:
             A list of Nordpool prices.
         """
         # SpotPrices dataset is in euros
-        ele_prices = pd.read_csv(f"{self.path}/PowerPrices.csv", header=0, index_col=0, parse_dates=True)
+        ele_prices = pd.read_csv(f"{self.path}/shared/PowerPrices.csv", header=0, index_col=0, parse_dates=True)
         # Select bidding region
         return [price / 1000 for price in ele_prices[self.location.biddingZone]]
 
@@ -76,7 +76,7 @@ class GetPowerPricesData:
         List[float]
             A list of distribution prices.
         """
-        dist_prices = pd.read_csv(f"{self.path}/DistributionPrice{self.location.countryCode}.csv", header=0, index_col=0, parse_dates=True)
+        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}.csv", header=0, index_col=0, parse_dates=True)
         return [prices.item() for prices in dist_prices.values]
 
     def _calculate_buying_price(self) -> List[float]:
