@@ -1,10 +1,16 @@
+[build-system]
+requires = [ "poetry-core",]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "aiecommon"
 version = "0.1.9.6"
 description = ""
-authors = ["Pepe Una <pepe@ai-nergy.net>"]
+authors = [ "Pepe Una <pepe@ai-nergy.net>",]
 readme = "README.md"
-packages = [{include = "aiecommon", from = "src"}]
+[[tool.poetry.packages]]
+include = "aiecommon"
+from = "src"
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -12,7 +18,3 @@ google-api-python-client = "^2.92.0"
 pvlib = "^0.10.1"
 toml = "^0.10.2"
 semver = "^3.0.1"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
