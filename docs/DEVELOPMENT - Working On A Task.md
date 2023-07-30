@@ -56,29 +56,22 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
 
 ### 4.1. In the `aiecommon` repo:
 
-- check if there's a newer version of the package in the remote repo
-    - this is done on your local machine by doing fetch, then checking the newest version tag
-    - or by going to the `aiecommon` repo on github.com and checking the list of tags there 
-- if there's a newer version of the package, then merge **main** into your task branch to pick up that version changes
-- increase the version of the package, in `pyproject.toml`, e.g.:
-    ```toml
-    [tool.poetry]
-    name = "aiecommon"
-    version = "0.1.9.7"
+- run update_version script:
     ```
-- in the `CHANGELOG` file add the new version number on the top and describe the changes, e.g.:
+    scripts/update-version.cmd
+    # Use backslash on Windows: scripts\update-version.cmd
     ```
-    0.1.9.7
+    - _the script will update `pyproject.toml` and `CHANGELOG` with new version and open `CHANGELOG` in vscode [^1]_ 
+- in the opened `CHANGELOG` describe the changes under the new version, e.g.:
+    ```
+    0.1.9.9
     
     write development protocol in the docs
     
-    0.1.9.6 stable latest
+    0.1.9.8
 
-    update biddingZonesPolygonsFiltered.json and countryCodeBiddingZone.json with the correct versions (SI FIX)
-
-    0.1.9.5
-
-    upgrade pvlib to 0.10.1
+    Rename paths to match new data folder structures
+    ...
     ```
 - commit your changes and tag your latest commit with the new version (e.g. 0.1.9.7)
 - switch to **main** branch and merge your task branch into it
@@ -93,3 +86,30 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
     ```
 - do all the steps listed in ["3. Finishing the task - a) changes only in **project repo**](#3-finishing-the-task---a-changes-only-in-project-repo)
 "
+
+
+--
+
+## Footnotes
+
+[^1] the update-version script automates several tasks:
+
+- get the latest version tags and generate a new version tag
+- update pyproject.toml with the new version tag
+- add new version tag to CHANGELOG and open it in vscode
+
+
+
+[//]: <> ()
+[//]: <> ()
+[//]: <> (
+    - check if there's a newer version of the package in the remote repo
+        - this is done on your local machine by doing fetch, then checking the newest version tag
+        - or by going to the `aiecommon` repo on github.com and checking the list of tags there 
+    - if there's a newer version of the package, then merge **main** into your task branch to pick up that version changes
+    - increase the version of the package, in `pyproject.toml`, e.g.:
+        ```toml
+        [tool.poetry]
+        name = "aiecommon"
+        version = "0.1.9.7"        ```
+)
