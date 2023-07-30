@@ -58,8 +58,8 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
 
 - run update_version script:
     ```
-    scripts/update-version.cmd
-    # Use backslash on Windows: scripts\update-version.cmd
+    scripts/update_version.cmd
+    # Use backslash on Windows: scripts\update_version.cmd
     ```
     - _the script will update `pyproject.toml` and `CHANGELOG` with new version and open `CHANGELOG` in vscode [^1]_ 
 - in the opened `CHANGELOG` describe the changes under the new version, e.g.:
@@ -92,7 +92,7 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
 
 ## Footnotes
 
-[^1] the update-version script automates several tasks:
+[^1] the update_version script automates several tasks:
 
 - get the latest version tags and generate a new version tag
 - update pyproject.toml with the new version tag
