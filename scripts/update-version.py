@@ -51,7 +51,7 @@ print()
 if (pyproject["tool"]["poetry"]["version"] != new_version_tag):
     pyproject["tool"]["poetry"]["version"] = new_version_tag
     print(f"Writing {new_version_tag} version to pyproject.toml... ", end="")
-    with open("pyproject.toml", "w") as file:
+    with open("pyproject.toml", "w", newline='\n') as file:
         toml.dump(pyproject, file)
     print("DONE")
 
@@ -62,7 +62,7 @@ changelog_line = 3
 if not changelog_has_new_version:
     changelog_line = 3
     print(f"Writing {new_version_tag} version to CHANGELOG... ", end="")
-    with open("CHANGELOG", "w") as file:
+    with open("CHANGELOG", "w", newline='\n') as file:
         file.write(f"{new_version_tag}\n\n\n\n" + changelog_data)
     print("DONE")
 
