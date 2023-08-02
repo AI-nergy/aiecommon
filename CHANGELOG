@@ -1,3 +1,7 @@
+0.1.9.9
+
+Fix minimum consumption when minimum heat pump or ev is larger than total consumption
+
 0.1.9.8
 
 Rename paths to fix files in ainergy-main

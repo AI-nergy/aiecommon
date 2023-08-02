@@ -86,16 +86,27 @@ class GetDemandData:
         '''
         Here we return the hourly electricity demand of the generic consumption only
         '''
+        # Set up the min generic consumption
+        minGenericConsumption = 1500
+        # Set totalConsumption to the total consumption that the user entered
         totalConsumption = float(self.dataRequest.yearConsumptionKwh)
-        # if total_ev_consumption_exists is not None we deduct it from the total consumption
-        if self.total_ev_consumption_exists is not None:
-            totalConsumption -= self.total_ev_consumption_exists
-        # if total_heat_pump_consumption_exists is not None we deduct it from the total consumption
-        if self.total_heat_pump_consumption_exists is not None:
-            totalConsumption -= self.total_heat_pump_consumption_exists
-        # we need to catch the exception if totalConsumption is negative now
-        if totalConsumption < 0:
-            totalConsumption = 500
+
+        # Check if total_heat_pump_consumption_exists is set and adjust totalConsumption accordingly
+        if self.total_heat_pump_consumption_exists:
+            # If the difference is less than minGenericConsumption, set total_heat_pump_consumption_exists to totalConsumption - minGenericConsumption
+            if totalConsumption - self.total_heat_pump_consumption_exists < minGenericConsumption:
+                self.total_heat_pump_consumption_exists = totalConsumption - minGenericConsumption
+            # Otherwise, subtract the heat pump consumption from totalConsumption
+            else: 
+                totalConsumption -= self.total_heat_pump_consumption_exists
+        # Check if total_ev_consumption_exists is set and adjust totalConsumption accordingly
+        if self.total_ev_consumption_exists:
+            # If the difference is less than minGenericConsumption, set total_ev_consumption_exists to totalConsumption - minGenericConsumption
+            if totalConsumption - self.total_ev_consumption_exists < minGenericConsumption:
+                self.total_ev_consumption_exists = totalConsumption - minGenericConsumption
+            # Otherwise, subtract the EV consumption from totalConsumptio
+            else: 
+                totalConsumption -= self.total_ev_consumption_exists
         # return normalized generic consumption
         return self._normalise_consumption_data(totalConsumption)
             
