@@ -81,7 +81,10 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
     ```
     (*the script will tag the current commit with new version tag and merge current branch into main*) 
 
-- push your **main** branch
+- push your **main** branch and all the tags
+    ```
+    git push --tags
+    ```
 
 ### 4.2. In the **project repo**:
 
