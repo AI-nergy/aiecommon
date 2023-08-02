@@ -6,12 +6,27 @@
     - either `ainergy-main` or `ainergy-rooftop-planner` (we’ll call it “**project repo**”)
     - example task branch: **SOLP-135-write-development-protocol**
 - pull **SOLP-XXX** of **project repo** to your local machine
-- if task requires work on `aiecommon` package, then in the same JIRA task also create a new branch **SOLP-XXX** from **main** branch in `aiecommon` repo 
-    - pull the branch **SOLP-XXX** of `aiecommon` to your local machine
 - run poetry install:
     ```
     poetry install
     ```
+- if the task requires work on `aiecommon` package, then:
+    - in the same JIRA task also create a new branch **SOLP-XXX** from **main** branch in `aiecommon` repo
+    - pull the branch **SOLP-XXX** in `aiecommon` repo to your local machine
+ 
+ Important notes:
+
+- after you have run `poetry install`, the repo `aiecommon` will be located on your local machine in a poetry environment folder, e.g:
+    ```
+    C:/Users/YourUsername/AppData/Local/pypoetry/Cache/virtualenvs/ainergy-main-XXXXXXXX-py3.9/src/aiecommon
+    ```
+    you can find it by running in your project repo: 
+    ```
+    python -m site
+    ```
+    Mind, you have to open the `aiecommon`, not the `src` inside it.
+- changes to `aiecommon` have to be done in this folder, you should never clone the `aiecommon` repo manually
+
 
 ## 2. Working on the task
 

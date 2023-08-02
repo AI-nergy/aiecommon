@@ -4,7 +4,7 @@
 
 Every task, when resolved, should be checked by its reporter.
 
-We use the checking workflow only on tasks, subtasks are smaller pieces of work which do not have to checked by the reporter (they serve for the person working on a task to organise the work into smaller chunks).
+We use the checking workflow only on tasks, subtasks are smaller pieces of work which do not have to be checked by the reporter (they serve for the person working on a task to organise the work into smaller chunks).
 
 The list of tasks you need to check is [available in JIRA](#jira-filter-with-tasks-you-need-to-check).
 
