@@ -100,6 +100,11 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
     ```
     git push --tags
     ```
+- Now you can open a pull request in GitHub with the changes of your branch **SOLP-XXX** (in case you want a peer-review).
+- If on the contrary, you are confident enough to push your changes to main then:
+  ```
+  git push
+  ``` 
 
 ### 4.2. In the **project repo**:
 
