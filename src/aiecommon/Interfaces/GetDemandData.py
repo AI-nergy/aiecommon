@@ -170,10 +170,12 @@ class GetDemandData:
         """
         Returns total heat pump consumption in kWh
         """
+        hp_area_exists = self.dataRequest.areaStructureHPExists if self.dataRequest.areaStructureHPExists else 0
+        hp_area_planned = self.dataRequest.areaStructureHPPlanned if self.dataRequest.areaStructureHPPlanned else 0
         # Calculate heat pump consumption for existing heat pump class
-        hp_existing_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPExists, 0) * self.dataRequest.areaStructureHPExists
+        hp_existing_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPExists, 0) * hp_area_exists
         # Calculate heat pump consumption for planned heat pump class
-        hp_planned_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPPlanned, 0) * self.dataRequest.areaStructureHPPlanned
+        hp_planned_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPPlanned, 0) * hp_area_planned
         # return total heat pump consumption divided by COP
         return (hp_existing_consumption + hp_planned_consumption) / self.technicalData.HeatPump.Cop
         
