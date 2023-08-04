@@ -1,3 +1,7 @@
+0.1.9.10
+
+Add heat pump consumption calculations based on heat pump class
+
 0.1.9.9
 
 Fix minimum consumption when minimum heat pump or ev is larger than total consumption

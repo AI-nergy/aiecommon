@@ -17,6 +17,10 @@ class RequestData(BaseModel):
     heatPumpExists: bool
     heatPumpPlanned: bool
     ipAddress: Optional[str]
+    areaStructureHPExists: Optional[int] = 0
+    energyLabelHPExists: Optional[str]
+    areaStructureHPPlanned: Optional[int] = 0
+    energyLabelHPPlanned: Optional[str]
 
 
     # check that consumption is big enough

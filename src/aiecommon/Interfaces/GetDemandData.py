@@ -2,13 +2,14 @@ import pandas as pd
 import numpy as np
 
 import sys; sys.path.append('../..')
-from ..DataModels import RequestData
+from ..DataModels import RequestData, TechnicalData
 
 
 class GetDemandData:
-    def __init__(self, path, request: RequestData) -> None:
+    def __init__(self, path, request: RequestData, technicalData: TechnicalData) -> None:
         self.path = path
         self.dataRequest = request
+        self.technicalData = technicalData
         # Read demand data
         self._demand_data = pd.read_csv(f"{path}/PowerConsumption.csv", sep=';')
         # Calculate total ev and heat pump consumption
@@ -166,7 +167,15 @@ class GetDemandData:
         return self.dataRequest.kilometersPerDayExists * 365 * 18 / 100 # (365 days * average km per day consumption of electric vehicle is 18 kWh/100km)
     
     def _get_total_heat_pump_consumption(self) -> float:
-        return 6500 # TODO: Calculate this value from the heat pump data as a function of rooftop size
+        """
+        Returns total heat pump consumption in kWh
+        """
+        # Calculate heat pump consumption for existing heat pump class
+        hp_existing_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPExists, 0) * self.dataRequest.areaStructureHPExists
+        # Calculate heat pump consumption for planned heat pump class
+        hp_planned_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPPlanned, 0) * self.dataRequest.areaStructureHPPlanned
+        # return total heat pump consumption divided by COP
+        return (hp_existing_consumption + hp_planned_consumption) / self.technicalData.HeatPump.Cop
         
     @staticmethod
     def aboslute_normalize_data(column):

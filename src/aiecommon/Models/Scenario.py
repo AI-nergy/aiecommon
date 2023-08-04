@@ -37,14 +37,14 @@ class Scenario:
         self.CountryData = CountryData.from_json(path="modules/aiesolar/optimizer/data/shared/CountryData.json", key=request.location.countryCode)
 
         self.Location = request.location
+        self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/shared/TechnicalData.json")
         self.RoofTopsides = list(range(len(self.RequestData.rooftopSummaryTable)))
-        self.Demand = GetDemandData(path="modules/aiesolar/optimizer/data/shared", request= self.RequestData).Demand
+        self.Demand = GetDemandData(path="modules/aiesolar/optimizer/data/shared", request= self.RequestData, technicalData=self.TechnicalData).Demand
         logging.info(f"starting to get solar production data from external API")
         self.Production = GetSolarProductionData(request= self.RequestData).Production
         logging.info(f"finished getting solar production data from external API")
         self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
         self.TimeWindow = range(len(self.Demand)) # one year houly data
-        self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/shared/TechnicalData.json")
         self.InvestmentData = GetInvestmentData(
                     countryData=self.CountryData, technicalData=self.TechnicalData
                 )

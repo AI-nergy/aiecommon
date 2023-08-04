@@ -17,5 +17,9 @@ class InputData(BaseModel):
     heatPumpExists: bool
     heatPumpPlanned: bool
     ipAddress: Optional[str]
+    areaStructureHPExists: Optional[int]
+    energyLabelHPExists: Optional[str]
+    areaStructureHPPlanned: Optional[int]
+    energyLabelHPPlanned: Optional[str]
 
     
