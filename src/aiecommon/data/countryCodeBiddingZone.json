@@ -15,12 +15,16 @@
         "DE_BERLIN",
         "DE_NRW",
         "DE_SAXONY",
-        "DE_THURINGEN"
+        "DE_THURINGEN",
+        "DE_MV",
+        "DE_BAVARIA",
+        "DE_BRANDENBURG_NEW"
     ],
-    "AD": "AD",
     "AT": [
         "AT_WIEN",
         "AT_VORARLBERG"
     ],
-    "LU": "LU"
+    "LU": "LU",
+    "MT": "MT",
+    "GB_SCOTLAND": "GB_SCOTLAND"
 }
