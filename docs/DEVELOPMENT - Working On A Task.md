@@ -10,6 +10,8 @@
     ```
     poetry install
     ```
+    - **if you have changes which are not commited or pushed in `aiecommon` repo, DO NOT RUN `poetry install` in your project repo!!!**
+    - it will reinstall the `aiecommon` package to the version stated in the `pyproject.toml` of your **project repo** and delete your local changes in `aiecommon` repo
 - if the task requires work on `aiecommon` package, then:
     - in the same JIRA task also create a new branch **SOLP-XXX** from **main** branch in `aiecommon` repo
     - pull the branch **SOLP-XXX** in `aiecommon` repo to your local machine
@@ -36,9 +38,6 @@
 - the changes which are related to the algorithm and don't affect the API part implemented in Azure you can test them during development by running `python main.py`
 - changes which are related to of somehow affect the API part implemented in Azure should be tested/debugged during the development by locally running the Azure functions server or by 
 [deploying the code to the developer slot](#deploying-the-code-to-the-developer-slot)
-- **if you have changes which are not commited or pushed in `aiecommon` repo, DO NOT RUN `poetry install` in your project repo!!!**
-    - it will reinstall the `aiecommon` package to the version stated in the `pyproject.toml` of your **project repo** and delete your local changes in `aiecommon` repo
-
 
 ### 2.2. Deploying the code to the developer slot (optional)
 
