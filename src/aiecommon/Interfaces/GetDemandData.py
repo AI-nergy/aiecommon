@@ -168,7 +168,7 @@ class GetDemandData:
     
     def _get_total_heat_pump_consumption(self) -> float:
         """
-        Returns total heat pump consumption in kWh
+        Returns total heat pump consumption in kWh as a function of heat pump class and floor surface area
         """
         hp_area_exists = self.dataRequest.areaStructureHPExists if self.dataRequest.areaStructureHPExists else 0
         hp_area_planned = self.dataRequest.areaStructureHPPlanned if self.dataRequest.areaStructureHPPlanned else 0
