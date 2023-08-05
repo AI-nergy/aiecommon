@@ -26,7 +26,8 @@
     ```
     python -m site
     ```
-    Mind, you have to open the `aiecommon`, not the `src` inside it.
+    Make sure you are in the right poetry environment before running it and that you open the `aiecommon`, not the `src` inside it.
+
 - changes to `aiecommon` have to be done in this folder, you should never clone the `aiecommon` repo manually
 
 
