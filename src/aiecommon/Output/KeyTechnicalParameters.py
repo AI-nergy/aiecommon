@@ -1,5 +1,6 @@
-
 from pydantic import BaseModel
+from typing import Union
+
 
 class KeyTechnicalParameters(BaseModel):
     pvCapacity: float
@@ -9,4 +10,3 @@ class KeyTechnicalParameters(BaseModel):
     selfSufficiencyYearly: float
     curtailedProduction: Union[int, float]
     co2Reduction: float
-
