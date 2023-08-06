@@ -39,7 +39,8 @@ class Scenario:
         self.Location = request.location
         self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/shared/TechnicalData.json")
         self.RoofTopsides = list(range(len(self.RequestData.rooftopSummaryTable)))
-        self.Demand = GetDemandData(path="modules/aiesolar/optimizer/data/shared", request= self.RequestData, technicalData=self.TechnicalData).Demand
+        self.ConsumptionData = GetDemandData(path="modules/aiesolar/optimizer/data/shared", request= self.RequestData, technicalData=self.TechnicalData)
+        self.Demand = self.ConsumptionData.Demand
         logging.info(f"starting to get solar production data from external API")
         self.Production = GetSolarProductionData(request= self.RequestData).Production
         logging.info(f"finished getting solar production data from external API")
