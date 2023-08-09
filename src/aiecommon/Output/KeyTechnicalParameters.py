@@ -7,9 +7,10 @@ class KeyTechnicalParameters(BaseModel):
     inverterCapacity: float
     batteryCapacity: float
     yearlySolarPlantProduction: int
-    selfSufficiencyYearly: float
-    curtailedProduction: Union[int, float]
-    co2Reduction: float
+    selfSufficiencyYearly: int
+    curtailedProductionAbosulute: int
+    curtailedProductionPercentage: int
+    co2Reduction: int
     estimatedHeatPumpConsumption: Optional[int]
     EVplannedConsumption: Optional[int]
     EVexistsConsumption: Optional[int]
