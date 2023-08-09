@@ -10,12 +10,12 @@ class RequestData(BaseModel):
     location: Location
     yearConsumptionKwh: float
     pvOptimizationType: Optional[str] = None
-    electricVehiclePlanned: bool
+    electricVehiclePlanned: Optional[bool] = False
     kilometersPerDayPlanned: Optional[float] = 35  
-    electricVehicleExists: bool
+    electricVehicleExists: Optional[bool] = False
     kilometersPerDayExists: Optional[float] = 35 # TODO: Ask Dominik why why need this data, if we already know the consumption from the smart meter profile? maybe to stimate?
-    heatPumpExists: bool
-    heatPumpPlanned: bool
+    heatPumpExists: Optional[bool] = False
+    heatPumpPlanned: Optional[bool] = False
     ipAddress: Optional[str]
     areaStructureHPExists: Optional[int] = 0
     energyLabelHPExists: Optional[str]
