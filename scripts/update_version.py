@@ -20,7 +20,7 @@ def run(cmd:str):
 
 git_fetch = run("git fetch --tags")
 
-version_tags = run("git tag -l *.*.*.* --sort=-refname").split("\n")
+version_tags = run("git tag -l *.*.*.* --sort=-version:refname").split("\n")
 
 version_tags = [item for item in version_tags if item.strip() != ""]
 
