@@ -108,7 +108,7 @@ In this case you need to finish the task in two steps, one in the `aiecommon` re
 
 ### 4.2. In the **project repo**:
 
-- change rev for aiecommon in `pyproyect.toml` to the new version (e.g. 0.1.9.9):
+- change rev for aiecommon in `pyproyect.toml` (located in aienergy-main) to the new version (e.g. 0.1.9.9):
     ```python
     aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "0.1.9.9", develop = true}
     ```
