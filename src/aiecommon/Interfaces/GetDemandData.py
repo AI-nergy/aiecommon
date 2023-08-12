@@ -14,12 +14,10 @@ class GetDemandData:
         self._demand_data = pd.read_csv(f"{path}/PowerConsumption.csv", sep=';')
         # Calculate total ev and heat pump consumption
         # if ev exists or is planned but there is no data on km per day, assign 35 km per day
-        self.dataRequest.kilometersPerDayPlanned = 35 if self.dataRequest.electricVehiclePlanned and self.dataRequest.kilometersPerDayPlanned is None else self.dataRequest.kilometersPerDayPlanned
-        self.dataRequest.kilometersPerDayExists = 35 if self.dataRequest.electricVehicleExists and self.dataRequest.kilometersPerDayExists is None else self.dataRequest.kilometersPerDayExists
-        self.total_ev_consumption_planned = self._get_total_ev_consumption_planned() if self.dataRequest.electricVehiclePlanned else None
-        self.total_ev_consumption_exists = self._get_total_ev_consumption_exists() if self.dataRequest.electricVehicleExists else None
-        self.total_heat_pump_consumption_planned = self._get_total_heat_pump_consumption() if self.dataRequest.heatPumpPlanned else None
-        self.total_heat_pump_consumption_exists = self._get_total_heat_pump_consumption() if self.dataRequest.heatPumpExists else None
+        self.total_ev_consumption_planned = self._get_total_ev_consumption_planned() if self.dataRequest.electricVehicle.kilometersPerDayPlanned else None
+        self.total_ev_consumption_exists = self._get_total_ev_consumption_exists() if self.dataRequest.electricVehicle.kilometersPerDayExists else None
+        self.total_heat_pump_consumption_planned = self._get_total_heat_pump_consumption() if self.dataRequest.heatPump.areaStructurePlanned else None
+        self.total_heat_pump_consumption_exists = self._get_total_heat_pump_consumption() if self.dataRequest.heatPump.areaStructureExisting else None
         # Return hourly demand data
         self.Demand = self._return_hourly_demand_data(self)
         
@@ -90,7 +88,7 @@ class GetDemandData:
         # Set up the min generic consumption
         minGenericConsumption = 1500
         # Set totalConsumption to the total consumption that the user entered
-        totalConsumption = float(self.dataRequest.yearConsumptionKwh)
+        totalConsumption = float(self.dataRequest.yearlyConsumption)
 
         # Check if total_heat_pump_consumption_exists is set and adjust totalConsumption accordingly
         if self.total_heat_pump_consumption_exists:
@@ -161,21 +159,21 @@ class GetDemandData:
         )
 
     def _get_total_ev_consumption_planned(self) -> float:
-        return self.dataRequest.kilometersPerDayPlanned * 365 * 18 / 100 # (365 days * average km per day consumption of electric vehicle is 18 kWh/100km)
+        return self.dataRequest.electricVehicle.kilometersPerDayPlanned * 365 * 18 / 100 # (365 days * average km per day consumption of electric vehicle is 18 kWh/100km)
     
     def _get_total_ev_consumption_exists(self) -> float:
-        return self.dataRequest.kilometersPerDayExists * 365 * 18 / 100 # (365 days * average km per day consumption of electric vehicle is 18 kWh/100km)
+        return self.dataRequest.electricVehicle.kilometersPerDayExists * 365 * 18 / 100 # (365 days * average km per day consumption of electric vehicle is 18 kWh/100km)
     
     def _get_total_heat_pump_consumption(self) -> float:
         """
         Returns total heat pump consumption in kWh as a function of heat pump class and floor surface area
         """
-        hp_area_exists = self.dataRequest.areaStructureHPExists if self.dataRequest.areaStructureHPExists else 0
-        hp_area_planned = self.dataRequest.areaStructureHPPlanned if self.dataRequest.areaStructureHPPlanned else 0
+        hp_area_exists = self.dataRequest.heatPump.areaStructureExisting if self.dataRequest.heatPump.areaStructureExisting else 0
+        hp_area_planned = self.dataRequest.heatPump.areaStructurePlanned if self.dataRequest.heatPump.areaStructurePlanned else 0
         # Calculate heat pump consumption for existing heat pump class
-        hp_existing_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPExists, 0) * hp_area_exists
+        hp_existing_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.heatPump.energyLabelExisting, 0) * hp_area_exists
         # Calculate heat pump consumption for planned heat pump class
-        hp_planned_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.energyLabelHPPlanned, 0) * hp_area_planned
+        hp_planned_consumption = self.technicalData.HeatPump.HeatConsumption.get(self.dataRequest.heatPump.energyLabelPlanned, 0) * hp_area_planned
         # return total heat pump consumption divided by COP
         return (hp_existing_consumption + hp_planned_consumption) / self.technicalData.HeatPump.Cop
         
