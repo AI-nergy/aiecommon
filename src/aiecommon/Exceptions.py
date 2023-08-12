@@ -14,6 +14,7 @@ class AieException(Exception):
     BUILDING_NOT_FOUND_ON_OSM = "BUILDING_NOT_FOUND_ON_OSM"
     COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION = "COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION"
     COUNTRY_NOT_SUPPORTED = "COUNTRY_NOT_SUPPORTED"
+    NO_CONSUMPTION_PROVIDED = "NO_CONSUMPTION_PROVIDED"
 
     logMessage: str
 
@@ -21,7 +22,7 @@ class AieException(Exception):
         super().__init__(message)
 
         if (logMessage is None):
-             self.logMessage = message
+            self.logMessage = message
         else:
             self.logMessage = logMessage
 

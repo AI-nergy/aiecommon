@@ -1,31 +1,33 @@
 from pydantic import BaseModel, validator
-from ..Models import Rooftop
+from ..Models import Rooftop, TechnoEconomicData, MeterData, ElectricVehicle, HeatPump
 from aiecommon.Models import Location
-from typing import Optional
+from typing import Optional, List
 from aiecommon.Exceptions import AieException
 
 class RequestData(BaseModel):
     referenceId: str
-    rooftopSummaryTable: list[Rooftop]
     location: Location
-    yearConsumptionKwh: float
-    pvOptimizationType: Optional[str] = None
-    electricVehiclePlanned: Optional[bool] = False
-    kilometersPerDayPlanned: Optional[float] = 35  
-    electricVehicleExists: Optional[bool] = False
-    kilometersPerDayExists: Optional[float] = 35 # TODO: Ask Dominik why why need this data, if we already know the consumption from the smart meter profile? maybe to stimate?
-    heatPumpExists: Optional[bool] = False
-    heatPumpPlanned: Optional[bool] = False
-    ipAddress: Optional[str]
-    areaStructureHPExists: Optional[int] = 0
-    energyLabelHPExists: Optional[str]
-    areaStructureHPPlanned: Optional[int] = 0
-    energyLabelHPPlanned: Optional[str]
-
+    systemType: str
+    yearlyConsumption: Optional[float]
+    meterData: Optional[MeterData]
+    technoEconomicData: Optional[TechnoEconomicData]
+    electricVehicle: Optional[ElectricVehicle]
+    heatPump: Optional[HeatPump]
+    outputFormat: Optional[str]
+    rooftopSummaryTable: Optional[List[Rooftop]]
 
     # check that consumption is big enough
-    @validator('yearConsumptionKwh', pre=True, allow_reuse=True)
+    @validator('yearlyConsumption', pre=True, allow_reuse=True)
     def check_consumption(cls, v):
+        if v is None:
+            return v
         if int(v) < 2500:
             raise AieException(AieException.CONSUMPTION_TOO_LOW)
+        return v
+
+    # check that if no meter data is provided, consumption is provided
+    @validator('meterData', pre=True, allow_reuse=True)
+    def check_meter_data(cls, v, values):
+        if v is None and values['yearlyConsumption'] is None:
+            raise AieException(AieException.NO_CONSUMPTION_PROVIDED)
         return v
