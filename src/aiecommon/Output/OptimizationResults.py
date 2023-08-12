@@ -12,7 +12,7 @@ from .InvestmentCostBreakdown import InvestmentCostBreakdown
 from .MonthlyBalance import MonthlyBalance
 from .HourlyElectricityFlow import HourlyElectricityFlow
 
-class ReturnValues(BaseModel):
+class OptimizationResults(BaseModel):
     typeOfResult: str
     keyEconomicIndicators: KeyEconomicIndicators
     keyTechnicalParameters: KeyTechnicalParameters

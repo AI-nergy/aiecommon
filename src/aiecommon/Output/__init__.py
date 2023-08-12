@@ -1,5 +1,5 @@
 
-from .ReturnValues import ReturnValues
+from .OptimizationResults import OptimizationResults
 from .MonthlyBalance import MonthlyBalance
 from .MonthName import MonthName
 from .KeyEconomicIndicators import KeyEconomicIndicators
@@ -13,3 +13,5 @@ from .Rooftop import Rooftop
 from .PvPanelRooftopArea import PvPanelRooftopArea
 from .InvestmentCostBreakdown import InvestmentCostBreakdown
 from .HourlyBatteryOperation import HourlyBatteryOperation
+from .ResultSctructure import ResultStructure
+from .ErrorMessage import ErrorMessage
