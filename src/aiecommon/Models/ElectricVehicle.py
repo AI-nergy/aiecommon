@@ -3,8 +3,8 @@ from typing import Dict, Optional
 
 
 class ElectricVehicle(BaseModel):
-    kilometersPerDayExists: float
-    kilometersPerDayPlanned: float  
+    kilometersPerDayExists: Optional[float]
+    kilometersPerDayPlanned: Optional[float]
     batteryCapacity: Optional[float]
     dischargeEfficiency: Optional[float]
     chargeEfficiency: Optional[float]

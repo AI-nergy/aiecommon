@@ -13,11 +13,17 @@ class GetDemandData:
         # Read demand data
         self._demand_data = pd.read_csv(f"{path}/PowerConsumption.csv", sep=';')
         # Calculate total ev and heat pump consumption
+        self.total_ev_consumption_planned = None
+        self.total_ev_consumption_exists = None
+        self.total_heat_pump_consumption_planned = None
+        self.total_heat_pump_consumption_exists = None
         # if ev exists or is planned but there is no data on km per day, assign 35 km per day
-        self.total_ev_consumption_planned = self._get_total_ev_consumption_planned() if self.dataRequest.electricVehicle.kilometersPerDayPlanned else None
-        self.total_ev_consumption_exists = self._get_total_ev_consumption_exists() if self.dataRequest.electricVehicle.kilometersPerDayExists else None
-        self.total_heat_pump_consumption_planned = self._get_total_heat_pump_consumption() if self.dataRequest.heatPump.areaStructurePlanned else None
-        self.total_heat_pump_consumption_exists = self._get_total_heat_pump_consumption() if self.dataRequest.heatPump.areaStructureExisting else None
+        if self.dataRequest.electricVehicle:
+            self.total_ev_consumption_planned = self._get_total_ev_consumption_planned() if self.dataRequest.electricVehicle.kilometersPerDayPlanned else None
+            self.total_ev_consumption_exists = self._get_total_ev_consumption_exists() if self.dataRequest.electricVehicle.kilometersPerDayExists else None
+        if self.dataRequest.heatPump:
+            self.total_heat_pump_consumption_planned = self._get_total_heat_pump_consumption() if self.dataRequest.heatPump.areaStructurePlanned else None
+            self.total_heat_pump_consumption_exists = self._get_total_heat_pump_consumption() if self.dataRequest.heatPump.areaStructureExisting else None
         # Return hourly demand data
         self.Demand = self._return_hourly_demand_data(self)
         

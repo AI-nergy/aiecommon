@@ -1,5 +1,5 @@
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
 import pandas as pd
 
@@ -13,7 +13,7 @@ from .MonthlyBalance import MonthlyBalance
 from .HourlyElectricityFlow import HourlyElectricityFlow
 
 class OptimizationResults(BaseModel):
-    typeOfResult: str
+    typeOfResult: str = Field(..., choices=['OPTIMISATION_BATTERY_ONLY', 'OPTIMISATION_PV_ONLY', 'OPTIMISATION_PV_AND_BATTERY'])
     keyEconomicIndicators: KeyEconomicIndicators
     keyTechnicalParameters: KeyTechnicalParameters
     pvPlant: Photovoltaic

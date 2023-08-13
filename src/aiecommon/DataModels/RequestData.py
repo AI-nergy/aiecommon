@@ -15,6 +15,7 @@ class RequestData(BaseModel):
     heatPump: Optional[HeatPump]
     outputFormat: Optional[str]
     rooftopSummaryTable: Optional[List[Rooftop]]
+    pvOptimizationType: Optional[str]
 
     # check that consumption is big enough
     @validator('yearlyConsumption', pre=True, allow_reuse=True)

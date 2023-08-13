@@ -6,3 +6,5 @@ class ResponseData(BaseModel):
     success: Optional[bool]
     result: Optional[ResultStructure]
     errorMessage: Optional[ErrorMessage]
+
+    

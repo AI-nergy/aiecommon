@@ -1,4 +1,4 @@
-from pydantinc import BaseModel
+from pydantic import BaseModel
 from typing import Optional, Union, List
 from .OptimizationResults import OptimizationResults
 
