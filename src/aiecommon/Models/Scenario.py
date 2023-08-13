@@ -2,7 +2,7 @@ from aiecommon.Models import Location
 from ..DataModels import TechnicalData, RequestData, CountryData 
 #from DataModels.CountryData import CountryData 
 
-from ..Interfaces import GetSolarProductionData, GetPowerPricesData, GetDemandData, GetInvestmentData
+from ..Interfaces import GetSolarProductionData, GetPowerPricesData, GetDemandData, GetInvestmentData, GetEmissionsData
 import pandas as pd
 import json
 import logging
@@ -45,6 +45,7 @@ class Scenario:
         self.Production = GetSolarProductionData(request= self.RequestData).Production
         logging.info(f"finished getting solar production data from external API")
         self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
+        self.co2_emissions = GetEmissionsData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
         self.TimeWindow = range(len(self.Demand)) # one year houly data
         self.InvestmentData = GetInvestmentData(
                     countryData=self.CountryData, technicalData=self.TechnicalData
