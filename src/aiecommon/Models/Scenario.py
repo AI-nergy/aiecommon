@@ -45,7 +45,7 @@ class Scenario:
         self.Production = GetSolarProductionData(request= self.RequestData).Production
         logging.info(f"finished getting solar production data from external API")
         self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
-        self.co2_emissions = GetEmissionsData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
+        self.co2_emissions = GetEmissionsData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData).co2_emissions
         self.TimeWindow = range(len(self.Demand)) # one year houly data
         self.InvestmentData = GetInvestmentData(
                     countryData=self.CountryData, technicalData=self.TechnicalData
