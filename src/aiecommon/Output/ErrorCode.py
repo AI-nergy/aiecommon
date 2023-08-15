@@ -3,6 +3,6 @@ from typing import Optional
 
 class ErrorCode(BaseModel):
     rooftopAreaLargerThan: Optional[int]
-    radius = Optional[float]
+    radius: Optional[float]
     class Config:
         arbitrary_types_allowed = True
