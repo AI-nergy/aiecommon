@@ -161,3 +161,8 @@ cython_debug/
 
 .vscode
 runtimedata
+.idea/aiecommon.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml

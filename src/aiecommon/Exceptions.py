@@ -14,15 +14,17 @@ class AieException(Exception):
     BUILDING_NOT_FOUND_ON_OSM = "BUILDING_NOT_FOUND_ON_OSM"
     COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION = "COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION"
     COUNTRY_NOT_SUPPORTED = "COUNTRY_NOT_SUPPORTED"
+    NO_CONSUMPTION_PROVIDED = "NO_CONSUMPTION_PROVIDED"
+    MODEL_SOLUTION_NOT_FOUND = "MODEL_SOLUTION_NOT_FOUND"
 
-    logMessage: str
+    log_message: str
 
-    def __init__(self, message, logMessage = None):
-        super().__init__(message)
+    def __init__(self, error_code: str, log_message: str = None, data: dict = None):
+        super().__init__(error_code)
 
-        if (logMessage is None):
-             self.logMessage = message
+        if not log_message:
+            self.log_message = error_code
         else:
-            self.logMessage = logMessage
+            self.log_message = log_message
 
-        logging.info(f"AinException: {self.logMessage}")
+        logging.info(f"AinException: {self.log_message}")
