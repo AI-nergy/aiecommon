@@ -1,6 +1,8 @@
 from pydantic import BaseModel
-from aiecommon.FileSystem import LocalDataFiles
 import logging
+import json
+
+from aiecommon.FileSystem import LocalDataFiles
 
 class DataModelBase(BaseModel):
 
@@ -29,7 +31,7 @@ class DataModelBase(BaseModel):
         Args:
             path: str Path of the file to load
             package: str|Package (None) Package from which to load the file. If not specified, it loads from current project.
-            key: str (None) if specified, the data loaded from the file is interpreted as dictionary and the value of the spefiied key is loaded into the class. 
+            key: str (None) if specified, the data loaded from the file is interpreted as dictionary and the value of the specified key is loaded into the class. 
         Returns:
             class object: object of the class with the data loaded from the file
         """
@@ -39,6 +41,27 @@ class DataModelBase(BaseModel):
 
         # Run validation function on the loaded data
         cls._validate(data, key)
+
+        # Return an instance of class representing data
+        if key is None:
+            return cls(**data)
+        else:
+            return cls(**data[key])
+        
+    @classmethod
+    def from_json_string(cls, json_string: str, key:str = None):
+        """
+        Loads the data into data class from a JSON string.
+
+        Args:
+            json_string: string from which to load JSON
+            key: str (None) if specified, the data loaded from the string is interpreted as dictionary and the value of the specified key is loaded into the class. 
+        Returns:
+            class object: object of the class with the data loaded from the file
+        """
+
+        # Load the JSON string
+        data = json.loads(json_string)
 
         # Return an instance of class representing data
         if key is None:
