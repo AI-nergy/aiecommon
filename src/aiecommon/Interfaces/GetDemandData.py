@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 
 import sys; sys.path.append('../..')
-from ..DataModels import RequestData, TechnicalData
+from ..DataModels import InputData, TechnicalData
 
 
 class GetDemandData:
-    def __init__(self, path, request: RequestData, technicalData: TechnicalData) -> None:
+    def __init__(self, path, request: InputData, technicalData: TechnicalData) -> None:
         self.path = path
         self.dataRequest = request
         self.technicalData = technicalData

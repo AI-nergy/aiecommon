@@ -1,6 +1,5 @@
 from .Country import Country
 from .Location import Location
-from .InputData import InputData
 from .MeterData import MeterData
 from .TechnoEconomicData import TechnoEconomicData
 from .Response import ResponseBody, Rooftop

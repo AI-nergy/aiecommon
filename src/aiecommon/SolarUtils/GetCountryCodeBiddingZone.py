@@ -6,7 +6,7 @@ import matplotlib.path as mpltPath
 import logging
 
 
-from aiecommon.Models import InputData
+from aiecommon.DataModels import InputData
 from aiecommon.FileSystem import LocalDataFiles
 
 #         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()

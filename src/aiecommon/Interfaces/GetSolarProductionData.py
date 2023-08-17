@@ -8,13 +8,13 @@ from pvlib._deprecation import pvlibDeprecationWarning
 import sys
 from pathlib import Path
 from timezonefinder import TimezoneFinder
-from ..DataModels import RequestData
+from ..DataModels import InputData
 from .GetClosestInlandPoint import ClosestInlandPoint
 import logging
 from aiecommon.Exceptions import AieException
 
 class GetSolarProductionData:
-    def __init__(self, request: RequestData) -> None:
+    def __init__(self, request: InputData) -> None:
         self.request = request
         self.location = request.location
         self.Production = self._power_pv_production()

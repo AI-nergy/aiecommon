@@ -4,8 +4,7 @@ from pydantic import BaseModel
 
 from .Location import Location
 
-
-class InputData(BaseModel):
+class InputDataOLD(BaseModel):
     referenceId: str
     location: Location
     yearConsumptionKwh: float
