@@ -5,5 +5,5 @@ from typing import Optional
 class Location(BaseModel):
     latitude: float
     longitude: float
-    countryCode: Optional[str]
-    biddingZone: Optional[str]
+    countryCode: Optional[str] = None
+    biddingZone: Optional[str] = None

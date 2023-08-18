@@ -8,4 +8,4 @@ class Rooftop(BaseModel):
     orientation: str
     orientationDegrees: int
     rooftopSideSlopeDegrees: int
-    colorCode: Optional[str]
+    colorCode: Optional[str] = None

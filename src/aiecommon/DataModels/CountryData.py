@@ -12,21 +12,21 @@ class CountryData(DataModelBase):
     investmentSubsidy: float
     biddingRegions: list[BiddingRegion]
     priceTechnology: PricesTechnologies
-    labourHourRateEUR: Optional[float]
-    permittingCostsEUR: Optional[float]
-    materialFixedCost: Optional[float]
-    annualizationRate: Optional[float]
-    discountCoefficient: Optional[float]
-    penaltySellingPowerPrice: Optional[float]
-    transportTariff: Optional[float] 
-    vat: Optional[float]
-    electricityTax: Optional[float]
+    labourHourRateEUR: Optional[float] = None
+    permittingCostsEUR: Optional[float] = None
+    materialFixedCost: Optional[float] = None
+    annualizationRate: Optional[float] = None
+    discountCoefficient: Optional[float] = None
+    penaltySellingPowerPrice: Optional[float] = None
+    transportTariff: Optional[float] = None
+    vat: Optional[float] = None
+    electricityTax: Optional[float] = None
     limitGridExport: Optional[float] = 1.0 # Percentage of the total capacity
-    feeSupportingRES : Optional[float] 
-    feeMarketOperator : Optional[float]  
-    feeExciseDutyOfElectricity : Optional[float] 
-    feeForSupportingEfficencyImprovements : Optional[float]
-    feeForAvailablePowerInstallation : Optional[float]
+    feeSupportingRES : Optional[float] = None
+    feeMarketOperator : Optional[float] = None
+    feeExciseDutyOfElectricity : Optional[float] = None
+    feeForSupportingEfficencyImprovements : Optional[float] = None
+    feeForAvailablePowerInstallation : Optional[float] = None
 
     @classmethod
     def _validate(cls, data, key):

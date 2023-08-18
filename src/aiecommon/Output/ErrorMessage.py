@@ -4,4 +4,4 @@ from .ErrorCode import ErrorCode
 
 class ErrorMessage(BaseModel):
     code: str
-    data: Optional[ErrorCode]
+    data: Optional[ErrorCode] = None

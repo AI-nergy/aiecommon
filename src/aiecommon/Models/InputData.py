@@ -16,10 +16,10 @@ class InputData(BaseModel):
     kilometersPerDayExists: Optional[float] = 35 # TODO: Ask Dominik why why need this data, if we already know the consumption from the smart meter profile? maybe to stimate?
     heatPumpExists: bool
     heatPumpPlanned: bool
-    ipAddress: Optional[str]
-    areaStructureHPExists: Optional[int]
-    energyLabelHPExists: Optional[str]
-    areaStructureHPPlanned: Optional[int]
-    energyLabelHPPlanned: Optional[str]
+    ipAddress: Optional[str] = None
+    areaStructureHPExists: Optional[int] = None
+    energyLabelHPExists: Optional[str] = None
+    areaStructureHPPlanned: Optional[int] = None
+    energyLabelHPPlanned: Optional[str] = None
 
     
