@@ -45,6 +45,7 @@ class GetPowerPricesData:
             An object containing the country-specific data.
         """
         self.path = path
+        self.requestData = requestData
         self.location = requestData.location
         self.countryData = countryData
         self.distributionPrices = self._get_distribution_prices()
@@ -76,7 +77,7 @@ class GetPowerPricesData:
         List[float]
             A list of distribution prices.
         """
-        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}_{suffix}.csv", header=0, index_col=0, parse_dates=True)
+        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}{'_' + self.requestData.systemType if self.location.countryCode == 'EE' else ''}.csv", header=0, index_col=0, parse_dates=True)
         return [prices.item() for prices in dist_prices.values]
 
     def _calculate_buying_price(self) -> List[float]:
@@ -135,7 +136,7 @@ class GetPowerPricesData:
                     powerPrices[t]
                     + distributionPrices[t] # assuming that distribution price includes RES levy and electricity price duty
                 )
-                *  (1 + (countryData.vat if self.Scenario.request.systemType in ["house", "building"] else 0))
+                *  (1 + (countryData.vat if self.requestData.systemType in ["house", "building"] else 0))
                 for t in range(len(powerPrices))
             ]
         else:
