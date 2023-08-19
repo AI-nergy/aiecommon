@@ -99,8 +99,7 @@ class GetPowerPricesData:
         """
         return [price * (1 - self.countryData.penaltySellingPowerPrice) for price in self.__powerPrices]
 
-    @staticmethod
-    def _buying_price_function_per_country(countryCode: str, countryData: CountryData, powerPrices: list, distributionPrices: list):
+    def _buying_price_function_per_country(self, countryCode: str, countryData: CountryData, powerPrices: list, distributionPrices: list):
         """
         Calculate the buying price for electricity based on the country code, country data, power prices, and distribution prices.
 
@@ -136,7 +135,7 @@ class GetPowerPricesData:
                     powerPrices[t]
                     + distributionPrices[t] # assuming that distribution price includes RES levy and electricity price duty
                 )
-                *  * (1 + (countryData.vat if Scenario.request.systemType in ["house", "building"] else 0))
+                *  (1 + (countryData.vat if self.Scenario.request.systemType in ["house", "building"] else 0))
                 for t in range(len(powerPrices))
             ]
         else:
