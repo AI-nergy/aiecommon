@@ -131,13 +131,12 @@ class GetPowerPricesData:
                 countryData.feeMarketOperator + 
                 countryData.feeExciseDutyOfElectricity) * (countryData.vat + 1) for price in powerPrices]
         elif countryCode == "EE":
-            building_type = np.random.choice(["residential", "commercial"]) # dummy
             return [
                 (
                     powerPrices[t]
                     + distributionPrices[t] # assuming that distribution price includes RES levy and electricity price duty
                 )
-                *  * (1 + countryData.vat if building_type == "residential" else 0)
+                *  * (1 + (countryData.vat if Scenario.request.systemType in ["house", "building"] else 0))
                 for t in range(len(powerPrices))
             ]
         else:
