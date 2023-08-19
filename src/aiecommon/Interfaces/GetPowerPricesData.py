@@ -67,7 +67,7 @@ class GetPowerPricesData:
         # Select bidding region
         return [price / 1000 for price in ele_prices[self.location.biddingZone]]
 
-    def _get_distribution_prices(self) -> List[float]:
+    def _get_distribution_prices(self, suffix: str="") -> List[float]:
         """
         Returns a list of distribution prices for the specified country.
 
@@ -76,7 +76,7 @@ class GetPowerPricesData:
         List[float]
             A list of distribution prices.
         """
-        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}.csv", header=0, index_col=0, parse_dates=True)
+        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}_{suffix}.csv", header=0, index_col=0, parse_dates=True)
         return [prices.item() for prices in dist_prices.values]
 
     def _calculate_buying_price(self) -> List[float]:
