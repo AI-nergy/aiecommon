@@ -3,16 +3,19 @@ from typing import Dict, List, Optional, Union
 
 from ..Models import ElectricVehicle, HeatPump, MeterData, Rooftop, TechnoEconomicData, Location
 from aiecommon.Exceptions import AieException
-from .data_model_base import DataModelBase
+from ..DataModels import SystemOptimisationType
+from ..DataModels.data_model_base import DataModelBase
+
+MINIMUM_YEARLY_CONSUMPTION = 2500
 
 class InputData(DataModelBase):
 #class InputData(BaseModel):
         # Constants
-    MINIMUM_YEARLY_CONSUMPTION: Optional[int] = 2500
     # Values
     referenceId: str
     location: Location
     systemType: str
+    systemOptimisationType: SystemOptimisationType
     yearlyConsumption: Optional[float]
     meterData: Optional[MeterData]
     technoEconomicData: Optional[TechnoEconomicData]
@@ -20,15 +23,16 @@ class InputData(DataModelBase):
     heatPump: Optional[HeatPump]
     outputFormat: Optional[str]
     rooftopSummaryTable: Optional[List[Rooftop]]
-    pvOptimizationType: Optional[str]
 
+    # TODONACHO: CONSUMPTION_TOO_LOW shouldn't be an error
+    # Actually, implement better error handling in the API response, separate errors for rooftop and optimiser
     # check that consumption is big enough
     @validator('yearlyConsumption', pre=True, allow_reuse=True)
     def check_yearly_consumption(cls, v, values):
         if v is None:
             return v
-        if int(v) < values["MINIMUM_YEARLY_CONSUMPTION"]:
-            raise AieException(AieException.CONSUMPTION_TOO_LOW, data={"minimumConsumption": values["MINIMUM_YEARLY_CONSUMPTION"]})
+        if int(v) < MINIMUM_YEARLY_CONSUMPTION:
+            raise AieException(AieException.CONSUMPTION_TOO_LOW, data={"minimumConsumption": MINIMUM_YEARLY_CONSUMPTION})
         return v
 
     # check that if no meter data is provided, consumption is provided

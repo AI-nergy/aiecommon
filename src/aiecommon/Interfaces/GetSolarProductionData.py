@@ -8,15 +8,15 @@ from pvlib._deprecation import pvlibDeprecationWarning
 import sys
 from pathlib import Path
 from timezonefinder import TimezoneFinder
-from ..DataModels import InputData
+from ..Models import InputData
 from .GetClosestInlandPoint import ClosestInlandPoint
 import logging
 from aiecommon.Exceptions import AieException
 
 class GetSolarProductionData:
-    def __init__(self, request: InputData) -> None:
-        self.request = request
-        self.location = request.location
+    def __init__(self, input_data: InputData) -> None:
+        self.input_data = input_data
+        self.location = input_data.location
         self.Production = self._power_pv_production()
 
     def _power_pv_production(self):
@@ -37,7 +37,7 @@ class GetSolarProductionData:
                     side.rooftopSideSlopeDegrees,
                     side.orientationDegrees,  # This has to be in degrees
                 )
-                for idx, side in enumerate(self.request.rooftopSummaryTable)
+                for idx, side in enumerate(self.input_data.rooftopSummaryTable)
             }
         except Exception:
             logging.info("Original API call to PVgis failed. We are trying to find the closest inland point.")
@@ -52,7 +52,7 @@ class GetSolarProductionData:
                                 side.rooftopSideSlopeDegrees,
                                 side.orientationDegrees,  # This has to be in degrees
                             )
-                            for idx, side in enumerate(self.request.rooftopSummaryTable)
+                            for idx, side in enumerate(self.input_data.rooftopSummaryTable)
                         }  
                         logging.info(f"Coordinates considered for the PV Production API changed to ({point.latitude},{point.longitude})") 
                         return pv_production

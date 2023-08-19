@@ -6,7 +6,7 @@ import matplotlib.path as mpltPath
 import logging
 
 
-from aiecommon.DataModels import InputData
+from aiecommon.Models import InputData
 from aiecommon.FileSystem import LocalDataFiles
 
 #         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
@@ -21,9 +21,9 @@ from aiecommon.FileSystem import LocalDataFiles
 #
 
 class GetCountryCodeBiddingZone:
-    def __init__(self, request: InputData) -> None:
+    def __init__(self, input_data: InputData) -> None:
 
-        self.request = request
+        self.input_data = input_data
 
         #self.polygons = json.load(open("modules/aiesolar/rooftop/data/biddingZonesPolygonsFiltered.json"))
         #self.polygons = json.load(importlib.resources.files("aiecommon").joinpath("data/biddingZonesPolygonsFiltered.json").open())
@@ -37,9 +37,9 @@ class GetCountryCodeBiddingZone:
 
     # this function returns bidding zone based on coordinates, and 501 error if the requested location is not implemented yet
     def _getPolygonBiddingZone(self):  # sourcery skip: raise-specific-error        
-        logging.info(f"self.request: {self.request}")
+        logging.info(f"self.input_data: {self.input_data}")
         point = [
-            (self.request.location.longitude, self.request.location.latitude)
+            (self.input_data.location.longitude, self.input_data.location.latitude)
         ]  # because crs84 is in lon, lat, otherwise it is the same as epsg4326
         filteredGeoJSON = self.polygons
         biddingZone = None
@@ -61,10 +61,10 @@ class GetCountryCodeBiddingZone:
     # this function maps bidding zone to the country from predefined json file
     def getCountryCodeFromBiddingZone(self):
         # call bidding zone function
-        self.request.location.biddingZone = self._getPolygonBiddingZone()
-        if not self.request.location.biddingZone:
+        self.input_data.location.biddingZone = self._getPolygonBiddingZone()
+        if not self.input_data.location.biddingZone:
             return None
         for key, values in self.countryCodeBiddingZone.items():
-            if self.request.location.biddingZone in values:
-                self.request.location.countryCode = key
+            if self.input_data.location.biddingZone in values:
+                self.input_data.location.countryCode = key
                 return key

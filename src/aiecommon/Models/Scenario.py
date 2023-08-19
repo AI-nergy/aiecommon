@@ -1,18 +1,19 @@
-from aiecommon.Models import Location
-from ..DataModels import TechnicalData, InputData, CountryData 
-#from DataModels.CountryData import CountryData 
-
-from ..Interfaces import GetSolarProductionData, GetPowerPricesData, GetDemandData, GetInvestmentData, GetEmissionsData
 import pandas as pd
 import json
 import logging
+
+from ..DataModels import CountryData 
+from .Location import Location
+from .TechnicalData import TechnicalData
+from .InputData import InputData
+from ..Interfaces import GetSolarProductionData, GetPowerPricesData, GetDemandData, GetInvestmentData, GetEmissionsData
 
 class Scenario: 
     """
     A class representing a scenario of solar panel production and power consumption data for a given location in a specific country.
     
     Attributes:
-        InputData (InputData): The request data to generate the scenario. 
+        InputData (InputData): The input data to generate the scenario. 
         CountryData (CountryData): The relevant data about the target country.
         Location (LocationData): The data about the requested location.
         RoofTopsides (list): A list of integers representing the sides of rooftops available for installation.
@@ -25,27 +26,28 @@ class Scenario:
         DiscardedRooftopSides (list): A list of rooftop sides that cannot be installed on due to capacity limitations.
     """
     
-    def __init__(self, request: InputData) -> None:
+    def __init__(self, input_data: InputData) -> None:
         """
         Constructs all necessary attributes for the Scenario object.
 
         Args:
-            request (InputData): The request data to generate the scenario.
+            input_data (InputData): The input data to generate the scenario.
         """
-        self.InputData = request
-        #self.CountryData = CountryData.from_json(path = "modules/aiesolar/optimizer/data/CountryData.json", request= request)
-        self.CountryData = CountryData.from_json(path="modules/aiesolar/optimizer/data/shared/CountryData.json", key=request.location.countryCode)
+        self.InputData = input_data
+        #logging.info(self.InputData)
+        #self.CountryData = CountryData.from_json(path = "modules/aiesolar/optimizer/data/CountryData.json", input_data=input_data)
+        self.CountryData = CountryData.from_json(path="modules/aiesolar/optimizer/data/shared/CountryData.json", key=self.InputData.location.countryCode)
 
-        self.Location = request.location
+        self.Location = input_data.location
         self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/shared/TechnicalData.json")
         self.RoofTopsides = list(range(len(self.InputData.rooftopSummaryTable)))
-        self.ConsumptionData = GetDemandData(path="modules/aiesolar/optimizer/data/shared", request= self.InputData, technicalData=self.TechnicalData)
+        self.ConsumptionData = GetDemandData(path="modules/aiesolar/optimizer/data/shared", input_data= self.InputData, technicalData=self.TechnicalData)
         self.Demand = self.ConsumptionData.Demand
         logging.info(f"starting to get solar production data from external API")
-        self.Production = GetSolarProductionData(request= self.InputData).Production
+        self.Production = GetSolarProductionData(input_data= self.InputData).Production
         logging.info(f"finished getting solar production data from external API")
-        self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData)
-        self.co2_emissions = GetEmissionsData(path="modules/aiesolar/optimizer/data", requestData=request, countryData = self.CountryData).co2_emissions
+        self.Prices = GetPowerPricesData(path="modules/aiesolar/optimizer/data", input_data=input_data, countryData = self.CountryData)
+        self.co2_emissions = GetEmissionsData(path="modules/aiesolar/optimizer/data", input_data=input_data, countryData = self.CountryData).co2_emissions
         self.TimeWindow = range(len(self.Demand)) # one year houly data
         self.InvestmentData = GetInvestmentData(
                     countryData=self.CountryData, technicalData=self.TechnicalData

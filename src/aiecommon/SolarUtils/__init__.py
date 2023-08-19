@@ -1,5 +1,5 @@
 from .GetCountryCodeBiddingZone import GetCountryCodeBiddingZone
-from ..DataModels import InputData
+from ..Models import InputData
 
 import json
 import logging

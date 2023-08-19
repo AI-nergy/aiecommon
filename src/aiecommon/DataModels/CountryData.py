@@ -3,10 +3,12 @@ from typing import Optional
 import json
 import logging
 
-from ..Models import BiddingRegion, PricesTechnologies
+from .BiddingRegion import BiddingRegion
+from .PricesTechnologies import PricesTechnologies
 from ..Exceptions import AieException
 from .data_model_base import DataModelBase
 
+#class CountryData(BaseModel):
 class CountryData(DataModelBase):
     investmentSubsidy: float
     biddingRegions: list[BiddingRegion]

@@ -1,7 +1,8 @@
 import pandas as pd
 from typing import List
 import sys; sys.path.append('../..')
-from aiecommon.DataModels import InputData, CountryData
+from aiecommon.DataModels import CountryData
+from aiecommon.Models import InputData
 
 class GetPowerPricesData:
     """
@@ -31,7 +32,7 @@ class GetPowerPricesData:
 
     """
 
-    def __init__(self, path: str, requestData: InputData, countryData: CountryData) -> None:
+    def __init__(self, path: str, input_data: InputData, countryData: CountryData) -> None:
         """
         Initializes the GetPowerPricesData class.
 
@@ -39,13 +40,13 @@ class GetPowerPricesData:
         -----------
         path : str
             The path to the directory where the CSV files are stored.
-        requestData : InputData
+        input_data : InputData
             An object containing the location data.
         countryData : CountryData
             An object containing the country-specific data.
         """
         self.path = path
-        self.location = requestData.location
+        self.location = input_data.location
         self.countryData = countryData
         self.distributionPrices = self._get_distribution_prices()
         self.__powerPrices = self._get_nordpool_prices()

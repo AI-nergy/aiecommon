@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 import json 
 from typing import Optional
+from ..DataModels.data_model_base import DataModelBase
 from ..Models import Photovoltaic, Battery, ElectricVehicle, Inverter, HeatPump
-from .data_model_base import DataModelBase
 
 class TechnicalData(DataModelBase):
     Photovoltaic: Optional[Photovoltaic]

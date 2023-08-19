@@ -1,6 +1,7 @@
 from typing import Optional
 import sys; sys.path.append('../..')
-from aiecommon.DataModels import CountryData, TechnicalData
+from aiecommon.DataModels import CountryData
+from aiecommon.Models import TechnicalData
 
 
 class GetInvestmentData:
