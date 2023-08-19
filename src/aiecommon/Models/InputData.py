@@ -24,6 +24,10 @@ class InputData(DataModelBase):
     outputFormat: Optional[str]
     rooftopSummaryTable: Optional[List[Rooftop]]
 
+    # Needed only for SolarPLanner, until we upgrade it to polling instead of POST
+    # We don't publish this field in the API documentation
+    callbackUrl: Optional[str]
+
     # TODONACHO: CONSUMPTION_TOO_LOW shouldn't be an error
     # Actually, implement better error handling in the API response, separate errors for rooftop and optimiser
     # check that consumption is big enough
