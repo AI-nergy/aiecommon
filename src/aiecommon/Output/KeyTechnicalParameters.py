@@ -8,7 +8,7 @@ class KeyTechnicalParameters(BaseModel):
     batteryCapacity: float
     yearlySolarPlantProduction: int
     selfSufficiencyYearly: int
-    curtailedProductionAbosulute: int
+    curtailedProductionAbsolute: int
     curtailedProductionPercentage: int
     co2Reduction: int
     estimatedHeatPumpConsumption: Optional[int]
