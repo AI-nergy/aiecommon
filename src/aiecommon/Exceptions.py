@@ -18,10 +18,13 @@ class AieException(Exception):
     MODEL_SOLUTION_NOT_FOUND = "MODEL_SOLUTION_NOT_FOUND"
 
     log_message: str
+    error_code: str
 
     def __init__(self, error_code: str, log_message: str = None, data: dict = None):
         super().__init__(error_code)
 
+        self.error_code = error_code
+        
         if not log_message:
             self.log_message = error_code
         else:
