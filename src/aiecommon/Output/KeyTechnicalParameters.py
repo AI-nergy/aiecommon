@@ -11,6 +11,6 @@ class KeyTechnicalParameters(BaseModel):
     curtailedProductionAbsolute: int
     curtailedProductionPercentage: int
     co2Reduction: int
-    estimatedHeatPumpConsumption: Optional[int]
-    EVplannedConsumption: Optional[int]
-    EVexistsConsumption: Optional[int]
+    estimatedHeatPumpConsumption: Optional[int] = None
+    EVplannedConsumption: Optional[int] = None
+    EVexistsConsumption: Optional[int] = None

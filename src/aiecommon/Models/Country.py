@@ -16,7 +16,7 @@ class Country(BaseModel):
     boundingPolyXY: bool
     folderId: str
     fileMapName: str
-    buildingPolygonsNameFile: Optional[str]
+    buildingPolygonsNameFile: Optional[str] = None
     PolyNameYX:  Optional[bool] = False
-    buildingPolygonsEPSG: Optional[int]
-    buildingPolygonsResolution: Optional[int]
+    buildingPolygonsEPSG: Optional[int] = None
+    buildingPolygonsResolution: Optional[int] = None
