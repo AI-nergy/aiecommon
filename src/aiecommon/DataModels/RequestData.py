@@ -11,14 +11,14 @@ class RequestData(BaseModel):
     referenceId: str
     location: Location
     systemType: str
-    yearlyConsumption: Optional[float]
-    meterData: Optional[MeterData]
-    technoEconomicData: Optional[TechnoEconomicData]
-    electricVehicle: Optional[ElectricVehicle]
-    heatPump: Optional[HeatPump]
-    outputFormat: Optional[str]
-    rooftopSummaryTable: Optional[List[Rooftop]]
-    pvOptimizationType: Optional[str]
+    yearlyConsumption: Optional[float] = None
+    meterData: Optional[MeterData] = None
+    technoEconomicData: Optional[TechnoEconomicData] = None
+    electricVehicle: Optional[ElectricVehicle] = None
+    heatPump: Optional[HeatPump] = None
+    outputFormat: Optional[str] = None
+    rooftopSummaryTable: Optional[List[Rooftop]] = None
+    pvOptimizationType: Optional[str] = None
 
 
     # check that consumption is big enough

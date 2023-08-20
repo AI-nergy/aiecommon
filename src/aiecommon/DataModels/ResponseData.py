@@ -7,9 +7,9 @@ from ..Output import ResultStructure, ErrorMessage
 
 class ResponseData(BaseModel):
     success: bool
-    result: Optional[ResultStructure]
-    resultCheckUrl: Optional[str]
-    errorMessage: Optional[ErrorMessage]
+    result: Optional[ResultStructure] = None
+    resultCheckUrl: Optional[str] = None
+    errorMessage: Optional[ErrorMessage] = None
 
     # Validate True success
     @validator('success')

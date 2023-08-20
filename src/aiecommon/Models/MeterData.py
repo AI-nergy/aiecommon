@@ -3,5 +3,5 @@ from typing import Optional
 from .TimeSeries import TimeSeries
 
 class MeterData(BaseModel):
-    pvGeneration: TimeSeries
-    electricityDemand: TimeSeries
+    pvGeneration: Optional[TimeSeries] = None
+    electricityDemand: Optional[TimeSeries] = None
