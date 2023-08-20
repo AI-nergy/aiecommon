@@ -13,7 +13,7 @@ from .InvestmentCostBreakdown import InvestmentCostBreakdown
 from .MonthlyBalance import MonthlyBalance
 from .HourlyElectricityFlow import HourlyElectricityFlow
 
-class OptimizationResults(BaseModel):
+class OptimisationResults(BaseModel):
     typeOfResult: SystemOptimisationType
     keyEconomicIndicators: KeyEconomicIndicators
     keyTechnicalParameters: KeyTechnicalParameters

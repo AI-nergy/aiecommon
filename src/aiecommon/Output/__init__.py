@@ -1,5 +1,5 @@
 
-from .OptimizationResults import OptimizationResults
+from .OptimisationResults import OptimisationResults
 from .MonthlyBalance import MonthlyBalance
 from .MonthName import MonthName
 from .KeyEconomicIndicators import KeyEconomicIndicators

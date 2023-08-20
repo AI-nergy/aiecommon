@@ -1,8 +1,9 @@
 from pydantic import BaseModel
-from typing import Optional, Union, List
-from .OptimizationResults import OptimizationResults
+from typing import Optional, Union, List, Dict
+from .OptimisationResults import OptimisationResults
+from ..DataModels import SystemOptimisationType
 
 
 class ResultStructure(BaseModel):
-    roofTop: Optional[str]  # To be decided
-    optimization: Optional[List[OptimizationResults]]
+    rooftop: Optional[str]  # To be decided
+    optimisation: Optional[Dict[SystemOptimisationType, OptimisationResults]] = {}
