@@ -135,6 +135,8 @@ class GetPowerPricesData:
                 (
                     powerPrices[t]
                     + distributionPrices[t] # assuming that distribution price includes RES levy and electricity price duty
+                    + countryData.renewableEnergyLevy
+                    + countryData.electricityExerciseDuty
                 )
                 *  (1 + (countryData.vat if self.requestData.systemType in ["house", "building"] else 0))
                 for t in range(len(powerPrices))
