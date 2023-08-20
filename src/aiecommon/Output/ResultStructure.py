@@ -6,4 +6,4 @@ from ..DataModels import SystemOptimisationType
 
 class ResultStructure(BaseModel):
     optimisation: Optional[Dict[SystemOptimisationType, OptimisationResults]] = {}
-    roofTop: Optional[str] = None  # To be decided
+    rooftop: Optional[str] = None  # To be decided
