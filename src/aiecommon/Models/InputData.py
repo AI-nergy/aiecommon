@@ -15,7 +15,7 @@ class InputData(DataModelBase):
     referenceId: str
     location: Location
     systemType: str
-    systemOptimisationType: SystemOptimisationType
+    systemOptimisationType: Optional[SystemOptimisationType]
     yearlyConsumption: Optional[float]
     meterData: Optional[MeterData]
     technoEconomicData: Optional[TechnoEconomicData]
