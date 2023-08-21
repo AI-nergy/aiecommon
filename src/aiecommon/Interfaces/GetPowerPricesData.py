@@ -47,6 +47,7 @@ class GetPowerPricesData:
         """
         self.path = path
         self.location = input_data.location
+        self.input_data = input_data
         self.countryData = countryData
         self.distributionPrices = self._get_distribution_prices()
         self.__powerPrices = self._get_nordpool_prices()
@@ -68,7 +69,7 @@ class GetPowerPricesData:
         # Select bidding region
         return [price / 1000 for price in ele_prices[self.location.biddingZone]]
 
-    def _get_distribution_prices(self) -> List[float]:
+    def _get_distribution_prices(self, suffix: str="") -> List[float]:
         """
         Returns a list of distribution prices for the specified country.
 
@@ -77,7 +78,7 @@ class GetPowerPricesData:
         List[float]
             A list of distribution prices.
         """
-        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}.csv", header=0, index_col=0, parse_dates=True)
+        dist_prices = pd.read_csv(f"{self.path}/{self.location.countryCode.lower()}/DistributionPrice{self.location.countryCode}{'_' + self.input_data.systemType if self.location.countryCode == 'EE' else ''}.csv", header=0, index_col=0, parse_dates=True)
         return [prices.item() for prices in dist_prices.values]
 
     def _calculate_buying_price(self) -> List[float]:
@@ -100,8 +101,7 @@ class GetPowerPricesData:
         """
         return [price * (1 - self.countryData.penaltySellingPowerPrice) for price in self.__powerPrices]
 
-    @staticmethod
-    def _buying_price_function_per_country(countryCode: str, countryData: CountryData, powerPrices: list, distributionPrices: list):
+    def _buying_price_function_per_country(self, countryCode: str, countryData: CountryData, powerPrices: list, distributionPrices: list):
         """
         Calculate the buying price for electricity based on the country code, country data, power prices, and distribution prices.
 
@@ -131,5 +131,16 @@ class GetPowerPricesData:
                 countryData.feeSupportingRES + 
                 countryData.feeMarketOperator + 
                 countryData.feeExciseDutyOfElectricity) * (countryData.vat + 1) for price in powerPrices]
+        elif countryCode == "EE":
+            return [
+                (
+                    powerPrices[t]
+                    + distributionPrices[t] # assuming that distribution price includes RES levy and electricity price duty
+                    + countryData.renewableEnergyLevy
+                    + countryData.electricityExerciseDuty
+                )
+                *  (1 + (countryData.vat if self.input_data.systemType in ["house", "building"] else 0))
+                for t in range(len(powerPrices))
+            ]
         else:
             return [price * 1.15 for price in powerPrices]
