@@ -37,7 +37,7 @@ class GetSolarProductionData:
                     side.rooftopSideSlopeDegrees,
                     side.orientationDegrees,  # This has to be in degrees
                 )
-                for idx, side in enumerate(self.input_data.rooftopSummaryTable)
+                for idx, side in enumerate(self.input_data.rooftopResult.rooftopSummaryTable)
             }
         except Exception:
             logging.info("Original API call to PVgis failed. We are trying to find the closest inland point.")
@@ -52,7 +52,7 @@ class GetSolarProductionData:
                                 side.rooftopSideSlopeDegrees,
                                 side.orientationDegrees,  # This has to be in degrees
                             )
-                            for idx, side in enumerate(self.input_data.rooftopSummaryTable)
+                            for idx, side in enumerate(self.input_data.rooftopResult.rooftopSummaryTable)
                         }  
                         logging.info(f"Coordinates considered for the PV Production API changed to ({point.latitude},{point.longitude})") 
                         return pv_production

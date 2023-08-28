@@ -1,7 +1,7 @@
 from pydantic import BaseModel, validator
 from typing import Dict, List, Optional, Union
 
-from ..Models import ElectricVehicle, HeatPump, MeterData, Rooftop, TechnoEconomicData, Location
+from ..Models import ElectricVehicle, HeatPump, MeterData, Rooftop, TechnoEconomicData, Location, ResponseBody
 from aiecommon.Exceptions import AieException
 from ..DataModels import SystemOptimisationType
 from ..DataModels.data_model_base import DataModelBase
@@ -22,8 +22,8 @@ class InputData(DataModelBase):
     electricVehicle: Optional[ElectricVehicle]
     heatPump: Optional[HeatPump]
     outputFormat: Optional[str]
-    rooftopSummaryTable: Optional[List[Rooftop]]
-
+    rooftopResult: Optional[ResponseBody] 
+    
     # Private Values (not published in the API)
     systemOptimisationType: Optional[SystemOptimisationType]
 
