@@ -15,7 +15,7 @@ class InputData(DataModelBase):
     referenceId: str
     location: Location
     systemType: str
-    systemOptimisationTypes: Optional[List[SystemOptimisationType]]
+    requestedOptimisationTypes: Optional[List[SystemOptimisationType]]
     yearlyConsumption: Optional[float]
     meterData: Optional[MeterData]
     technoEconomicData: Optional[TechnoEconomicData]
@@ -25,7 +25,7 @@ class InputData(DataModelBase):
     rooftopResult: Optional[ResponseBody] 
     
     # Private Values (not published in the API)
-    systemOptimisationType: Optional[SystemOptimisationType]
+    resultOptimizationType: Optional[SystemOptimisationType]
 
     # Needed only for SolarPLanner, until we upgrade it to polling instead of POST
     # We don't publish this field in the API documentation
