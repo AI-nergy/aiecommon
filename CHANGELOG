@@ -1,3 +1,7 @@
+0.1.9.24
+
+Fix some names of properties in InputData
+
 0.1.9.23
 
 Adjust InputData to meet new API specifications, allow sending of all rooftop data to optimizer
