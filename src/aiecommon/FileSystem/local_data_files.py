@@ -3,8 +3,7 @@ import json
 import importlib.resources
 
 from .file_system_base import FileSystemBase
-import aiecommon
-from aiecommon import Exceptions
+from aiecommon.Exceptions import AieException
 
 class LocalDataFiles(FileSystemBase):
 
@@ -40,7 +39,7 @@ class LocalDataFiles(FileSystemBase):
             for suggestedFile in suggestedFiles:
                 logging.error(suggestedFile)
 
-        raise Exceptions.AieException(Exceptions.AieException.GENERIC_PYTHON_ERROR, f"LocalDataFiles, file not found filePath={filePath}, package={package} suggestedFiles={suggestedFiles}")
+        raise AieException(AieException.GENERIC_PYTHON_ERROR, f"LocalDataFiles, file not found filePath={filePath}, package={package} suggestedFiles={suggestedFiles}")
 
     @classmethod
     def open_file(cls, filePath, package = None):
