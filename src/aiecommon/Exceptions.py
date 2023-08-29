@@ -1,4 +1,17 @@
 import logging
+import json
+
+class AieError(dict):
+
+    log_message: str
+    code: str
+    data: dict
+
+    def __init__(self, code: str, data: dict = None):
+        super().__init__(code=code, data=data )
+
+        self.code = code
+        self.data = data
 
 class AieException(Exception):
 
@@ -48,9 +61,9 @@ class AieException(Exception):
     @staticmethod
     def error(code, data, source, logMessage = "", exception = None):
 
-        error = AieException(code, logMessage, data)
+        error = AieError(code, data)
 
-        logging.info(f"AieException.error: error={error}, logMessage={logMessage}, Exception Name: {type(exception).__name__}, exception={exception}")
+        logging.error(f"AieException.error: error={error}, logMessage={logMessage}, source={source}, exception Name: {type(exception).__name__}, exception={exception}")
 
         if (exception is not None):
             logging.exception("Caught exception!")
