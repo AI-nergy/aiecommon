@@ -53,7 +53,7 @@ class InputData(DataModelBase):
     @validator('resultOptimizationType', pre=True, allow_reuse=True)
     def check_result_optimisation_type_and_rooftop_result(cls, v, values):
         if v is not None and v not in SystemOptimisationType.optimizationOnlyAllowedTypes() and ('rooftopResult' not in values or not values['rooftopResult']):
-            raise AieException(AieException.INVALID_INPUT_DATA, "", {"msg": f"For system optimization {v} we need to run rooftop first. Please use only {SystemOptimisationType.optimizationOnlyAllowedTypes()} with /solar/optmizer, or use '/solar' API endpoint for other optimization types."})
+            raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "requestedOptimisationTypes", "message": f"For system optimization {v} we need to run rooftop first. Please use only {SystemOptimisationType.optimizationOnlyAllowedTypes()} with /solar/optmizer, or use '/solar' API endpoint for other optimization types."})
         return v   
 
 
