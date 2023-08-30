@@ -56,7 +56,9 @@ class Logger:
             log filename in the format 'log_info_{ref_id}_{current_time}.log'
         """
         current_time = datetime.datetime.now().strftime("%Y_%m_%d_%H%M%S")
-        return f"{Logger.LOG_FOLDER}/log_info_{current_time}.log"
+        log_filename = os.path.join(Logger.LOG_FOLDER, f"log_info_{current_time}.log")
+        print("Logger, log_filename:", log_filename)
+        return log_filename
 
     def _generate_logger_folder_if_not_exists():
         """
