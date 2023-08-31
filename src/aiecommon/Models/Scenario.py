@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import logging
 
-from ..DataModels import CountryData 
+from ..DataModels import CountryData, SystemOptimisationType 
 from .Location import Location
 from .TechnicalData import TechnicalData
 from .InputData import InputData
