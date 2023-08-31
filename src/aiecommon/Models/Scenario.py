@@ -36,11 +36,14 @@ class Scenario:
         self.InputData = input_data
         #logging.info(self.InputData)
         #self.CountryData = CountryData.from_json(path = "modules/aiesolar/optimizer/data/CountryData.json", input_data=input_data)
+        if self.InputData.resultOptimizationType == SystemOptimisationType.SYSTEM_OPTIMISATION_TYPE_BATTERY_ONLY:
+            self.RoofTopsides = []
+            self.MeterData = self.InputData.meterData
+        else:
+            self.RoofTopsides = list(range(len(self.InputData.rooftopResult.rooftopSummaryTable)))
         self.CountryData = CountryData.from_json(path="modules/aiesolar/optimizer/data/shared/CountryData.json", key=self.InputData.location.countryCode)
-
         self.Location = input_data.location
         self.TechnicalData = TechnicalData.from_json(path="modules/aiesolar/optimizer/data/shared/TechnicalData.json")
-        self.RoofTopsides = list(range(len(self.InputData.rooftopResult.rooftopSummaryTable)))
         self.ConsumptionData = GetDemandData(path="modules/aiesolar/optimizer/data/shared", input_data= self.InputData, technicalData=self.TechnicalData)
         self.Demand = self.ConsumptionData.Demand
         logging.info(f"starting to get solar production data from external API")
