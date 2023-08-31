@@ -11,13 +11,17 @@ class Logger:
     Methods
     -------
     generate_logger()
-          Generates a logger object
+        Generates a logger object
     """
+    def __init__(self, path) -> None:
+        self.path = path
+        # Create folder in case it does not exist
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
 
-    LOG_FOLDER = "./logs"
 
-    @staticmethod
-    def generate_logger():
+
+    def generate_logger(self):
         """
         Generates a logger object
 
@@ -26,14 +30,11 @@ class Logger:
         logger object
             An instance of the configured logger
         """
-
-        Logger._generate_logger_folder_if_not_exists()
-        Logger._setup_logger()
+        self._setup_logger()
 
         return logging.getLogger(__name__)
- 
-    @staticmethod
-    def _setup_logger():
+
+    def _setup_logger(self):
         """
         Configures the logging settings for the logger
         """
@@ -43,11 +44,10 @@ class Logger:
             format="%(asctime)s %(filename)-5s %(levelname)-8s %(message)s",
             datefmt="%d/%m/%Y %H:%M:%S",
             filemode="a",
-            filename=Logger._get_log_filename()
+            filename=self._get_log_filename()
         )
 
-    @staticmethod
-    def _get_log_filename():
+    def _get_log_filename(self):
         """
         Creates a log file name based on the current time
         Returns
@@ -56,11 +56,4 @@ class Logger:
             log filename in the format 'log_info_{ref_id}_{current_time}.log'
         """
         current_time = datetime.datetime.now().strftime("%Y_%m_%d_%H%M%S")
-        return f"{Logger.LOG_FOLDER}/log_info_{current_time}.log"
-
-    def _generate_logger_folder_if_not_exists():
-        """
-        Generates a logger folder if it does not exist
-        """
-        if not os.path.exists(Logger.LOG_FOLDER):
-            os.makedirs(Logger.LOG_FOLDER)
+        return f"{self.path}/log_info_{current_time}.log"
