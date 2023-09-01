@@ -48,3 +48,15 @@ class InputData(DataModelBase):
         if v is None and values['yearlyConsumption'] is None:
             raise AieException(AieException.NO_CONSUMPTION_PROVIDED)
         return v   
+
+    # check that resultOptimizationType is among the optimization types which don't need rooftop data, or rooftop data is provided
+    @validator('resultOptimizationType', pre=True, allow_reuse=True)
+    def check_result_optimisation_type_and_rooftop_result(cls, v, values):
+        if v is not None and v not in SystemOptimisationType.optimizationOnlyAllowedTypes() and ('rooftopResult' not in values or not values['rooftopResult']):
+            raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "requestedOptimisationTypes", "message": f"For system optimization {v} we need to run rooftop first. Please use only {SystemOptimisationType.optimizationOnlyAllowedTypes()} with /solar/optmizer, or use '/solar' API endpoint for other optimization types."})
+        return v   
+
+
+    class Config:
+#        validate_assignment = True
+        pass
