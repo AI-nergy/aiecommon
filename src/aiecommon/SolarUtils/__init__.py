@@ -6,10 +6,16 @@ import logging
 import os
 
 
+
 class SolarUtils:
-    def __init__(self):
+
+    def __init__(self, input_data: InputData):
         pass
-    
+        self.biddingZone = GetCountryCodeBiddingZone(input_data) 
+
+    def getCountryCode():
+        return SolarUtils.biddingZone.getCountryCodeFromBiddingZone()
+
     @staticmethod
-    def getCountryCode(inputData: InputData):
-        return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
+    def getBiddingZone():
+        return SolarUtils.biddingZone._getPolygonBiddingZone()
