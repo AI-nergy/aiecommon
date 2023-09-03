@@ -13,9 +13,8 @@ class SolarUtils:
         pass
         self.biddingZone = GetCountryCodeBiddingZone(input_data) 
 
-    def getCountryCode():
-        return SolarUtils.biddingZone.getCountryCodeFromBiddingZone()
+    def getCountryCode(self):
+        return self.biddingZone.getCountryCodeFromBiddingZone()
 
-    @staticmethod
-    def getBiddingZone():
-        return SolarUtils.biddingZone._getPolygonBiddingZone()
+    def getBiddingZone(self):
+        return self.biddingZone._getPolygonBiddingZone()
