@@ -3,12 +3,11 @@ from typing import Optional
 import json
 import logging
 
-from .BiddingRegion import BiddingRegion
-from .PricesTechnologies import PricesTechnologies
+from ..Models import BiddingRegion, PricesTechnologies
 from ..Exceptions import AieException
+from .RequestData import RequestData
 from .data_model_base import DataModelBase
 
-#class CountryData(BaseModel):
 class CountryData(DataModelBase):
     investmentSubsidy: float
     biddingRegions: list[BiddingRegion]
@@ -64,3 +63,19 @@ class CountryData(DataModelBase):
             # If not raise an AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION exception
             logging.error(f"Country code {key} not supported for optimisation")
             raise AieException(AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION)
+
+
+    def from_json_old(path: str, request: RequestData = None):
+        # Open the specified JSON file
+        with open(path, 'r') as f:
+            # Load the contents of the file into a Python object using json library
+            country_data = json.loads(f.read())
+
+        # Check if input countryCode is present in the loaded data or not.
+        if request.location.countryCode.upper() not in country_data:
+            # If not raise an AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION exception
+            logging.error(f"Country code {request.location.countryCode} not supported")
+            raise AieException(AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION)
+        
+        # Return an instance of CountryData class representing data for the input country code
+        return CountryData(**country_data[request.location.countryCode])
