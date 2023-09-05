@@ -37,6 +37,13 @@ class CountryData(DataModelBase):
     electricityExerciseDuty : Optional[float]
     connectionFeeMonthly: Optional[dict]
     peakConsumptionFeeMonthlyPerKw: Optional[dict]
+    FeedInTariffPeak: Optional[float]
+    FeedInTariffOffPeak: Optional[float]
+    electricityTax: Optional[float]
+    fixedDeliveryCost: Optional[float]
+    gridManagementCost: Optional[float]
+    reductionEnergyTax: Optional[float]
+    feedInFactor: Optional[float]
 
     @classmethod
     def _validate(cls, data, key):
