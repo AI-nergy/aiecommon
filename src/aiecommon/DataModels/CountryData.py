@@ -3,12 +3,10 @@ from typing import Optional
 import json
 import logging
 
-from .BiddingRegion import BiddingRegion
-from .PricesTechnologies import PricesTechnologies
+from ..DataModels import BiddingRegion, PricesTechnologies
 from ..Exceptions import AieException
 from .data_model_base import DataModelBase
 
-#class CountryData(BaseModel):
 class CountryData(DataModelBase):
     investmentSubsidy: float
     biddingRegions: list[BiddingRegion]
@@ -37,6 +35,15 @@ class CountryData(DataModelBase):
     electricityExerciseDuty : Optional[float]
     connectionFeeMonthly: Optional[dict]
     peakConsumptionFeeMonthlyPerKw: Optional[dict]
+    deliveryCostPeak: Optional[float]
+    deliveryCostOffPeak: Optional[float]
+    feedInTariffPeak: Optional[float]
+    feedInTariffOffPeak: Optional[float]
+    electricityTax: Optional[float]
+    fixedDeliveryCost: Optional[float]
+    gridManagementCost: Optional[float]
+    reductionEnergyTax: Optional[float]
+    feedInFactor: Optional[float]
 
     @classmethod
     def _validate(cls, data, key):
@@ -55,3 +62,4 @@ class CountryData(DataModelBase):
             # If not raise an AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION exception
             logging.error(f"Country code {key} not supported for optimisation")
             raise AieException(AieException.COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION)
+
