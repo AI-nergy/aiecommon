@@ -3,7 +3,8 @@ from typing import Optional
 import json
 import logging
 
-from ..DataModels import BiddingRegion, PricesTechnologies
+from .BiddingRegion import BiddingRegion
+from .PricesTechnologies import PricesTechnologies
 from ..Exceptions import AieException
 from .data_model_base import DataModelBase
 
