@@ -25,9 +25,14 @@ class GetDemandData:
             self.total_heat_pump_consumption_planned = self._get_total_heat_pump_consumption() if self.input_data.heatPump.areaStructurePlanned else None
             self.total_heat_pump_consumption_exists = self._get_total_heat_pump_consumption() if self.input_data.heatPump.areaStructureExisting else None
         # Return hourly demand data
+# TODO: use the code below if we decide to allow less than 12 months and change the Month class
+#        if (input_data.meterData):
+#            self.Demand = input_data.meterData.electricityDemand.values
+#        else:
+#            self.Demand = self._return_hourly_demand_data(self)
         self.Demand = self._return_hourly_demand_data(self)
         
-    def _return_hourly_demand_data(self, path):
+    def _return_hourly_demand_data(self, path) -> list[float]:
         '''
         Here we return the hourly demand data, taking into account possible PLANNED ev and heat pump consumption
         As well as HP and EV consumption that already exists

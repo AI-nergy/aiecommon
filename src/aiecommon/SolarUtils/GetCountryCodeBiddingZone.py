@@ -37,7 +37,7 @@ class GetCountryCodeBiddingZone:
 
     # this function returns bidding zone based on coordinates, and 501 error if the requested location is not implemented yet
     def _getPolygonBiddingZone(self):  # sourcery skip: raise-specific-error        
-        logging.info(f"self.input_data: {self.input_data}")
+#        logging.info(f"self.input_data: {self.input_data}")
         point = [
             (self.input_data.location.longitude, self.input_data.location.latitude)
         ]  # because crs84 is in lon, lat, otherwise it is the same as epsg4326
