@@ -1,3 +1,7 @@
+0.1.9.30
+
+supress output of input data in GetCountryCodeBiddingZone (to avoid printing meterData because it's too long)
+
 0.1.9.29
 
 Merged all branches into new API structure, fixed conflicts
