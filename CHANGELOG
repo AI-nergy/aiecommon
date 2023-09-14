@@ -1,3 +1,7 @@
+0.1.9.31
+
+remove supportedCountries.json
+
 0.1.9.30
 
 supress output of input data in GetCountryCodeBiddingZone (to avoid printing meterData because it's too long)
