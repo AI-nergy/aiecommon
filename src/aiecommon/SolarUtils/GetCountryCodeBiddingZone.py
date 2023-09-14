@@ -11,14 +11,6 @@ from aiecommon.FileSystem import LocalDataFiles
 
 #         return GetCountryCodeBiddingZone(inputData).getCountryCodeFromBiddingZone()
 
-# TODO: what to do with this:
-#
-# check that the country is supported
-# with open("modules/aiesolar/rooftop/data/supportedCountries.json") as data:
-#     supportedCountries = json.load(data)
-#     if SolarUtils.getCountryCode(InputData(**orchestratorInput["inputData"])) not in supportedCountries["supportedCountries"]:
-#         return Utils.ErrorResponse(AieException.COUNTRY_NOT_SUPPORTED, None, "GetCountryCodeBiddingZone", 400)
-#
 
 class GetCountryCodeBiddingZone:
     def __init__(self, input_data: InputData) -> None:
