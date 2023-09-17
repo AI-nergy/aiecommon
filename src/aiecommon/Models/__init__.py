@@ -8,7 +8,6 @@ from .ElectricVehicle import ElectricVehicle
 from .Inverter import Inverter
 from .HeatPump import HeatPump
 from .Photovoltaic import Photovoltaic
-from .Scenario import Scenario
 from .SurfaceCapacityRatio import SurfaceCapacityRatio
 from .TimeSeries import TimeSeries
 from .ElectricVehicle import ElectricVehicle

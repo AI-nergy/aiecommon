@@ -1,6 +1,3 @@
 from .GetSolarProductionData import GetSolarProductionData
 from .GetDemandData import GetDemandData
-from .GetPowerPricesData import GetPowerPricesData
-from .GetInvestmentData import GetInvestmentData
 from .GetClosestInlandPoint import ClosestInlandPoint
-from .GetEmissionsData import GetEmissionsData
