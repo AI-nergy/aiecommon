@@ -12,6 +12,10 @@ class InputData(DataModelBase):
 #class InputData(BaseModel):
         # Constants
     # Values
+
+    # siteIdentifier is temporary until we eliminate POST and change SolarPlanner website to use poling
+    siteIdentifier: Optional[str]
+
     referenceId: str
     location: Location
     systemType: Optional[str]
