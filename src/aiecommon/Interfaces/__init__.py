@@ -1,3 +1,2 @@
-from .GetSolarProductionData import GetSolarProductionData
 from .GetDemandData import GetDemandData
 from .GetClosestInlandPoint import ClosestInlandPoint
