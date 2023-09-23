@@ -1,6 +1,10 @@
-0.1.9.32
+0.1.9.33
 
 temporarily add siteIdentifier to InputData
+
+0.1.9.32
+
+Move CountryData, GetEmissionsData, GetInvestmentData, GetPowerPricesData, Scenario to aienergy-main
 
 0.1.9.31
 
