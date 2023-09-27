@@ -22,9 +22,16 @@
     ],
     "AT": [
         "AT_WIEN",
-        "AT_VORARLBERG"
+        "AT_VORARLBERG",
+        "AT_STYRIA_NEW",
+        "AT_STYRIA_OLD",
+        "AT_KARINTHIATIROLSALZBURG",
+        "AT_BURGENLAND",
+        "AT_OBEROSTERREICH",
+        "AT_NIEDEROSTERREICH"
     ],
     "LU": "LU",
     "MT": "MT",
-    "GB_SCOTLAND": "GB_SCOTLAND"
+    "GB_SCOTLAND": "GB_SCOTLAND",
+    "HR": "HR"
 }
