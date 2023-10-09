@@ -1,3 +1,7 @@
+0.1.9.36
+
+add download_file() to FileSystemBase
+
 0.1.9.34
 
 move GetSolarProductionData to ainergy-main
