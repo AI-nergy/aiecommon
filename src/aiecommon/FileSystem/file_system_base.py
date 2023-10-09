@@ -22,8 +22,7 @@ class FileSystemBase:
         
 
     @classmethod
-    def open_file(cls, filePath, mode = "r", *args, **kwargs):
-        
+    def download_file(cls, filePath, mode = "r", *args, **kwargs):
         if cls in FileSystemBase.__object_list:
             object = FileSystemBase.__object_list[cls]
         else:
@@ -31,6 +30,14 @@ class FileSystemBase:
             FileSystemBase.__object_list[cls] = object
 
         resolvedFilePath = object.get_file(filePath, *args, **kwargs)
+
+        return resolvedFilePath
+
+
+    @classmethod
+    def open_file(cls, filePath, mode = "r", *args, **kwargs):
+        
+        resolvedFilePath = FileSystemBase.download_file(filePath, mode, args, kwargs)
 
         if (resolvedFilePath):
             fullFileDir = os.path.dirname(resolvedFilePath)
