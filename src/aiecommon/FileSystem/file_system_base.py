@@ -26,7 +26,7 @@ class FileSystemBase:
         if cls in FileSystemBase.__object_list:
             object = FileSystemBase.__object_list[cls]
         else:
-            object = cls()        
+            object = cls()
             FileSystemBase.__object_list[cls] = object
 
         resolvedFilePath = object.get_file(filePath, *args, **kwargs)
@@ -36,8 +36,8 @@ class FileSystemBase:
 
     @classmethod
     def open_file(cls, filePath, mode = "r", *args, **kwargs):
-        
-        resolvedFilePath = FileSystemBase.download_file(filePath, mode, args, kwargs)
+
+        resolvedFilePath = cls.download_file(filePath, mode, *args, **kwargs)
 
         if (resolvedFilePath):
             fullFileDir = os.path.dirname(resolvedFilePath)
