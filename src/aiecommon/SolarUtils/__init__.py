@@ -18,3 +18,6 @@ class SolarUtils:
 
     def getBiddingZone(self):
         return self.biddingZone._getPolygonBiddingZone()
+
+    def getCountryCodeBiddingZone(self):
+        return self.biddingZone.getCountryCodeAndBiddingZone()
