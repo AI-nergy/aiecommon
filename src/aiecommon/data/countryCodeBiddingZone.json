@@ -20,16 +20,7 @@
         "DE_BAVARIA",
         "DE_BRANDENBURG_NEW"
     ],
-    "AT": [
-        "AT_WIEN",
-        "AT_VORARLBERG",
-        "AT_STYRIA_NEW",
-        "AT_STYRIA_OLD",
-        "AT_KARINTHIATIROLSALZBURG",
-        "AT_BURGENLAND",
-        "AT_OBEROSTERREICH",
-        "AT_NIEDEROSTERREICH"
-    ],
+    "AT": "AT",
     "LU": "LU",
     "MT": "MT",
     "GB_SCOTLAND": "GB_SCOTLAND",
