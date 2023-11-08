@@ -6,3 +6,4 @@ class KeyEconomicIndicators(BaseModel):
     payBackPeriod: Optional[float] = None
     totalInvestmentAfterSubsidy: int
     monthlySavingsAfterLoanPayment: int
+    constantCosts: int
