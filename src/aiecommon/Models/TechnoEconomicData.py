@@ -2,9 +2,10 @@ from pydantic import BaseModel
 from typing import Optional, Union, List
 
 class TechnoEconomicData(BaseModel):
-    batteryInvestmentCost: Optional[float] = None # Euro/kWh
     pvInvestmentCost: Optional[float] = None # Euro/kWh
-    pvArea: Optional[float] = None #m2/panel
+    pvWidth: Optional[float] = None #m/panel
+    pvLength: Optional[float] = None #m/panel
     pvCapacity: Optional[float] = None # W peak/panel 
-    inverterInvestmentCost: Optional[float] = None # EUR/kW
+    inverterCapacityPrice: Optional[List[List]] = None # EUR/kW
+    batteryCapacityPrice: Optional[List[List]] = None # Euro/kWh
     fixedInstallationCost: Optional[float] = None # EUR
