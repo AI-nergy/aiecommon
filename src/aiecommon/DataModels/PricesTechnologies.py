@@ -6,3 +6,4 @@ from .Technologies import Technologies
 class PricesTechnologies(BaseModel):
     fixTerm: Technologies
     variableTerm: Technologies
+    fixedInstallationCost: Optional[float] = None
