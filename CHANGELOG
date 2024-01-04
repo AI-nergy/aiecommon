@@ -1,3 +1,7 @@
+0.1.9.46
+
+Update aiecommon to new API structure (passing custom technologies to regress costs)
+
 0.1.9.45
 
 Update technoEconomic data to additional API inputs
