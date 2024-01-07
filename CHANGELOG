@@ -1,3 +1,7 @@
+0.1.9.47
+
+Add input data validation for TechnoEconomicData and runtime validation for regression coefs
+
 0.1.9.46
 
 Update aiecommon to new API structure (passing custom technologies to regress costs)
