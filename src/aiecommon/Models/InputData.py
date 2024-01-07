@@ -79,6 +79,7 @@ class InputData(DataModelBase):
                 raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "batteryCapacityPrice", "message": f"all entries of batteryCapacityPrice must be greater than 0.0"})
             if v['fixedInstallationCost'] < 0.0: 
                 raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "fixedInstallationCost", "message": f"fixedInstallationCost must be equal or greater than 0.0"})
+        return v
 
     class Config:
 #        validate_assignment = True
