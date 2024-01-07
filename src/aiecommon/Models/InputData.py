@@ -1,5 +1,6 @@
 from pydantic import BaseModel, validator
 from typing import Dict, List, Optional, Union
+import numpy as np
 
 from ..Models import ElectricVehicle, HeatPump, MeterData, Rooftop, TechnoEconomicData, Location, ResponseBody
 from aiecommon.Exceptions import AieException
@@ -60,6 +61,24 @@ class InputData(DataModelBase):
             raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "requestedOptimisationTypes", "message": f"For system optimization {v} we need to run rooftop first. Please use only {SystemOptimisationType.optimizationOnlyAllowedTypes()} with /solar/optmizer, or use '/solar' API endpoint for other optimization types."})
         return v   
 
+    # check that non-negativity of technoEconomicData
+    @validator('technoEconomicData', pre=True, allow_reuse=True)
+    def check_techno_economic_data(cls, v, values):
+        if v is not None:
+            if v['pvInvestmentCost'] <= 0.0: 
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "pvInvestmentCost", "message": f"pvInvestmentCost must be greater than 0.0"})
+            if v['pvWidth'] <= 0.0: 
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "pvWidth", "message": f"pvWidth must be greater than 0.0"})
+            if v['pvLength'] <= 0.0: 
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "pvLength", "message": f"pvLength must be greater than 0.0"})
+            if v['pvCapacity'] <= 0.0: 
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "pvCapacity", "message": f"pvCapacity must be greater than 0.0"})
+            if (np.array(v['inverterCapacityPrice']) < 0.0).any():
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "inverterCapacityPrice", "message": f"all entries of inverterCapacityPrice must be greater than 0.0"})
+            if (np.array(v['batteryCapacityPrice']) < 0.0).any():
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "batteryCapacityPrice", "message": f"all entries of batteryCapacityPrice must be greater than 0.0"})
+            if v['fixedInstallationCost'] < 0.0: 
+                raise AieException(AieException.INVALID_INPUT_DATA, "", {"field": "fixedInstallationCost", "message": f"fixedInstallationCost must be equal or greater than 0.0"})
 
     class Config:
 #        validate_assignment = True
