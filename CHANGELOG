@@ -1,0 +1,263 @@
+0.2.0.6
+
+load google drive key from env
+
+0.2.0.5
+
+add custom logging functions to Logger
+
+0.2.0.4
+
+remove autogeneration of id in RooftopSide, make it optional
+
+0.2.0.3
+
+rename Rooftop -> RooftopSIde
+
+0.2.0.2
+
+move Location, UserAccountType and Rooftop to aiecommon
+
+0.2.0.1
+
+Move SolarUtils back from ainergy-main
+
+0.2.0.00
+
+Remove InputData, OutputData, Models, DataModels, SolarUtils from aiecommon and leave only FileSystem, Loggers and Exceptions
+
+0.1.9.58
+
+SOLP-248/264: fix input data validation for techno-economic data if not supplied
+
+0.1.9.57
+
+Merge changes from 0.1.9.54 with the latest changes 
+
+0.1.9.56
+
+Add region to Location class (optional)
+
+0.1.9.55
+
+Move code and files used for detecting country and bidding zone in optimizer, from aiecommon to ainergy-main
+
+0.1.9.54
+
+SOLP-248: pass additional techno-economic data
+
+0.1.9.53
+
+Move GetDemandData.py to ainergy-main, remove CountrySpecifications.json
+
+0.1.9.52
+
+SOLP-261: rooftop pass account type in API
+
+0.1.9.51
+
+Add closest capacities to both battery and inverter in key technical parameters output
+
+0.1.9.50
+
+better logging of exceptions when sending error_response
+
+0.1.9.49
+
+Code organisation and cleanup, move responses, exceptions and errors here
+
+0.1.9.48
+
+Merge missing commits
+
+0.1.9.47
+
+Add input data validation for TechnoEconomicData and runtime validation for regression coefs
+
+0.1.9.46
+
+Update aiecommon to new API structure (passing custom technologies to regress costs)
+
+0.1.9.45
+
+Update technoEconomic data to additional API inputs
+
+0.1.9.44
+
+Add new Exception for NO_ROOFTOP_ENOUGH_CAPACITY
+
+0.1.9.43
+
+update json files
+
+0.1.9.42
+
+remove constant costs to KeyEconomicIndicators for testing (14/11/2023)
+
+0.1.9.41
+
+add constant costs to KeyEconomicIndicators (8/11/2023)
+
+0.1.9.40
+
+add new contry codes and polygons (22/10/23)
+
+0.1.9.39
+
+Fix polygons function to return bidding zone (21/10/23)
+
+0.1.9.38
+
+add new contry codes and polygons (20/10/23)
+
+0.1.9.37
+
+fix bug with loading local data files
+
+0.1.9.36
+
+add download_file() to FileSystemBase
+
+0.1.9.34
+
+move GetSolarProductionData to ainergy-main
+
+0.1.9.33
+
+temporarily add siteIdentifier to InputData
+
+0.1.9.32
+
+Move CountryData, GetEmissionsData, GetInvestmentData, GetPowerPricesData, Scenario to aienergy-main
+
+0.1.9.31
+
+remove supportedCountries.json
+
+0.1.9.30
+
+supress output of input data in GetCountryCodeBiddingZone (to avoid printing meterData because it's too long)
+
+0.1.9.29
+
+Merged all branches into new API structure, fixed conflicts
+
+0.1.9.28
+
+Add changes for battery only
+
+0.1.9.26
+Add data fields for NL model
+
+0.1.9.26
+
+Merge implementation of SYSTEM_OPTIMISATION_TYPE_BATTERY_ONLY
+
+0.1.9.25
+
+Modify validation and error handling to comply with new API specfications
+
+0.1.9.24
+
+Fix some names of properties in InputData
+
+0.1.9.23
+
+Adjust InputData to meet new API specifications, allow sending of all rooftop data to optimizer
+
+0.1.9.22
+
+Reorganise models, replace RequestData with InputData
+
+0.1.9.21
+
+Downgrade pydantic 
+
+0.1.9.20
+
+Add data pipeline for Estonian objective function
+
+0.1.9.19
+
+Downgrade pydantic to 1.10.12
+
+0.1.9.18
+
+Add Nones to optional fields
+
+0.1.9.17
+
+Update pydantic
+
+0.1.9.16
+
+Add new request/response structures
+
+0.1.9.15
+
+Add interface for getting CO2 emissions
+
+0.1.9.14
+
+Add new fields in key technical parameters 
+
+0.1.9.13
+
+Fix bug in tag versions aiecommon
+
+0.1.9.12
+
+Change files in polygons filtered and country bidding zones
+
+0.1.9.11
+
+Fix bug in surface area for heat pump
+
+0.1.9.10
+
+Add heat pump consumption calculations based on heat pump class
+
+0.1.9.9
+
+Fix minimum consumption when minimum heat pump or ev is larger than total consumption
+
+0.1.9.8
+
+Rename paths to fix files in ainergy-main
+
+0.1.9.6 stable latest
+
+update biddingZonesPolygonsFiltered.json and countryCodeBiddingZone.json with the correct versions (SI FIX)
+
+0.1.9.5
+
+upgrade pvlib to 0.10.1
+
+0.1.9.4
+
+translate INVALID_INPUT_DATA error message to danish
+
+0.1.9.3
+
+add INVALID_INPUT_DATA exception code (needs translation)
+
+0.1.9.2
+
+start of FileSystem documentation with quick examples
+bugfix: add check of empty fullFileDir in FileSystemBase
+switch loading of json files in GetCountryCodeBiddingZone to LocalDataFiles
+
+0.1.9.1
+
+bugfix: close file in LocalDataFile.save_json() and FileSystemBase.load_json()
+
+0.1.9 
+
+- implement FileSystem module
+- use FileSystem module in DataModelBase
+- refactor TechnicalData and CountryData to inherit from DataModelBase 
+
+0.1.8 (latest stable)
+
+Move entities and Data models from ainergy-main to aiecommon
+

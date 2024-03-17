@@ -1,0 +1,50 @@
+{
+    "INVALID_INPUT_DATA": {
+        "en": "Input data is invalid, please check your inputs",
+        "da": "Inputdata er ugyldige, tjek venligst dine inputs"
+    },
+    "NO_BUILDING_POLYGON_WIDER_AREA": {
+        "en": "We couldn’t find your house on OpenStreetMap within 15 meters from the marked location point",
+        "da": "Vi kunne ikke finde dit hus på OpenStreetMap inden for 15 meter fra den markerede lokation"
+    },
+    "NO_BUILDING_POLYGON": {
+        "en": "The marked location point did not appear to be inside a  building on OpenStreetMaps. Can you try to select a point in the middle of a house again?",
+        "da": "Den markerede position var vist ikke inden i et hus på OpenStreetMaps. Kan du prøve at markere et punkt igen, der er i midten af bygningen?"
+    },
+    "GENERIC_PYTHON_ERROR": {
+        "en": "An error has occurred in the application",
+        "da": "Der er opstået en fejl i applikationen"
+    },
+    "ROOFTOP_PLOTTING_ERROR": {
+        "en": "An error has occurred while plotting your rooftop. Developers have been notified. Please try again later.",
+        "da": "Der opstod en fejl ved visningen af dit tag. Udviklerne er blevet underrettet. Prøv venligst igen senere."
+    },
+    "HOUSE_NOT_LOCATED": {
+        "en": "We are sorry, but we unfortunately couldn't find your house. This usually happens if the marked object (house) is too small, or if your house is newly built one.",
+        "da": "Vi beklager, men vi kunne desværre ikke finde dit hus. Dette sker normalt, hvis huset er for lille, eller hvis dit hus er nybygget."
+    },
+    "HOUSE_TOO_LARGE": {
+        "en": "We are sorry, but we don't support houses that are larger than 550 square metres. For business purposes and for large scale properties, please contact us.",
+        "da": "Vi beklager, men vi understøtter ikke huse, der er større end 550 kvadratmeter. Hvis det drejer sig om erhvervsgrunde eller store ejendomme, bedes du i stedet kontakte os."
+    },
+    "ROOFTOP_ALGORITHM_FAILED": {
+        "en": "We are sorry for the inconvenience, but we were unable to evaluate your house",
+        "da": "Vi beklager ulejligheden, men vi var ikke i stand til at foretage beregninger for dit hus."
+    },
+    "BUILDING_NOT_FOUND_ON_OSM": {
+        "en": "We could not find a building around the chosen coordinates on OpenStreetMaps",
+        "da": "Vi kunne ikke finde en bygning omkring de valgte koordinater på OpenStreetMaps"
+    },
+    "COUNTRY_NOT_SUPPORTED_FOR_OPTIMIZATION": {
+        "en": "This country is not yet supported for the optimal solar plants and batteries setup detection.",
+        "da": "Dette land er ikke understøttet endnu af vores beregner til optimal opsætning af solcelleanlæg og batterier."
+    },
+    "COUNTRY_NOT_SUPPORTED": {
+        "en": "Country not supported",
+        "da": "Det angivne land er ikke understøttet"
+    },
+    "CONSUMPTION_TOO_LOW": {
+        "en": "Your annual electricity consumption is too low to make the investment in solar panels profitable. We recommend that you wait until your consumption increases.",
+        "da": "Dit årlige elforbrug er for lavt til at gøre investeringen i solpaneler rentabel. Vi anbefaler, at du venter, til dit forbrug stiger."
+    }
+}
