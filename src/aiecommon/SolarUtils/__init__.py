@@ -67,7 +67,8 @@ class SolarUtils:
     
         if safe_result:
             file_name = f"runtimedata/output_{file_sufix + '_' if file_sufix else ''}{endpoint}.json"
-            json.dump(response_body, open(file_name, "w"))
+            with open(file_name, "w") as file:
+                json.dump(response_body, file)
     
         return response_body
 
