@@ -67,7 +67,7 @@ class SolarUtils:
 
         debug = request_body.get("debug", False)
     
-        if safe_result and debug:
+        if safe_result and not debug:
             file_name = f"runtimedata/output_{file_sufix + '_' if file_sufix else ''}{endpoint}.json"
             with open(file_name, "w") as file:
                 json.dump(response_body, file)
