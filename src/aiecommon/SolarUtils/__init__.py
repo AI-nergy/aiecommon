@@ -56,16 +56,18 @@ class SolarUtils:
         import function_app as app
 
         endpoint = endpoint.replace("/", "_")
-        request_body = json.dumps(request_body).encode('utf-8')
- 
-        req = func.HttpRequest(method=method, url="", params=params, body=request_body)
+        request_body_bytes = json.dumps(request_body).encode('utf-8')
+
+        req = func.HttpRequest(method=method, url="", params=params, body=request_body_bytes)
         response = getattr(app, endpoint)._function._func(req)
         response_body = json.loads(response.get_body())
- 
+
         Logger.info("response_body:")
         Logger.info(response_body)
+
+        debug = request_body.get("debug", False)
     
-        if safe_result:
+        if safe_result and debug:
             file_name = f"runtimedata/output_{file_sufix + '_' if file_sufix else ''}{endpoint}.json"
             with open(file_name, "w") as file:
                 json.dump(response_body, file)
