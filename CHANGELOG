@@ -1,3 +1,7 @@
+0.2.0.15
+
+remove log_message from AieException
+
 0.2.0.14
 
 remove pvlib
@@ -64,7 +68,7 @@ SOLP-248/264: fix input data validation for techno-economic data if not supplied
 
 0.1.9.57
 
-Merge changes from 0.1.9.54 with the latest changes 
+Merge changes from 0.1.9.54 with the latest changes
 
 0.1.9.56
 
@@ -203,7 +207,7 @@ Reorganise models, replace RequestData with InputData
 
 0.1.9.21
 
-Downgrade pydantic 
+Downgrade pydantic
 
 0.1.9.20
 
@@ -231,7 +235,7 @@ Add interface for getting CO2 emissions
 
 0.1.9.14
 
-Add new fields in key technical parameters 
+Add new fields in key technical parameters
 
 0.1.9.13
 
@@ -283,13 +287,12 @@ switch loading of json files in GetCountryCodeBiddingZone to LocalDataFiles
 
 bugfix: close file in LocalDataFile.save_json() and FileSystemBase.load_json()
 
-0.1.9 
+0.1.9
 
 - implement FileSystem module
 - use FileSystem module in DataModelBase
-- refactor TechnicalData and CountryData to inherit from DataModelBase 
+- refactor TechnicalData and CountryData to inherit from DataModelBase
 
-0.1.8 (latest stable)
+  0.1.8 (latest stable)
 
 Move entities and Data models from ainergy-main to aiecommon
-
