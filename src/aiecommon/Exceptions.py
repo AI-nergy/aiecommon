@@ -29,7 +29,6 @@ class AieException(Exception):
     EXTERNAL_API_GOOGLE_FAILED = "EXTERNAL_API_GOOGLE_FAILED"
     MISSING_MAP_DATA_IN_SUPPORTED_REGION = "MISSING_MAP_DATA_IN_SUPPORTED_REGION"
 
-    log_message: str
     code: str
     data: dict
 
@@ -40,9 +39,7 @@ class AieException(Exception):
         self.data = data
         
         if not log_message:
-            self.log_message = code
-        else:
-            self.log_message = log_message
+            log_message = code
 
-        Logger.error(f"AieException notice: self.code={self.code}, self.data={self.data}, self.log_message={self.log_message}")
+        Logger.error(f"AieException notice: self.code={self.code}, self.data={self.data}, log_message={log_message}")
 
