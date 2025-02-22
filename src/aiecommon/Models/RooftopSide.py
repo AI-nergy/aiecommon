@@ -8,7 +8,7 @@ from aiecommon.Exceptions import AieException
 class GeometryModel(BaseModel):
     EPSG: str  # e.g., '4326'
     type: str  # "Polygon", "MultiPolygon"
-    coordinates: Any  # could be more specific, e.g. List[List[float]]
+    coordinates: Any  # could be more specific, e.g. List[List[float]] or Tuple[Tuple[float, ...], ...]
 
 
 class RooftopSide(BaseModel):
@@ -61,10 +61,13 @@ class RooftopSide(BaseModel):
                 AieException.INVALID_INPUT_DATA,
                 data={"message": "geometry.type must be a string"},
             )
-        if not isinstance(value["coordinates"], list):
+        if not (
+            isinstance(value["coordinates"], list)
+            or isinstance(value["coordinates"], tuple)
+        ):
             raise AieException(
                 AieException.INVALID_INPUT_DATA,
-                data={"message": "geometry.coordinates must be a list/array"},
+                data={"message": "geometry.coordinates must be a list or a tuple"},
             )
 
         # If everything is okay, parse it into GeometryModel
