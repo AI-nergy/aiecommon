@@ -1,14 +1,21 @@
 from pydantic import BaseModel, validator
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Union
 
 from aiecommon.Exceptions import AieException
 
 
 # model describing geometry fields
 class GeometryModel(BaseModel):
-    EPSG: str  # e.g., '4326'
-    type: str  # "Polygon", "MultiPolygon"
+    EPSG: Union[int, str]  # EPSG can be provided as int or string
+    type: str  # e.g., "Polygon", "MultiPolygon"
     coordinates: Any  # could be more specific, e.g. List[List[float]] or Tuple[Tuple[float, ...], ...]
+
+    @validator("EPSG", pre=True)
+    def ensure_int_epsg(cls, v):
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            raise ValueError("geometry.EPSG must be convertible to an integer")
 
 
 class RooftopSide(BaseModel):
@@ -23,9 +30,7 @@ class RooftopSide(BaseModel):
     rooftopShadingHourly: Optional[List[int]] = None
     shadedFraction: Optional[float] = None
 
-    @validator(
-        "geometry", pre=True
-    )  # 'pre=True' means we check the raw input before Pydantic tries to parse it
+    @validator("geometry", pre=True)
     def check_geometry(cls, value):
         """If geometry is passed, ensure it has EPSG, type, and coordinates.
         Raise AieException (instead of default Pydantic) if anything is missing.
@@ -51,11 +56,7 @@ class RooftopSide(BaseModel):
             )
 
         # Check type correctness for each field
-        if not isinstance(value["EPSG"], str):
-            raise AieException(
-                AieException.INVALID_INPUT_DATA,
-                data={"message": "geometry.EPSG must be an integer"},
-            )
+        # Note: We allow EPSG to be a string or int; conversion is handled in GeometryModel
         if not isinstance(value["type"], str):
             raise AieException(
                 AieException.INVALID_INPUT_DATA,
@@ -71,5 +72,4 @@ class RooftopSide(BaseModel):
             )
 
         # If everything is okay, parse it into GeometryModel
-        # so that 'RooftopSide.geometry' becomes a valid GeometryModel instance.
         return GeometryModel(**value)
