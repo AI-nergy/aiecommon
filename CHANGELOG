@@ -1,3 +1,7 @@
+0.2.0.20
+
+SOLP-554: add force_download, downloaded file validation check and download retry to GoogleDrive class
+
 0.2.0.19
 
 Update RooftopSide model to include better typing
