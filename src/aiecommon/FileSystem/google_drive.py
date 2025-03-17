@@ -1,4 +1,5 @@
 import io, os
+import time
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from .file_system_base import FileSystemBase
@@ -7,6 +8,8 @@ from ..Logger import Logger
 class GoogleDrive(FileSystemBase):
 
     _FILESYSTEM_IDENTIFIER = "google_drive"
+    _MIN_DOWNLOADED_FILE_SIZE = 80
+    _DOWNLOAD_RETRY_DELAY = 3
     # TODO: move these to functions in FileSystemBase
 #    CACHE_DIRECTORY = os.path(FileSystemBase.CONFIG_DATA_DIRECTORY, FILEYSTEM_IDENTIFIER)
 #    STORAGE_DIRECTORY = os.path(FileSystemBase.CONFIG_STORAGE_DIRECTORY, FILEYSTEM_IDENTIFIER)
@@ -19,7 +22,32 @@ class GoogleDrive(FileSystemBase):
         self.service = build("drive", "v3", developerKey=self._API_KEY)
         Logger.info(f"GoogleDrive constructor")
 
-    def get_file(self, fileId:str, localFileName:str = None, usePermanentStorage:bool = False):
+    def download_google_drive_file(self, localFilePath:str, fileId:str):
+        Logger.info(f"GoogleDrive start download from drive: {localFilePath}.")
+
+        request = self.service.files().get_media(fileId=fileId)
+
+        fh = io.FileIO(localFilePath, "wb")
+        downloader = MediaIoBaseDownload(fh, request)
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+            Logger.info(f"GoogleDrive downloading from drive: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}...")
+        fh.close()
+        Logger.info(f"GoogleDrive download from drive DONE: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}.")
+ 
+    @staticmethod
+    def is_downloaded_file_valid(localFilePath:str):
+        if not os.path.exists(localFilePath):
+            Logger.info(f"GoogleDrive downloaded file doesn't exist, localFilePath={localFilePath}")
+            return False
+        size = os.path.getsize(localFilePath)
+        if size < GoogleDrive._MIN_DOWNLOADED_FILE_SIZE:
+            Logger.info(f"GoogleDrive downloaded file is too small, localFilePath={localFilePath}, size={size}, _MIN_DOWNLOADED_FILE_SIZE={GoogleDrive._MIN_DOWNLOADED_FILE_SIZE}")
+            return False
+        return True
+    
+    def get_file(self, fileId:str, localFileName:str = None, usePermanentStorage:bool = False, force_download:bool = False):
 
         if self.service is None:
             return None
@@ -38,18 +66,20 @@ class GoogleDrive(FileSystemBase):
         localFilePath = os.path.join(download_directory, localFileName)
 
         if os.path.exists(localFilePath):
-            Logger.info(f"GoogleDrive get from local cache (disk): {localFilePath}")
-            return localFilePath
+            if not GoogleDrive.is_downloaded_file_valid(localFilePath):
+                Logger.info(f"GoogleDrive file is not valid, not getting from local path: localFilePath={localFilePath}, size={os.path.getsize(localFilePath)}")
+            elif force_download:
+                Logger.info(f"GoogleDrive file is valid, but forceDownload is true, not getting from local path: localFilePath={localFilePath}, size={os.path.getsize(localFilePath)}")
+            else:
+                Logger.info(f"GoogleDrive get from local cache (disk): {localFilePath}, size={os.path.getsize(localFilePath)}")
+                return localFilePath
         
-        request = self.service.files().get_media(fileId=fileId)
+        self.download_google_drive_file(localFilePath, fileId)
 
-        fh = io.FileIO(localFilePath, "wb")
-        downloader = MediaIoBaseDownload(fh, request)
-        done = False
-        while not done:
-            status, done = downloader.next_chunk()
-            Logger.info(f"GoogleDrive download from drive: {localFilePath} {int(status.progress() * 100)}%.")
-        fh.close()
+        if not GoogleDrive.is_downloaded_file_valid(localFilePath):
+            Logger.info(f"GoogleDrive downloaded file is invalid, retry after sleep, localFilePath={localFilePath}, _DOWNLOAD_RETRY_DELAY={GoogleDrive._DOWNLOAD_RETRY_DELAY}...")
+            time.sleep(GoogleDrive._DOWNLOAD_RETRY_DELAY)
+            self.download_google_drive_file(localFilePath, fileId)
         
         return localFilePath
 
