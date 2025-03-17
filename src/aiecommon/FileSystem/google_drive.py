@@ -38,6 +38,10 @@ class GoogleDrive(FileSystemBase):
             fh.close()
             Logger.info(f"GoogleDrive download from drive DONE: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}.")
         except Exception as e:
+            try:
+                os.unlink(localFilePath)
+            except:
+                pass
             Logger.error(f"GoogleDrive download from drive FAILED: localFilePath={localFilePath}, error={e}")
 
     @staticmethod
