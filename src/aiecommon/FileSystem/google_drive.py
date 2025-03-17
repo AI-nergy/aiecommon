@@ -1,4 +1,5 @@
 import io, os
+import random
 import time
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -77,8 +78,9 @@ class GoogleDrive(FileSystemBase):
         self.download_google_drive_file(localFilePath, fileId)
 
         if not GoogleDrive.is_downloaded_file_valid(localFilePath):
-            Logger.info(f"GoogleDrive downloaded file is invalid, retry after sleep, localFilePath={localFilePath}, _DOWNLOAD_RETRY_DELAY={GoogleDrive._DOWNLOAD_RETRY_DELAY}...")
-            time.sleep(GoogleDrive._DOWNLOAD_RETRY_DELAY)
+            sleep_delay = GoogleDrive._DOWNLOAD_RETRY_DELAY + random.random()
+            Logger.info(f"GoogleDrive downloaded file is invalid, retry after sleep, localFilePath={localFilePath}, sleep_delay={sleep_delay}...")
+            time.sleep(sleep_delay)
             self.download_google_drive_file(localFilePath, fileId)
         
         return localFilePath
