@@ -26,17 +26,20 @@ class GoogleDrive(FileSystemBase):
     def download_google_drive_file(self, localFilePath:str, fileId:str):
         Logger.info(f"GoogleDrive start download from drive: {localFilePath}.")
 
-        request = self.service.files().get_media(fileId=fileId)
+        try:
+            request = self.service.files().get_media(fileId=fileId)
 
-        fh = io.FileIO(localFilePath, "wb")
-        downloader = MediaIoBaseDownload(fh, request)
-        done = False
-        while not done:
-            status, done = downloader.next_chunk()
-            Logger.info(f"GoogleDrive downloading from drive: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}...")
-        fh.close()
-        Logger.info(f"GoogleDrive download from drive DONE: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}.")
- 
+            fh = io.FileIO(localFilePath, "wb")
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while not done:
+                status, done = downloader.next_chunk()
+                Logger.info(f"GoogleDrive downloading from drive: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}...")
+            fh.close()
+            Logger.info(f"GoogleDrive download from drive DONE: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}.")
+        except Exception as e:
+            Logger.error(f"GoogleDrive download from drive FAILED: localFilePath={localFilePath}, error={e}")
+
     @staticmethod
     def is_downloaded_file_valid(localFilePath:str):
         if not os.path.exists(localFilePath):
