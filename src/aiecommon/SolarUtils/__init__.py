@@ -1,5 +1,7 @@
 import json
-import azure.functions as func
+# import azure.functions as func
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi import Request
 import traceback
 from ..Logger import Logger
 
@@ -29,7 +31,8 @@ class SolarUtils:
 
     @staticmethod
     def _response(body, status_code):
-        return func.HttpResponse(body=body, status_code=status_code, headers={"Content-Type": "application/json"})
+        return JSONResponse(content=body, status_code=status_code)
+        # return func.HttpResponse(body=body, status_code=status_code, headers={"Content-Type": "application/json"})
 
 
     @staticmethod
@@ -43,11 +46,11 @@ class SolarUtils:
         if exception:
             Logger.error(f"CAUGHT EXCEPTION: {exception}\nexception.args={exception.args}\nTRACEBACK:\n{traceback.format_exc()}")
 
-        return SolarUtils._response(SolarUtils.__pack_error_response(errorMessage, True), http_error_code)
+        return SolarUtils._response(SolarUtils.__pack_error_response(errorMessage, json_dump=False), http_error_code)
 
     @staticmethod
     def success_response(result: dict):
-        return SolarUtils._response(SolarUtils.__pack_success_response(result, json_dump=True), status_code=200)
+        return SolarUtils._response(SolarUtils.__pack_success_response(result, json_dump=False), status_code=200)
 
 
     @staticmethod
@@ -75,11 +78,17 @@ class SolarUtils:
         return response_body
 
     @staticmethod
-    def parse_request_body(req: func.HttpRequest) -> dict:
-
+    def parse_request_body(request: Request) -> dict:
         try:
-            request_body_json = req.get_json()
+            request_body_json = request.json()
         except:
             raise AieException(AieException.INVALID_INPUT_DATA, data="Request body is not valid JSON")
 
         return request_body_json
+
+        # try:
+        #     request_body_json = req.get_json()
+        # except:
+        #     raise AieException(AieException.INVALID_INPUT_DATA, data="Request body is not valid JSON")
+
+        # return request_body_json
