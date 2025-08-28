@@ -9,7 +9,8 @@ class LocalRuntimeFiles(FileSystemBase):
             
         logging.info(f"LocalFile constructor")
 
-    def get_file(self, filePath, usePermanentStorage = False):
+    @classmethod
+    def get_file(cls, filePath, usePermanentStorage = False):
 
         if usePermanentStorage:
             base_directory = LocalRuntimeFiles._get_storage_directory()
