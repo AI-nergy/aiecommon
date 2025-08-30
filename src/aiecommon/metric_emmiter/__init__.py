@@ -115,7 +115,7 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
         logger.info("AwsEcsMetricEmitter: get_cluster_info")
         self.cluster_info = self.get_cluster_info()
 
-        if self.cluster_info and self.service:
+        if self.cluster_info:
             self.cluster_name = self.cluster_info["Cluster"]
             self.task_arn = self.cluster_info["TaskARN"]
             self.task_id = self.task_arn.split("/")[-1]
