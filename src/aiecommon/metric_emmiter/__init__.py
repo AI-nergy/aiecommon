@@ -1,3 +1,5 @@
+import aiecommon.custom_logger as custom_logger
+logger = custom_logger.get_logger()
 
 import json
 import os, time, datetime, threading, queue, boto3
@@ -18,9 +20,12 @@ class AwsMetricEmitterBase:
         self.dimensions = dimensions
         self.flush_interval = flush_interval
         self.max_batch = max_batch
+        logger.info("AwsMetricEmitterBase: Start AWS cloudwatch client")
+        self._cw = boto3.client("cloudwatch", region_name=region_name)
+
+        logger.info("AwsMetricEmitterBase: Setup threading and queue")
         self.queue: "queue.Queue[dict]" = queue.Queue()
         self._stop = threading.Event()
-        self._cw = boto3.client("cloudwatch", region_name=region_name)
         self._thread = threading.Thread(target=self._run, name="cw-metrics", daemon=True)
         self._thread.start()
 
@@ -107,21 +112,30 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
     ):
         self.metric_name = None
 
+        logger.info("AwsEcsMetricEmitter: get_cluster_info")
         self.cluster_info = self.get_cluster_info()
-        self.service = os.getenv("ECS_SERVICE_NAME")
 
         if self.cluster_info and self.service:
             self.cluster_name = self.cluster_info["Cluster"]
-            self.task_id = self.cluster_info["TaskARN"].split("/")[-1]
+            self.task_arn = self.cluster_info["TaskARN"]
+            self.task_id = self.task_arn.split("/")[-1]
             # self.region = cluster_info["AvailabilityZone"]
             self.region_name = None
 
+            # self.service_name = os.getenv("ECS_SERVICE_NAME")
+            logger.info("AwsEcsMetricEmitter: Get ECS service")
+            ecs = boto3.client("ecs", region_name=self.region_name)
+            resp = ecs.describe_tasks(cluster=self.cluster_name, tasks=[self.task_arn])
+            group = resp["tasks"][0].get("group")
+            self.service_name = group.split(":")[1] if group and group.startswith("service:") else None
+
+            logger.info("AwsEcsMetricEmitter: Init metrics")
             super().__init__(
                 namespace=namespace,
                 region_name=self.region_name,
                 metric_name=metric_name,
                 dimensions=[{
-                    "Service": self.service,
+                    "Service": self.service_name,
                     "Cluster": self.cluster_name,
                     "TaskId": self.task_id
                 }],
