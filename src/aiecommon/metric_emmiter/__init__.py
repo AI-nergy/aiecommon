@@ -102,17 +102,17 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
         self,
         namespace: str,
         metric_name: str,
-        service: str,
         flush_interval: float = 1.0,     # seconds
         max_batch: int = 1              # CW allows up to 20 metrics per PutMetricData
     ):
         self.metric_name = None
 
         self.cluster_info = self.get_cluster_info()
-        if self.cluster_info:
+        self.service = os.getenv("ECS_SERVICE_NAME")
+
+        if self.cluster_info and self.service:
             self.cluster_name = self.cluster_info["Cluster"]
             self.task_id = self.cluster_info["TaskARN"].split("/")[-1]
-            self.service = service
             # self.region = cluster_info["AvailabilityZone"]
             self.region_name = None
 
