@@ -120,7 +120,8 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
             self.task_arn = self.cluster_info["TaskARN"]
             self.task_id = self.task_arn.split("/")[-1]
             # self.region = cluster_info["AvailabilityZone"]
-            self.region_name = None
+            # self.region_name = None
+            self.region_name = "eu-north-1"
 
             # self.service_name = os.getenv("ECS_SERVICE_NAME")
             logger.info("AwsEcsMetricEmitter: Get ECS service")
