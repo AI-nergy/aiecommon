@@ -63,17 +63,20 @@ class AwsMetricEmitterBase:
         asyncio.create_task(asyncio.to_thread(self._emit_metric, value))
 
     def _emit_metric(self, value: int):
-        self._cw.put_metric_data(
-            Namespace=self.namespace,
-            MetricData=[{
-                "MetricName": self.metric_name,
-                "Dimensions": self.dimensions,
-                "Timestamp": datetime.datetime.now(datetime.timezone.utc),
-                "Value": value,
-                "Unit": "Count",
-                "StorageResolution": 1,
-            }]
-        )
+        try:
+            self._cw.put_metric_data(
+                Namespace=self.namespace,
+                MetricData=[{
+                    "MetricName": self.metric_name,
+                    "Dimensions": self.dimensions,
+                    "Timestamp": datetime.datetime.now(datetime.timezone.utc),
+                    "Value": value,
+                    "Unit": "Count",
+                    "StorageResolution": 1,
+                }]
+            )
+        except Exception as e:
+            logger.exception(f"Failed to put metric metric_name={self.metric_name}, value=[value], exception={e}")
 
     def emit_metric_async(self, value: int):
         if not self.metric_name:
@@ -153,11 +156,16 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
                 namespace=namespace,
                 region_name=self.region_name,
                 metric_name=metric_name,
-                dimensions=[{
-                    "Service": self.service_name,
-                    "Cluster": self.cluster_name,
-                    "TaskId": self.task_id
-                }],
+                dimensions=[
+                    {"Name": "Cluster", "Value": self.cluster_name},
+                    {"Name": "Service", "Value": self.service_name},
+                    {"Name": "TaskId",  "Value": self.task_id},
+                ]
+                # dimensions=[{
+                #     "Service": self.service_name,
+                #     "Cluster": self.cluster_name,
+                #     "TaskId": self.task_id
+                # }],
                 flush_interval=flush_interval,
                 max_batch=max_batch
             )
