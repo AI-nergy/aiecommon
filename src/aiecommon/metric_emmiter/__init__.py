@@ -1,3 +1,4 @@
+import asyncio
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
 
@@ -23,11 +24,11 @@ class AwsMetricEmitterBase:
         logger.info("AwsMetricEmitterBase: Start AWS cloudwatch client")
         self._cw = boto3.client("cloudwatch", region_name=region_name)
 
-        logger.info("AwsMetricEmitterBase: Setup threading and queue")
-        self.queue: "queue.Queue[dict]" = queue.Queue()
-        self._stop = threading.Event()
-        self._thread = threading.Thread(target=self._run, name="cw-metrics", daemon=True)
-        self._thread.start()
+        # logger.info("AwsMetricEmitterBase: Setup threading and queue")
+        # self.queue: "queue.Queue[dict]" = queue.Queue()
+        # self._stop = threading.Event()
+        # self._thread = threading.Thread(target=self._run, name="cw-metrics", daemon=True)
+        # self._thread.start()
 
     def _run(self):
         buf = []
@@ -58,6 +59,22 @@ class AwsMetricEmitterBase:
                     last_flush = time.time()
 
     def emit_metric(self, value: int):
+        asyncio.create_task(asyncio.to_thread(self._emit_metric, value))
+
+    def _emit_metric(self, value: int):
+        self._cw.put_metric_data(
+            Namespace=self.namespace,
+            MetricData=[{
+                "MetricName": self.metric_name,
+                "Dimensions": self.dimensions,
+                "Timestamp": datetime.datetime.now(datetime.timezone.utc),
+                "Value": value,
+                "Unit": "Count",
+                "StorageResolution": 1,
+            }]
+        )
+
+    def emit_metric_async(self, value: int):
         if not self.metric_name:
             return
         
