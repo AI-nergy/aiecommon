@@ -160,7 +160,7 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
                     {"Name": "Cluster", "Value": self.cluster_name},
                     {"Name": "Service", "Value": self.service_name},
                     {"Name": "TaskId",  "Value": self.task_id},
-                ]
+                ],
                 # dimensions=[{
                 #     "Service": self.service_name,
                 #     "Cluster": self.cluster_name,
