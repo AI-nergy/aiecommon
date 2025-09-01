@@ -13,12 +13,14 @@ class AwsMetricEmitterBase:
         metric_name: str,
         region_name: str,
         dimensions: list,
+        period,
         flush_interval: float = 1.0,     # seconds
         max_batch: int = 1              # CW allows up to 20 metrics per PutMetricData
     ):
         self.namespace = namespace
         self.metric_name = metric_name
         self.dimensions = dimensions
+        self.period = period
         self.flush_interval = flush_interval
         self.max_batch = max_batch
         logger.info("AwsMetricEmitterBase: Start AWS cloudwatch client")
@@ -64,12 +66,16 @@ class AwsMetricEmitterBase:
 
     def _emit_metric(self, value: int):
         try:
+            now = datetime.datetime.now(datetime.timezone.utc)
             self._cw.put_metric_data(
                 Namespace=self.namespace,
                 MetricData=[{
                     "MetricName": self.metric_name,
                     "Dimensions": self.dimensions,
-                    "Timestamp": datetime.datetime.now(datetime.timezone.utc),
+                    "Timestamp": now.replace(
+                        second=(now.second // self.period) * self.period,
+                        microsecond=0
+                    ),
                     "Value": value,
                     "Unit": "Count",
                     "StorageResolution": 1,
@@ -128,6 +134,7 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
         self,
         namespace: str,
         metric_name: str,
+        period: int,
         flush_interval: float = 1.0,     # seconds
         max_batch: int = 1              # CW allows up to 20 metrics per PutMetricData
     ):
@@ -166,6 +173,7 @@ class AwsEcsMetricEmitter(AwsMetricEmitterBase):
                 #     "Cluster": self.cluster_name,
                 #     "TaskId": self.task_id
                 # }],
+                period=period,
                 flush_interval=flush_interval,
                 max_batch=max_batch
             )
