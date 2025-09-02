@@ -62,9 +62,16 @@ class AwsMetricEmitterBase:
 
     def emit_metric(self, value: int):
         logger.info(f"AwsMetricEmitterBase: emit_metric, metric_name={self.metric_name}, value={value}")
+        self._emit_metric(value)
+
+    def emit_metric_async(self, value: int):
+        logger.info(f"AwsMetricEmitterBase: emit_metric_async, metric_name={self.metric_name}, value={value}")
         asyncio.create_task(asyncio.to_thread(self._emit_metric, value))
 
     def _emit_metric(self, value: int):
+        if  not self.metric_name:
+            logger.info(f"AwsMetricEmitterBase._emit_metric: metric_name not spefied, skip emit, value={value}")
+            return
         try:
             now = datetime.datetime.now(datetime.timezone.utc)
             self._cw.put_metric_data(
