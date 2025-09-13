@@ -4,7 +4,8 @@ import time
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from .file_system_base import FileSystemBase
-from ..Logger import Logger
+from aiecommon import custom_logger
+logger = custom_logger.get_logger()
 
 class GoogleDrive(FileSystemBase):
 
@@ -21,10 +22,10 @@ class GoogleDrive(FileSystemBase):
         self._API_KEY = os.environ["AINERGY_GOOGLE_DRIVE_API_KEY"]
 
         self.service = build("drive", "v3", developerKey=self._API_KEY)
-        Logger.info(f"GoogleDrive constructor")
+        logger.info(f"GoogleDrive constructor")
 
     def download_google_drive_file(self, localFilePath:str, fileId:str):
-        Logger.info(f"GoogleDrive start download from drive: {localFilePath}.")
+        logger.info(f"GoogleDrive start download from drive: {localFilePath}.")
 
         try:
             request = self.service.files().get_media(fileId=fileId)
@@ -34,24 +35,24 @@ class GoogleDrive(FileSystemBase):
             done = False
             while not done:
                 status, done = downloader.next_chunk()
-                Logger.info(f"GoogleDrive downloading from drive: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}...")
+                logger.info(f"GoogleDrive downloading from drive: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}...")
             fh.close()
-            Logger.info(f"GoogleDrive download from drive DONE: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}.")
+            logger.info(f"GoogleDrive download from drive DONE: localFilePath={localFilePath}, progress={int(status.progress() * 100)}%, size={os.path.getsize(localFilePath)}.")
         except Exception as e:
             try:
                 os.unlink(localFilePath)
             except:
                 pass
-            Logger.error(f"GoogleDrive download from drive FAILED: localFilePath={localFilePath}, error={e}")
+            logger.error(f"GoogleDrive download from drive FAILED: localFilePath={localFilePath}, error={e}")
 
     @staticmethod
     def is_downloaded_file_valid(localFilePath:str):
         if not os.path.exists(localFilePath):
-            Logger.info(f"GoogleDrive downloaded file doesn't exist, localFilePath={localFilePath}")
+            logger.info(f"GoogleDrive downloaded file doesn't exist, localFilePath={localFilePath}")
             return False
         size = os.path.getsize(localFilePath)
         if size < GoogleDrive._MIN_DOWNLOADED_FILE_SIZE:
-            Logger.info(f"GoogleDrive downloaded file is too small, localFilePath={localFilePath}, size={size}, _MIN_DOWNLOADED_FILE_SIZE={GoogleDrive._MIN_DOWNLOADED_FILE_SIZE}")
+            logger.info(f"GoogleDrive downloaded file is too small, localFilePath={localFilePath}, size={size}, _MIN_DOWNLOADED_FILE_SIZE={GoogleDrive._MIN_DOWNLOADED_FILE_SIZE}")
             return False
         return True
     
@@ -75,18 +76,18 @@ class GoogleDrive(FileSystemBase):
 
         if os.path.exists(localFilePath):
             if not GoogleDrive.is_downloaded_file_valid(localFilePath):
-                Logger.info(f"GoogleDrive file is not valid, not getting from local path: localFilePath={localFilePath}, size={os.path.getsize(localFilePath)}")
+                logger.info(f"GoogleDrive file is not valid, not getting from local path: localFilePath={localFilePath}, size={os.path.getsize(localFilePath)}")
             elif force_download:
-                Logger.info(f"GoogleDrive file is valid, but forceDownload is true, not getting from local path: localFilePath={localFilePath}, size={os.path.getsize(localFilePath)}")
+                logger.info(f"GoogleDrive file is valid, but forceDownload is true, not getting from local path: localFilePath={localFilePath}, size={os.path.getsize(localFilePath)}")
             else:
-                Logger.info(f"GoogleDrive get from local cache (disk): {localFilePath}, size={os.path.getsize(localFilePath)}")
+                logger.info(f"GoogleDrive get from local cache (disk): {localFilePath}, size={os.path.getsize(localFilePath)}")
                 return localFilePath
         
         self.download_google_drive_file(localFilePath, fileId)
 
         if not GoogleDrive.is_downloaded_file_valid(localFilePath):
             sleep_delay = GoogleDrive._DOWNLOAD_RETRY_DELAY + random.random()
-            Logger.info(f"GoogleDrive downloaded file is invalid, retry after sleep, localFilePath={localFilePath}, sleep_delay={sleep_delay}...")
+            logger.info(f"GoogleDrive downloaded file is invalid, retry after sleep, localFilePath={localFilePath}, sleep_delay={sleep_delay}...")
             time.sleep(sleep_delay)
             self.download_google_drive_file(localFilePath, fileId)
         

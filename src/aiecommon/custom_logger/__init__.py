@@ -118,7 +118,7 @@ def dump_debug(label: str = None):
     Dump debug data to log.
     """
     logger = get_logger()
-    message = f"Logger DEBUG DATA:\n{debug_data}"
+    message = f"logger DEBUG DATA:\n{debug_data}"
     if label:
         message = f"[{label}] {message}"
     logger.info(message)

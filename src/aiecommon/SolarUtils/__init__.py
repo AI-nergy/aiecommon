@@ -3,7 +3,8 @@ import json
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi import Request
 import traceback
-from ..Logger import Logger
+from aiecommon import custom_logger
+logger = custom_logger.get_logger()
 
 from aiecommon.Exceptions import AieException
 
@@ -40,11 +41,11 @@ class SolarUtils:
 
         errorMessage = {"code": code, "data": data}
 
-        Logger.info(f"error_response sent, errorMessage={errorMessage}, http_error_code={http_error_code}")
-        Logger.error(f"logMessage: {logMessage}")
-        Logger.dump_debug("ERROR RESPONSE")
+        logger.info(f"error_response sent, errorMessage={errorMessage}, http_error_code={http_error_code}")
+        logger.error(f"logMessage: {logMessage}")
+        logger.dump_debug("ERROR RESPONSE")
         if exception:
-            Logger.error(f"CAUGHT EXCEPTION: {exception}\nexception.args={exception.args}\nTRACEBACK:\n{traceback.format_exc()}")
+            logger.error(f"CAUGHT EXCEPTION: {exception}\nexception.args={exception.args}\nTRACEBACK:\n{traceback.format_exc()}")
 
         return SolarUtils._response(SolarUtils.__pack_error_response(errorMessage, json_dump=False), http_error_code)
 
@@ -65,8 +66,8 @@ class SolarUtils:
         response = getattr(app, endpoint)._function._func(req)
         response_body = json.loads(response.get_body())
 
-        Logger.info("response_body:")
-        Logger.info(response_body)
+        logger.info("response_body:")
+        logger.info(response_body)
 
         debug = request_body.get("debug", False) if request_body else False
 

@@ -1,4 +1,5 @@
-from .Logger import Logger
+from aiecommon import custom_logger
+logger = custom_logger.get_logger()
 
 class AieException(Exception):
 
@@ -41,5 +42,5 @@ class AieException(Exception):
         if not log_message:
             log_message = code
 
-        Logger.error(f"AieException notice: self.code={self.code}, self.data={self.data}, log_message={log_message}")
+        logger.error(f"AieException notice: self.code={self.code}, self.data={self.data}, log_message={log_message}")
 
