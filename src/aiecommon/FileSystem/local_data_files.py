@@ -1,6 +1,7 @@
-import os, logging
+import os
 import importlib.resources
-
+from aiecommon import custom_logger
+logger = custom_logger.get_logger()
 from .file_system_base import FileSystemBase
 from aiecommon.Exceptions import AieException
 
@@ -8,7 +9,7 @@ class LocalDataFiles(FileSystemBase):
 
     def __init__(self):
             
-        logging.info(f"LocalFile constructor")
+        logger.info(f"LocalFile constructor")
 
     def get_file(self, filePath, package = None):
 
@@ -34,9 +35,9 @@ class LocalDataFiles(FileSystemBase):
                 suggestedFiles.append(f"{str(filePath)} ({str(suggestedPackage)})")
 
         if suggestedFiles:
-            logging.error(f"File {filePath} ({package if package else 'project root'}) not found, suggested alternatives:")
+            logger.error(f"File {filePath} ({package if package else 'project root'}) not found, suggested alternatives:")
             for suggestedFile in suggestedFiles:
-                logging.error(suggestedFile)
+                logger.error(suggestedFile)
 
         raise AieException(AieException.GENERIC_PYTHON_ERROR, f"LocalDataFiles, file not found filePath={filePath}, package={package} suggestedFiles={suggestedFiles}")
 

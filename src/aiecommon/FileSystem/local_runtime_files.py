@@ -1,5 +1,7 @@
-import os, logging, json
+import os, json
 from .file_system_base import FileSystemBase
+from aiecommon import custom_logger
+logger = custom_logger.get_logger()
 
 class LocalRuntimeFiles(FileSystemBase):
 
@@ -7,7 +9,7 @@ class LocalRuntimeFiles(FileSystemBase):
 
     def __init__(self):
             
-        logging.info(f"LocalFile constructor")
+        logger.info(f"LocalFile constructor")
 
     @classmethod
     def get_file(cls, filePath, usePermanentStorage = False):

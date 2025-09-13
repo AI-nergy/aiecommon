@@ -1,5 +1,7 @@
 import time
-import logging
+# import .custom_logger as custom_logger
+from aiecommon import custom_logger
+logger = custom_logger.get_logger()
 
 def log_time(message):
     def decorator(func):
@@ -8,7 +10,7 @@ def log_time(message):
             result = func(*args, **kwargs)
             end_time = time.time()
             elapsed_time = end_time - start_time
-            logging.info(f"{message}: {func.__name__} took {round(elapsed_time,2)} seconds")
+            logger.info(f"{message}: {func.__name__} took {round(elapsed_time,2)} seconds")
             return result
         return wrapper
     return decorator
