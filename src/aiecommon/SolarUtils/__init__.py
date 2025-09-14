@@ -43,7 +43,7 @@ class SolarUtils:
 
         logger.info(f"error_response sent, errorMessage={errorMessage}, http_error_code={http_error_code}")
         logger.error(f"logMessage: {logMessage}")
-        logger.dump_debug("ERROR RESPONSE")
+        custom_logger.dump_debug("ERROR RESPONSE")
         if exception:
             logger.error(f"CAUGHT EXCEPTION: {exception}\nexception.args={exception.args}\nTRACEBACK:\n{traceback.format_exc()}")
 
