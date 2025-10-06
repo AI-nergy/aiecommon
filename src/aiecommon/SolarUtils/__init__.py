@@ -64,7 +64,7 @@ class SolarUtils:
 
         req = func.HttpRequest(method=method, url="", params=params, body=request_body_bytes)
         response = getattr(app, endpoint)._function._func(req)
-        response_body = json.loads(response.get_body())
+        response_body = json.loads(response.body)
 
         logger.info("response_body:")
         logger.info(response_body)
