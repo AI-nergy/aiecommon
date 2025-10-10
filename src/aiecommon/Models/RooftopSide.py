@@ -22,7 +22,7 @@ class RooftopSide(BaseModel):
     id: Optional[int] = None
     usefulAream2: int
     orientation: str
-    orientationDegrees: int
+    orientationDegrees: float
     rooftopSideSlopeDegrees: int
     colorCode: Optional[str] = None
     # geometry is optional, but if provided, it must contain EPSG/type/coordinates
