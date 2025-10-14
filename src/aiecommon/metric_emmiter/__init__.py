@@ -3,8 +3,7 @@ import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
 
 import json
-import os, time, datetime, threading, queue, boto3
-from typing import Optional
+import os, time, datetime, queue, boto3
 
 class AwsMetricEmitterBase:
     def __init__(
@@ -61,11 +60,11 @@ class AwsMetricEmitterBase:
                     last_flush = time.time()
 
     def emit_metric(self, value: int):
-        logger.info(f"AwsMetricEmitterBase: emit_metric, metric_name={self.metric_name}, value={value}")
+        logger.info(f"AwsMetricEmitterBase: emit_metric, namespace={self.namespace}, metric_name={self.metric_name}, value={value}")
         self._emit_metric(value)
 
     def emit_metric_async(self, value: int):
-        logger.info(f"AwsMetricEmitterBase: emit_metric_async, metric_name={self.metric_name}, value={value}")
+        logger.info(f"AwsMetricEmitterBase: emit_metric_async, namespace={self.namespace}, metric_name={self.metric_name}, value={value}")
         asyncio.create_task(asyncio.to_thread(self._emit_metric, value))
 
     def _emit_metric(self, value: int):
@@ -89,7 +88,7 @@ class AwsMetricEmitterBase:
                 }]
             )
         except Exception as e:
-            logger.exception(f"Failed to put metric metric_name={self.metric_name}, value=[value], exception={e}")
+            logger.exception(f"Failed to put metric namespace={self.namespace}, metric_name={self.metric_name}, value={value}, exception={e}")
 
     def emit_metric_async(self, value: int):
         if not self.metric_name:
