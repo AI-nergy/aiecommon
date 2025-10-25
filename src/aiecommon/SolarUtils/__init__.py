@@ -74,10 +74,3 @@ class SolarUtils:
         with open('modules/aiesolar/optimizer/data/timeZoneFromCountryCode.json', 'r') as f:
             tzmap = json.load(f)
         return tzmap[countyCode]
-
-    @staticmethod
-    def get_tmy_minute_offsets(latitude, longitude, month_year_dict):
-        """
-        Return a fixed array of minute offsets (8760 entries) for aligning PVGIS TMY timestamps.
-        """
-        return np.full(8760, 10, dtype=np.float64)
