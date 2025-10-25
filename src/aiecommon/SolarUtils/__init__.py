@@ -1,10 +1,11 @@
 import json
+from fastapi.responses import JSONResponse
 from fastapi import Request
 import traceback
 
-import ..custom_logger
+from aiecommon import custom_logger
 logger = custom_logger.get_logger()
-from .Exceptions import AieException
+from aiecommon.Exceptions import AieException
 
 class SolarUtils:
 
@@ -30,7 +31,6 @@ class SolarUtils:
 
     @staticmethod
     def _response(body, status_code):
-        from fastapi.responses import JSONResponse
         return JSONResponse(content=body, status_code=status_code)
 
     @staticmethod
