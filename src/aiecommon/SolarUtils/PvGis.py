@@ -67,6 +67,7 @@ class PvGis():
         full_cache_file_path = PvGis._get_cache_file_path(latitude, longitude)
 
         if not os.path.exists(full_cache_file_path):
+            logger.info(f"Get PvGis cache file doesn;t exist, full_cache_file_path={full_cache_file_path}")
             return None
         
         try:
