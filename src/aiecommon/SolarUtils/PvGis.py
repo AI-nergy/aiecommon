@@ -11,10 +11,14 @@ import numpy as np
 from aiecommon.Exceptions import AieException
 from aiecommon import SolarUtils
 from aiecommon.FileSystem import LocalRuntimeFiles
+from aiecommon.SolarUtils.ExternalApiBase import ExternalApiBase
 
-class PvGis():
+class PvGis(ExternalApiBase):
     
     STORAGE_FOLDER = 'pvgis'
+    API_IDENTIFIER = 'PvGis'
+    USE_PERMANENT_STORAGE = 'True'
+
     PVGIS_START_YEAR = '2013'
     PVGIS_END_YEAR = '2023'
     TYPICAL_YEAR_START_DATE = '2018-01-01 00:00'
@@ -45,37 +49,47 @@ class PvGis():
         
         os.makedirs(LocalRuntimeFiles.get_file(PvGis.STORAGE_FOLDER, usePermanentStorage=True), exist_ok=True)
 
+        super().__init__()
+
 
     @staticmethod
-    def _get_cache_key(latitude, longitude):
+    def _get_cache_key(latitude: float, longitude: float):
         return f"{PvGis.PVGIS_START_YEAR}_{PvGis.PVGIS_END_YEAR}_{np.round(latitude, PvGis.COORDINATES_DECIMAL_PLACES):.3f}_{np.round(longitude, PvGis.COORDINATES_DECIMAL_PLACES):.3f}"
 
     @staticmethod
-    def _get_cache_file_path(latitude, longitude):
-        cache_key = PvGis._get_cache_key(latitude, longitude)
-        return LocalRuntimeFiles.get_file(os.path.join(PvGis.STORAGE_FOLDER, cache_key), usePermanentStorage=True)
-
+    def _read_cache(cache_file_path: str) -> pd.DataFrame:
+        return pd.read_pickle(cache_file_path)
 
     @staticmethod
-    def _save_cache(latitude, longitude, data: pd.DataFrame):
-        cache_file_path = PvGis._get_cache_file_path(latitude, longitude)
-        logger.info(f"PvGis: Saving data cache as pickle, cache_file_path={cache_file_path}")
-        data.to_pickle(cache_file_path)
+    def _write_cache(cache_file_path: str, data: pd.DataFrame):
+        return data.to_pickle(cache_file_path)
 
-    @staticmethod
-    def _get_cache(latitude, longitude) -> pd.DataFrame:
-        full_cache_file_path = PvGis._get_cache_file_path(latitude, longitude)
 
-        if not os.path.exists(full_cache_file_path):
-            logger.info(f"Get PvGis cache file doesn;t exist, full_cache_file_path={full_cache_file_path}")
-            return None
+    # @staticmethod
+    # def _get_cache_file_path(latitude, longitude):
+    #     cache_key = PvGis._get_cache_key(latitude, longitude)
+    #     return LocalRuntimeFiles.get_file(os.path.join(PvGis.STORAGE_FOLDER, cache_key), usePermanentStorage=True)
+
+    # @staticmethod
+    # def _save_cache(latitude, longitude, data: pd.DataFrame):
+    #     cache_file_path = PvGis._get_cache_file_path(latitude, longitude)
+    #     logger.info(f"PvGis: Saving data cache as pickle, cache_file_path={cache_file_path}")
+    #     data.to_pickle(cache_file_path)
+
+    # @staticmethod
+    # def _get_cache(latitude, longitude) -> pd.DataFrame:
+    #     cache_file_path = PvGis._get_cache_file_path(latitude, longitude)
+
+    #     if not os.path.exists(cache_file_path):
+    #         logger.info(f"Get PvGis cache file doesn;t exist, cache_file_path={cache_file_path}")
+    #         return None
         
-        try:
-            logger.info(f"Get PvGis cache file, full_cache_file_path={full_cache_file_path}")
-            return pd.read_pickle(full_cache_file_path)
-        except Exception as e:
-            logger.error(f"Cannot open PvGis cache file, full_cache_file_path={full_cache_file_path}, exception={e}")
-            return None
+    #     try:
+    #         logger.info(f"Get PvGis cache file, cache_file_path={cache_file_path}")
+    #         return PvGis._read_cache(cache_file_path)
+    #     except Exception as e:
+    #         logger.error(f"Cannot open PvGis cache file, full_cache_file_path={cache_file_path}, exception={e}")
+    #         return None
 
 
     def get_solar_components(
@@ -115,17 +129,20 @@ class PvGis():
             else:
                 logger.warning(f"PvGis: cached data exsist but it's not a pd.DataFrame or is empty, latitude={latitude}, longitude={longitude}")
         else:
-            logger.info(f"PvGis: no cached data proceeding with pvgis rwequest, latitude={latitude}, longitude={longitude}")
+            logger.info(f"PvGis: no cached data, proceeding with pvgis request, latitude={latitude}, longitude={longitude}")
+
+        latitude_truncated = np.round(latitude, PvGis.COORDINATES_DECIMAL_PLACES)
+        longitude_truncated = np.round(longitude, PvGis.COORDINATES_DECIMAL_PLACES),
 
         while retry_count <= self.max_retries:
             try:
                 start = pd.Timestamp(PvGis.TYPICAL_YEAR_START_DATE)
                 end = pd.Timestamp(PvGis.TYPICAL_YEAR_END_DATE)
-                logger.info(f"PvGis {retry_count}/{self.max_retries}: Fetching PVGIS TMY for ({latitude},{longitude})")
+                logger.info(f"PvGis {retry_count}/{self.max_retries}: Fetching PVGIS TMY for ({latitude},{longitude}) -> ({latitude_truncated}, {longitude_truncated})")
                 start_api = time.perf_counter()
                 tmy_data = iotools.get_pvgis_tmy(
-                    np.round(latitude, PvGis.COORDINATES_DECIMAL_PLACES),
-                    np.round(longitude, PvGis.COORDINATES_DECIMAL_PLACES),
+                    latitude_truncated,
+                    longitude_truncated,
                     url='https://re.jrc.ec.europa.eu/api/v5_3/',
                     usehorizon=True,
                     startyear=PvGis.PVGIS_START_YEAR,
