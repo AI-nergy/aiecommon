@@ -6,8 +6,16 @@ from aiecommon.Exceptions import AieException
 
 # model describing geometry fields
 class GeometryModel(BaseModel):
+    EPSG: Union[int, str]  # EPSG can be provided as int or string
     type: str  # e.g., "Polygon", "MultiPolygon"
     coordinates: Any  # could be more specific, e.g. List[List[float]] or Tuple[Tuple[float, ...], ...]
+
+    @validator("EPSG", pre=True)
+    def ensure_int_epsg(cls, v):
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            raise ValueError("geometry.EPSG must be convertible to an integer")
 
 
 class RooftopSide(BaseModel):
@@ -39,7 +47,7 @@ class RooftopSide(BaseModel):
             )
 
         # Check required keys
-        required_keys = {"type", "coordinates"}
+        required_keys = {"EPSG", "type", "coordinates"}
         missing = required_keys - set(value.keys())
         if missing:
             raise AieException(
