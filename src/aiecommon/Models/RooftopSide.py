@@ -1,22 +1,13 @@
 from pydantic import BaseModel, validator
-from typing import Optional, List, Any, Union
+from typing import Optional, List, Any
 
 from aiecommon.Exceptions import AieException
 
 
 # model describing geometry fields
 class GeometryModel(BaseModel):
-    EPSG: Union[int, str]  # EPSG can be provided as int or string
     type: str  # e.g., "Polygon", "MultiPolygon"
     coordinates: Any  # could be more specific, e.g. List[List[float]] or Tuple[Tuple[float, ...], ...]
-
-    @validator("EPSG", pre=True)
-    def ensure_int_epsg(cls, v):
-        try:
-            return int(v)
-        except (ValueError, TypeError):
-            raise ValueError("geometry.EPSG must be convertible to an integer")
-
 
 class RooftopSide(BaseModel):
     id: Optional[int] = None
@@ -25,14 +16,14 @@ class RooftopSide(BaseModel):
     orientationDegrees: float
     rooftopSideSlopeDegrees: int
     colorCode: Optional[str] = None
-    # geometry is optional, but if provided, it must contain EPSG/type/coordinates
+    # geometry is optional, but if provided, it must contain type/coordinates
     geometry: Optional[GeometryModel] = None
     rooftopShadingHourly: Optional[List[int]] = None
     shadedFraction: Optional[float] = None
 
     @validator("geometry", pre=True)
     def check_geometry(cls, value):
-        """If geometry is passed, ensure it has EPSG, type, and coordinates.
+        """If geometry is passed, ensure it has type and coordinates.
         Raise AieException (instead of default Pydantic) if anything is missing.
         """
         # If geometry is missing or None, that's okay for this example
@@ -47,7 +38,7 @@ class RooftopSide(BaseModel):
             )
 
         # Check required keys
-        required_keys = {"EPSG", "type", "coordinates"}
+        required_keys = {"type", "coordinates"}
         missing = required_keys - set(value.keys())
         if missing:
             raise AieException(
