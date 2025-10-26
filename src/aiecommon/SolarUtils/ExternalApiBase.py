@@ -109,7 +109,7 @@ class ExternalApiBase():
                 return result_data
 
             except Exception as e:
-                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught excepption while getting data")
+                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception while getting data")
                 logger.warning(e)
                 retry_count += 1
 
