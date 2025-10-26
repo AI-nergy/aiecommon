@@ -23,10 +23,10 @@ class ExternalApiBase():
         ignore_cache: bool = False,
     ):
         """
-        max_retries=3
-        min_retry_delay=2
-        min_result_size (optional, with default) - if the downloaded files is smaller, it won’t count as successful download
-        ignore_cache (optional, default False) - whether to download regardless of the existence of cache
+        max_retries - how many times to retry if the API call fails
+        min_retry_delay - minimal delay between retries
+        min_result_size - if the downloaded data is smaller, it won’t count as successful download
+        ignore_cache - whether to make the API call regardless of the existence of cache
         """
         pass
 
@@ -112,6 +112,8 @@ class ExternalApiBase():
                 logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught excepption while getting data")
                 logger.warning(e)
                 retry_count += 1
-                time.sleep(self.min_retry_delay * 2**(retry_count - 1) + random.random())
+                sleep_interval = self.min_retry_delay * 2**(retry_count - 1) + random.random()
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Sleeping for {sleep_interval} seconds before retry")
+                time.sleep(sleep_interval)
 
         raise AieException(AieException.EXTERNAL_API_FAILED, f"ExternalApiBase/{self.API_IDENTIFIER} failed after {retry_count} retries", {"api": self.API_IDENTIFIER})

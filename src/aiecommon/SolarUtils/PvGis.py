@@ -25,26 +25,17 @@ class PvGis(ExternalApiBase):
         country_code : str,
         max_retries : int = 3,
         min_retry_delay : int = 2,
-        min_file_size : int = 1024,
+        min_result_size : int = 1024,
         ignore_cache : bool = False,
     ):
         """
-        max_retries=3
-        min_retry_delay=2
-        min_file_size (optional, with default) - if the downloaded files is smaller, it won’t count as successful download
-        ignore_cache (optional, default False) - whether to download regardless of the existence of cache
+        max_retries - how many times to retry if the API call fails
+        min_retry_delay - minimal delay between retries
+        min_result_size - if the downloaded data is smaller, it won’t count as successful download
+        ignore_cache - whether to make the API call regardless of the existence of cache
         """
-        pass
-
         self.country_code = country_code
-        # self.max_retries = max_retries
-        # self.min_retry_delay = min_retry_delay
-        # self.min_file_size = min_file_size
-        # self.ignore_cache = ignore_cache
-        
-        # os.makedirs(LocalRuntimeFiles.get_file(PvGis.STORAGE_FOLDER, usePermanentStorage=True), exist_ok=True)
-
-        super().__init__(max_retries, min_retry_delay, min_file_size, ignore_cache)
+        super().__init__(max_retries, min_retry_delay, min_result_size, ignore_cache)
 
 
     @staticmethod
@@ -111,7 +102,7 @@ class PvGis(ExternalApiBase):
         country_code : str | None = None,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
-        min_file_size : int | None = None,
+        min_result_size : int | None = None,
         ignore_cache : bool | None = None,
     ) -> pd.DataFrame | None:
         """
@@ -134,7 +125,7 @@ class PvGis(ExternalApiBase):
             get_result_size_function=lambda result_data: result_data.size,
             max_retries=max_retries,
             min_retry_delay=min_retry_delay,
-            min_result_size=min_file_size,
+            min_result_size=min_result_size,
             ignore_cache=ignore_cache,
         )
 
