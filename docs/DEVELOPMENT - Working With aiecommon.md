@@ -16,26 +16,27 @@ It will update the version in `pyproject.toml` file for `aiecommon` and open the
 
 3. Write the changes in `CHANGELOG` and save it
 
-4. Tag the branch with the version tag:
+4. Commit your changes to `main` branch
 
+5. Tag the branch with the version tag:
 ```bash
 sh scripts/tag_branch_wtih_version.cmd
 ```
 
-5. Commit and push your changes to `main` branch, ensure to push the tags:
+5. Push your changes to `main` branch, ensure to push the tags:
 ```bash
 git push --tags
 ```
 
-## 2) In your base repo (rooftop, optimizer)
 
+## 2) In your base repo (rooftop, optimizer)
 
 1. Change aiecommon version in `pyproject.toml`
 
 Example:
 
 ```toml
-aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "v0.2.0.22", develop = true}
+aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "v0.2.0.24", develop = true}
 ```
 
 2. Update aiecommon:
