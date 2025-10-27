@@ -36,7 +36,7 @@ git push --tags
 Example:
 
 ```toml
-aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "v0.2.0.24", develop = true}
+aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "v0.2.0.26", develop = true}
 ```
 
 2. Update aiecommon:
@@ -45,4 +45,4 @@ aiecommon = {git = "https://github.com/AI-nergy/aiecommon.git", rev = "v0.2.0.24
 poetry update aiecommon
 ```
 
-3. Commit and push your changes to `main` branch
+3. Commit and push your changes to your task branch
