@@ -1,1 +1,0 @@
-python scripts/tag_version.py

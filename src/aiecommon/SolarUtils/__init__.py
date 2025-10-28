@@ -1,11 +1,10 @@
 import json
-# import azure.functions as func
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse
 from fastapi import Request
 import traceback
+
 from aiecommon import custom_logger
 logger = custom_logger.get_logger()
-
 from aiecommon.Exceptions import AieException
 
 class SolarUtils:
@@ -33,8 +32,6 @@ class SolarUtils:
     @staticmethod
     def _response(body, status_code):
         return JSONResponse(content=body, status_code=status_code)
-        # return func.HttpResponse(body=body, status_code=status_code, headers={"Content-Type": "application/json"})
-
 
     @staticmethod
     def error_response(code, data, source, http_error_code, logMessage = "", exception = None):
@@ -53,31 +50,6 @@ class SolarUtils:
     def success_response(result: dict):
         return SolarUtils._response(SolarUtils.__pack_success_response(result, json_dump=False), status_code=200)
 
-
-    @staticmethod
-    def call_endpoint(endpoint:str, params:dict=None, method="GET", request_body=None, safe_result=True, file_sufix = None):
-        import azure.functions as func
-        import function_app as app
-
-        endpoint = endpoint.replace("/", "_")
-        request_body_bytes = json.dumps(request_body).encode('utf-8')
-
-        req = func.HttpRequest(method=method, url="", params=params, body=request_body_bytes)
-        response = getattr(app, endpoint)._function._func(req)
-        response_body = json.loads(response.body)
-
-        logger.info("response_body:")
-        logger.info(response_body)
-
-        debug = request_body.get("debug", False) if request_body else False
-
-        if safe_result and not debug:
-            file_name = f"runtimedata/output_{file_sufix + '_' if file_sufix else ''}{endpoint}.json"
-            with open(file_name, "w") as file:
-                json.dump(response_body, file)
-    
-        return response_body
-
     @staticmethod
     def parse_request_body(request: Request) -> dict:
         try:
@@ -93,3 +65,12 @@ class SolarUtils:
         #     raise AieException(AieException.INVALID_INPUT_DATA, data="Request body is not valid JSON")
 
         # return request_body_json
+
+    @staticmethod
+    def get_timezone_from_country_code(countyCode):
+        """
+        Load and return the timezone for a given two-letter country code.
+        """
+        with open('modules/aiesolar/optimizer/data/timeZoneFromCountryCode.json', 'r') as f:
+            tzmap = json.load(f)
+        return tzmap[countyCode]
