@@ -46,7 +46,7 @@ class ExternalApiBase():
     def _save_cache(cls, params: dict, data):
         cache_file_path = cls._get_cache_file_path(params)
         logger.info(f"ExternalApiBase/{cls.API_IDENTIFIER}: Saving {cls.API_IDENTIFIER} data to cache, cache_file_path={cache_file_path}")
-        return cls._write_cache(cache_file_path, data)
+        return cls._write_cache(cache_file_path, data, params)
 
     @classmethod
     def _get_cache(cls, params: dict):
@@ -58,7 +58,7 @@ class ExternalApiBase():
         
         try:
             logger.info(f"ExternalApiBase/{cls.API_IDENTIFIER}: Get {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}")
-            return cls._read_cache(full_cache_file_path)
+            return cls._read_cache(full_cache_file_path, params)
         except Exception as e:
             logger.error(f"ExternalApiBase/{cls.API_IDENTIFIER}: Cannot open {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}, exception={e}")
             return None
@@ -98,7 +98,7 @@ class ExternalApiBase():
         while retry_count <= max_retries:
             try:
                 result_data = api_call_function(max_retries, retry_count, **api_call_params)
-                result_size = get_result_size_function(result_data)
+                result_size = get_result_size_function(result_data, params)
 
                 if  result_size < min_result_size:
                     raise Exception(f"The result size is smaller than limit, result_size={result_size}, min_result_size={min_result_size}")
