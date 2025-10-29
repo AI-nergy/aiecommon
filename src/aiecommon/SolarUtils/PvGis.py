@@ -56,7 +56,7 @@ class PvGis(ExternalApiBase):
             return True
         else:
             logger.warning(f"PvGis: cached data exsist but it's not a pd.DataFrame or is empty, params={params}")
-            False
+            return False
 
     # @staticmethod
     # def _get_result_size(result_data):
