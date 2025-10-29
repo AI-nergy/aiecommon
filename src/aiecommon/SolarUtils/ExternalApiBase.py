@@ -108,6 +108,8 @@ class ExternalApiBase():
 
                 return result_data
 
+            except AieException as e:
+                raise e
             except Exception as e:
                 logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception while getting data")
                 logger.warning(e)
@@ -118,4 +120,4 @@ class ExternalApiBase():
                     logger.info(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Sleeping for {sleep_interval} seconds before retry")
                     time.sleep(sleep_interval)
 
-        raise AieException(AieException.EXTERNAL_API_FAILED, f"ExternalApiBase/{self.API_IDENTIFIER} failed after {retry_count} retries", {"api": self.API_IDENTIFIER})
+        raise AieException(AieException.EXTERNAL_API_FAILED, f"ExternalApiBase/{self.API_IDENTIFIER}: API call failed after {retry_count} retries", {"api": self.API_IDENTIFIER})

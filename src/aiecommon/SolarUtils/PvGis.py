@@ -58,11 +58,6 @@ class PvGis(ExternalApiBase):
             logger.warning(f"PvGis: cached data exsist but it's not a pd.DataFrame or is empty, params={params}")
             return False
 
-    # @staticmethod
-    # def _get_result_size(result_data):
-    #     logger.warning(f"PvGis: _check_result_size, result_data.size={result_data.size}")
-    #     return result_data.size
-
     def _fetch(self, max_retries, retry_count, latitude, longitude, country_code):
         latitude_truncated = np.round(latitude, PvGis.COORDINATES_DECIMAL_PLACES)
         longitude_truncated = np.round(longitude, PvGis.COORDINATES_DECIMAL_PLACES)
