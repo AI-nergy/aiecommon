@@ -3,6 +3,7 @@ import random
 import pandas as pd
 from  typing import Callable
 import time
+import traceback
 
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
@@ -98,9 +99,10 @@ class ExternalApiBase():
         while retry_count <= max_retries:
             try:
                 result_data = api_call_function(max_retries, retry_count, **api_call_params)
-                result_size = get_result_size_function(result_data, params)
+                result_size = get_result_size_function(result_data, api_call_params)
 
                 if  result_size < min_result_size:
+                    logger.info(result_data)
                     raise Exception(f"The result size is smaller than limit, result_size={result_size}, min_result_size={min_result_size}")
 
                 logger.info(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Saving result to cache, api_call_params={api_call_params}")
@@ -111,8 +113,9 @@ class ExternalApiBase():
             except AieException as e:
                 raise e
             except Exception as e:
-                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception while getting data")
-                logger.warning(e)
+                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception while getting data:")
+                logger.warning(traceback.format_exc())
+
                 retry_count += 1
 
                 if retry_count <= max_retries:
