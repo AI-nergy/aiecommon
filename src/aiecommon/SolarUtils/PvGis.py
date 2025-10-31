@@ -43,15 +43,15 @@ class PvGis(ExternalApiBase):
         return f"{PvGis.PVGIS_START_YEAR}_{PvGis.PVGIS_END_YEAR}_{np.round(params['latitude'], PvGis.COORDINATES_DECIMAL_PLACES):.3f}_{np.round(params['longitude'], PvGis.COORDINATES_DECIMAL_PLACES):.3f}"
 
     @staticmethod
-    def _read_cache(cache_file_path: str) -> pd.DataFrame:
+    def _read_cache(cache_file_path: str, params: dict) -> pd.DataFrame:
         return pd.read_pickle(cache_file_path)
 
     @staticmethod
-    def _write_cache(cache_file_path: str, data: pd.DataFrame):
+    def _write_cache(cache_file_path: str, data: pd.DataFrame, params: dict):
         return data.to_pickle(cache_file_path)
 
     @staticmethod
-    def _check_cache(cached_result, params):
+    def _check_cache(cached_result, params: dict):
         if isinstance(cached_result, pd.DataFrame) and not cached_result.empty:
             return True
         else:
@@ -117,7 +117,7 @@ class PvGis(ExternalApiBase):
                 "longitude": longitude,
                 "country_code": country_code,
             },
-            get_result_size_function=lambda result_data: result_data.size,
+            get_result_size_function=lambda result_data, params: result_data.size,
             max_retries=max_retries,
             min_retry_delay=min_retry_delay,
             min_result_size=min_result_size,
