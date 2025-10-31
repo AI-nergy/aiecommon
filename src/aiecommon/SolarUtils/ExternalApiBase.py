@@ -3,6 +3,7 @@ import random
 import pandas as pd
 from  typing import Callable
 import time
+import traceback
 
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
@@ -25,7 +26,7 @@ class ExternalApiBase():
         """
         max_retries - how many times to retry if the API call fails
         min_retry_delay - minimal delay between retries
-        min_result_size - if the downloaded data is smaller, it won’t count as successful download
+        min_result_size - if the downloaded data is smaller, it won't count as successful download
         ignore_cache - whether to make the API call regardless of the existence of cache
         """
         pass
@@ -46,7 +47,7 @@ class ExternalApiBase():
     def _save_cache(cls, params: dict, data):
         cache_file_path = cls._get_cache_file_path(params)
         logger.info(f"ExternalApiBase/{cls.API_IDENTIFIER}: Saving {cls.API_IDENTIFIER} data to cache, cache_file_path={cache_file_path}")
-        return cls._write_cache(cache_file_path, data)
+        return cls._write_cache(cache_file_path, data, params)
 
     @classmethod
     def _get_cache(cls, params: dict):
@@ -58,7 +59,7 @@ class ExternalApiBase():
         
         try:
             logger.info(f"ExternalApiBase/{cls.API_IDENTIFIER}: Get {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}")
-            return cls._read_cache(full_cache_file_path)
+            return cls._read_cache(full_cache_file_path, params)
         except Exception as e:
             logger.error(f"ExternalApiBase/{cls.API_IDENTIFIER}: Cannot open {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}, exception={e}")
             return None
@@ -84,23 +85,27 @@ class ExternalApiBase():
 
         retry_count = 0
 
-        logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Try to get result from cache, api_call_params={api_call_params}")
-        cached_result = self._get_cache(api_call_params)
-        if cached_result is not None:
-            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Got result from cache, api_call_params={api_call_params}")
-            if self._check_cache(cached_result, api_call_params):
-                return cached_result
+        if not ignore_cache:
+            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Try to get result from cache, api_call_params={api_call_params}")
+            cached_result = self._get_cache(api_call_params)
+            if cached_result is not None:
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Got result from cache, api_call_params={api_call_params}")
+                if self._check_cache(cached_result, api_call_params):
+                    return cached_result
+                else:
+                    logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER}: cached data exsist but it didn't pass cache check, api_call_params={api_call_params}")
             else:
-                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER}: cached data exsist but it didn't pass cache check, api_call_params={api_call_params}")
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, proceeding with api request, api_call_params={api_call_params}")
         else:
-            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, proceeding with api request, api_call_params={api_call_params}")
+            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: ignoring cache and proceeding with api request, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
 
         while retry_count <= max_retries:
             try:
                 result_data = api_call_function(max_retries, retry_count, **api_call_params)
-                result_size = get_result_size_function(result_data)
+                result_size = get_result_size_function(result_data, api_call_params)
 
                 if  result_size < min_result_size:
+                    logger.info(result_data)
                     raise Exception(f"The result size is smaller than limit, result_size={result_size}, min_result_size={min_result_size}")
 
                 logger.info(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Saving result to cache, api_call_params={api_call_params}")
@@ -108,9 +113,23 @@ class ExternalApiBase():
 
                 return result_data
 
-            except Exception as e:
-                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception while getting data")
-                logger.warning(e)
+            except AieException as e:
+                raise e
+
+            # except HTTPError as e:
+            #     if e.code == 404:
+            #         logger.error(f'Internal exception: EXTERNAL_API_FAILED. Error code received is {e.code}.')
+            #         logger.error('There is no DSM data for the location you requested.')
+            #         raise AieException(AieException.HOUSE_NOT_LOCATED)
+            #     else:
+            #         logger.error(f'Internal exception: EXTERNAL_API_FAILED. Error code received is {e.code}.')
+            #         logger.error(f'Failed to fetch DSM URL: {response.read().decode()}')
+            #         raise AieException(AieException.HOUSE_NOT_LOCATED)
+
+            except (Exception) as e:
+                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception {type(e).__name__} while getting data:")
+                logger.warning(traceback.format_exc())
+
                 retry_count += 1
 
                 if retry_count <= max_retries:
@@ -118,4 +137,4 @@ class ExternalApiBase():
                     logger.info(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Sleeping for {sleep_interval} seconds before retry")
                     time.sleep(sleep_interval)
 
-        raise AieException(AieException.EXTERNAL_API_FAILED, f"ExternalApiBase/{self.API_IDENTIFIER} failed after {retry_count} retries", {"api": self.API_IDENTIFIER})
+        raise AieException(AieException.EXTERNAL_API_FAILED, f"ExternalApiBase/{self.API_IDENTIFIER}: API call failed after {retry_count} retries", {"api": self.API_IDENTIFIER})

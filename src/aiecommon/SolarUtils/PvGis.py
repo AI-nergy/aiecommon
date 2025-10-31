@@ -31,7 +31,7 @@ class PvGis(ExternalApiBase):
         """
         max_retries - how many times to retry if the API call fails
         min_retry_delay - minimal delay between retries
-        min_result_size - if the downloaded data is smaller, it won’t count as successful download
+        min_result_size - if the downloaded data is smaller, it won't count as successful download
         ignore_cache - whether to make the API call regardless of the existence of cache
         """
         self.country_code = country_code
@@ -43,25 +43,20 @@ class PvGis(ExternalApiBase):
         return f"{PvGis.PVGIS_START_YEAR}_{PvGis.PVGIS_END_YEAR}_{np.round(params['latitude'], PvGis.COORDINATES_DECIMAL_PLACES):.3f}_{np.round(params['longitude'], PvGis.COORDINATES_DECIMAL_PLACES):.3f}"
 
     @staticmethod
-    def _read_cache(cache_file_path: str) -> pd.DataFrame:
+    def _read_cache(cache_file_path: str, params: dict) -> pd.DataFrame:
         return pd.read_pickle(cache_file_path)
 
     @staticmethod
-    def _write_cache(cache_file_path: str, data: pd.DataFrame):
+    def _write_cache(cache_file_path: str, data: pd.DataFrame, params: dict):
         return data.to_pickle(cache_file_path)
 
     @staticmethod
-    def _check_cache(cached_result, params):
+    def _check_cache(cached_result, params: dict):
         if isinstance(cached_result, pd.DataFrame) and not cached_result.empty:
             return True
         else:
             logger.warning(f"PvGis: cached data exsist but it's not a pd.DataFrame or is empty, params={params}")
-            False
-
-    # @staticmethod
-    # def _get_result_size(result_data):
-    #     logger.warning(f"PvGis: _check_result_size, result_data.size={result_data.size}")
-    #     return result_data.size
+            return False
 
     def _fetch(self, max_retries, retry_count, latitude, longitude, country_code):
         latitude_truncated = np.round(latitude, PvGis.COORDINATES_DECIMAL_PLACES)
@@ -122,7 +117,7 @@ class PvGis(ExternalApiBase):
                 "longitude": longitude,
                 "country_code": country_code,
             },
-            get_result_size_function=lambda result_data: result_data.size,
+            get_result_size_function=lambda result_data, params: result_data.size,
             max_retries=max_retries,
             min_retry_delay=min_retry_delay,
             min_result_size=min_result_size,
