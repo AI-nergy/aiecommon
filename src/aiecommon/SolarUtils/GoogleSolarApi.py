@@ -19,9 +19,8 @@ class GoogleSolarApi(ExternalApiBase):
     API_IDENTIFIER = 'GoogleSolarApi'
     USE_PERMANENT_STORAGE = 'True'
 
-    COORDINATES_DECIMAL_PLACES = 3
+    COORDINATES_DECIMAL_PLACES = 4
 
-    RADIUS_METERS = 150
     PIXEL_SIZE_METERS = 0.25
     DATALAYERS_BASE_URL = "https://solar.googleapis.com/v1/dataLayers:get"
     ENDPOINT_IDENTIFIER_DATALAYERS = "ENDPOINT_IDENTIFIER_DATALAYERS"
@@ -49,7 +48,7 @@ class GoogleSolarApi(ExternalApiBase):
 
     @staticmethod
     def _get_cache_key(params: dict):
-        return f"{params['endpoint_identifier']}_{GoogleSolarApi.RADIUS_METERS}_{np.round(params['latitude'], GoogleSolarApi.COORDINATES_DECIMAL_PLACES):.3f}_{np.round(params['longitude'], GoogleSolarApi.COORDINATES_DECIMAL_PLACES):.3f}"
+        return f"{params['endpoint_identifier']}_{params['radius_meters']}_{np.round(params['latitude'], GoogleSolarApi.COORDINATES_DECIMAL_PLACES):.3f}_{np.round(params['longitude'], GoogleSolarApi.COORDINATES_DECIMAL_PLACES):.3f}"
 
     @staticmethod
     def _read_cache(cache_file_path: str, params) -> pd.DataFrame:
@@ -105,14 +104,14 @@ class GoogleSolarApi(ExternalApiBase):
             case _:
                 logger.error(f"GoogleSolarApi._get_result_size: invalid endpoint_identifier, endpoint_identifier={params['endpoint_identifier']}")
 
-    def _fetch_data_layers(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, use_google_experimental):
+    def _fetch_data_layers(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, use_google_experimental):
         
         if use_google_experimental == True:
             query_params = {
                 'location.latitude': latitude,
                 'location.longitude': longitude,
                 'view': 'IMAGERY_LAYERS',
-                'radiusMeters': self.RADIUS_METERS,  # optional, you can change this, CHRISTIAN TODO
+                'radiusMeters': radius_meters,  # optional, you can change this, CHRISTIAN TODO
                 'pixelSizeMeters': self.PIXEL_SIZE_METERS,
                 'requiredQuality': 'BASE',  # optional, you can change this
                 'experiments': 'EXPANDED_COVERAGE',
@@ -123,7 +122,7 @@ class GoogleSolarApi(ExternalApiBase):
                 'location.latitude': latitude,
                 'location.longitude': longitude,
                 'view': 'IMAGERY_LAYERS',
-                'radiusMeters': self.RADIUS_METERS,  # optional, you can change this, CHRISTIAN TODO
+                'radiusMeters': radius_meters, # optional, you can change this, CHRISTIAN TODO
                 'pixelSizeMeters': self.PIXEL_SIZE_METERS,
                 'requiredQuality': 'MEDIUM',  # optional, you can change this
                 'key': self.API_KEY
@@ -139,20 +138,7 @@ class GoogleSolarApi(ExternalApiBase):
         else:
             raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
-
-        # try:
-        # except HTTPError as e:
-        #     if e.code == 404:
-        #         logger.error(f'Internal exception: EXTERNAL_API_FAILED. Error code received is {e.code}.')
-        #         logger.error('There is no DSM data for the location you requested.')
-        #         raise AieException(AieException.HOUSE_NOT_LOCATED)
-        #     else:
-        #         logger.error(f'Internal exception: EXTERNAL_API_FAILED. Error code received is {e.code}.')
-        #         logger.error(f'Failed to fetch DSM URL: {response.read().decode()}')
-        #         raise AieException(AieException.HOUSE_NOT_LOCATED)
-
-
-    def _fetch_dsm(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, dsm_url):
+    def _fetch_dsm(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, dsm_url):
         
         response = requests.get(url=dsm_url, params={"key": self.API_KEY})
         if response.status_code == 200:
@@ -161,7 +147,7 @@ class GoogleSolarApi(ExternalApiBase):
         else:
             raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_dsm {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
-    def _fetch_mask(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, mask_url):
+    def _fetch_mask(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, mask_url):
         
         response = requests.get(url=mask_url, params={"key": self.API_KEY})
         if response.status_code == 200:
@@ -173,11 +159,12 @@ class GoogleSolarApi(ExternalApiBase):
     def get_layers_info(
         self,
         latitude, longitude,
+        radius_meters,
         use_google_experimental,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
         min_result_size : int = 64,
-        ignore_cache : bool | None = None,
+        ignore_cache : bool | None = True,
     ) -> pd.DataFrame | None:
         """
         Retrieve Google Solar API layer info for given coordinates
@@ -188,6 +175,7 @@ class GoogleSolarApi(ExternalApiBase):
             api_call_params={
                 "latitude": latitude,
                 "longitude": longitude,
+                "radius_meters": radius_meters,
                 "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_DATALAYERS,
                 # "url": "https://solar.googleapis.com/v1/dataLayers:get",
                 "use_google_experimental": use_google_experimental
@@ -202,6 +190,7 @@ class GoogleSolarApi(ExternalApiBase):
     def get_dsm(
         self,
         latitude, longitude,
+        radius_meters,
         dsm_url,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
@@ -217,6 +206,7 @@ class GoogleSolarApi(ExternalApiBase):
             api_call_params={
                 "latitude": latitude,
                 "longitude": longitude,
+                "radius_meters": radius_meters,
                 "dsm_url": dsm_url,
                 "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM,
             },
@@ -230,6 +220,7 @@ class GoogleSolarApi(ExternalApiBase):
     def get_mask(
         self,
         latitude, longitude,
+        radius_meters,
         mask_url,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
@@ -245,6 +236,7 @@ class GoogleSolarApi(ExternalApiBase):
             api_call_params={
                 "latitude": latitude,
                 "longitude": longitude,
+                "radius_meters": radius_meters,
                 "mask_url": mask_url,
                 "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK,
             },
