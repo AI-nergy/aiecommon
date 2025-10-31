@@ -85,16 +85,19 @@ class ExternalApiBase():
 
         retry_count = 0
 
-        logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Try to get result from cache, api_call_params={api_call_params}")
-        cached_result = self._get_cache(api_call_params)
-        if cached_result is not None:
-            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Got result from cache, api_call_params={api_call_params}")
-            if self._check_cache(cached_result, api_call_params):
-                return cached_result
+        if not ignore_cache:
+            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Try to get result from cache, api_call_params={api_call_params}")
+            cached_result = self._get_cache(api_call_params)
+            if cached_result is not None:
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Got result from cache, api_call_params={api_call_params}")
+                if self._check_cache(cached_result, api_call_params):
+                    return cached_result
+                else:
+                    logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER}: cached data exsist but it didn't pass cache check, api_call_params={api_call_params}")
             else:
-                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER}: cached data exsist but it didn't pass cache check, api_call_params={api_call_params}")
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, proceeding with api request, api_call_params={api_call_params}")
         else:
-            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, proceeding with api request, api_call_params={api_call_params}")
+            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: ignoring cache and proceeding with api request, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
 
         while retry_count <= max_retries:
             try:
@@ -112,8 +115,19 @@ class ExternalApiBase():
 
             except AieException as e:
                 raise e
-            except Exception as e:
-                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception while getting data:")
+
+            # except HTTPError as e:
+            #     if e.code == 404:
+            #         logger.error(f'Internal exception: EXTERNAL_API_FAILED. Error code received is {e.code}.')
+            #         logger.error('There is no DSM data for the location you requested.')
+            #         raise AieException(AieException.HOUSE_NOT_LOCATED)
+            #     else:
+            #         logger.error(f'Internal exception: EXTERNAL_API_FAILED. Error code received is {e.code}.')
+            #         logger.error(f'Failed to fetch DSM URL: {response.read().decode()}')
+            #         raise AieException(AieException.HOUSE_NOT_LOCATED)
+
+            except (Exception) as e:
+                logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER} {retry_count}/{max_retries}: Caught exception {type(e).__name__} while getting data:")
                 logger.warning(traceback.format_exc())
 
                 retry_count += 1
