@@ -1,3 +1,7 @@
+v0.2.0.30
+
+fix params in PvGis cache functions
+
 v0.2.0.29
 
 Improve ExternalApiBase and GoogleSolarApi
