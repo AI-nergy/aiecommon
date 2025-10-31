@@ -6,6 +6,7 @@ import time
 import numpy as np
 import requests
 from requests import Request
+from PIL import Image
 
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
@@ -56,23 +57,23 @@ class GoogleSolarApi(ExternalApiBase):
             case GoogleSolarApi.ENDPOINT_IDENTIFIER_DATALAYERS:
                 with open(cache_file_path) as file:
                     return json.load(file)
-            case GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM:
-                return None
-            case GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK:
-                return None
+            case (GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM |
+            GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK):
+                with open(cache_file_path, "bw") as file:
+                    return file.write(data)
             case _:
                 logger.error(f"GoogleSolarApi._read_cache: invalid endpoint_identifier, endpoint_identifier={params['endpoint_identifier']}")
 
     @staticmethod
-    def _write_cache(cache_file_path: str, data: pd.DataFrame, params):
+    def _write_cache(cache_file_path: str, data, params):
         match params["endpoint_identifier"]:
             case GoogleSolarApi.ENDPOINT_IDENTIFIER_DATALAYERS:
                 with open(cache_file_path, "w") as file:
                     return json.dump(data, file)
-            case GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM:
-                return None
-            case GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK:
-                return None
+            case (GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM | 
+            GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK):
+                with open(cache_file_path, "bw") as file:
+                    return file.write(data)
             case _:
                 logger.error(f"GoogleSolarApi._write_cache: invalid endpoint_identifier, endpoint_identifier={params['endpoint_identifier']}")
 
@@ -83,10 +84,18 @@ class GoogleSolarApi(ExternalApiBase):
                 if isinstance(cached_result, dict):
                     return True
                 else:
-                    logger.warning(f"GoogleSolarApi: cached data exsist but it's not a valid JSON, params={params}, exception={exception }")
+                    logger.warning(f"GoogleSolarApi._check_cache/{params['endpoint_identifier']}: cached data exsist but it's not a valid JSON, params={params}")
                     return False
-            case GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM:
-                return False
+            case (GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK |
+            GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM):
+                try:
+                    with Image.open(file_path) as img:
+                        img.verify()
+                    return True
+                except (IOError, SyntaxError) as exception:
+                    logger.warning(f"GoogleSolarApi._check_cache/{params['endpoint_identifier']}: cached data exsist but it's not a valid TIFF, params={params}, exception={exception}")
+                    return False
+
             case GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK:
                 return False
             case _:
