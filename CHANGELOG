@@ -1,3 +1,7 @@
+v0.2.0.31
+
+remove RooftopSide.py and replace with Geometry.py and RooftopParts.py
+
 v0.2.0.30
 
 fix params in PvGis cache functions
