@@ -26,7 +26,7 @@ class ExternalApiBase():
         """
         max_retries - how many times to retry if the API call fails
         min_retry_delay - minimal delay between retries
-        min_result_size - if the downloaded data is smaller, it won’t count as successful download
+        min_result_size - if the downloaded data is smaller, it won't count as successful download
         ignore_cache - whether to make the API call regardless of the existence of cache
         """
         pass
