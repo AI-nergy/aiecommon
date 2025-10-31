@@ -59,8 +59,8 @@ class GoogleSolarApi(ExternalApiBase):
                     return json.load(file)
             case (GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM |
             GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK):
-                with open(cache_file_path, "bw") as file:
-                    return file.write(data)
+                with open(cache_file_path, "r") as file:
+                    return file.read()
             case _:
                 logger.error(f"GoogleSolarApi._read_cache: invalid endpoint_identifier, endpoint_identifier={params['endpoint_identifier']}")
 
