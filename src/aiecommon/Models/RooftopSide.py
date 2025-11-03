@@ -16,14 +16,14 @@ class RooftopSide(BaseModel):
     orientationDegrees: float
     rooftopSideSlopeDegrees: int
     colorCode: Optional[str] = None
-    # geometry is optional, but if provided, it must contain EPSG/type/coordinates
+    # geometry is optional, but if provided, it must contain type/coordinates
     geometry: Optional[OLD_GeometryModel] = None
     rooftopShadingHourly: Optional[List[int]] = None
     shadedFraction: Optional[float] = None
 
     @validator("geometry", pre=True)
     def check_geometry(cls, value):
-        """If geometry is passed, ensure it has EPSG, type, and coordinates.
+        """If geometry is passed, ensure it has type and coordinates.
         Raise AieException (instead of default Pydantic) if anything is missing.
         """
         # If geometry is missing or None, that's okay for this example
@@ -35,15 +35,6 @@ class RooftopSide(BaseModel):
             raise AieException(
                 AieException.INVALID_INPUT_DATA,
                 data={"message": "geometry must be an object/dict if provided"},
-            )
-
-        # Check required keys
-        required_keys = {"EPSG", "type", "coordinates"}
-        missing = required_keys - set(value.keys())
-        if missing:
-            raise AieException(
-                AieException.INVALID_INPUT_DATA,
-                data={"message": f"Missing required geometry keys: {missing}"},
             )
 
         # Check type correctness for each field
