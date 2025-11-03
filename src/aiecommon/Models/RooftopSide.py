@@ -63,4 +63,4 @@ class RooftopSide(BaseModel):
             )
 
         # If everything is okay, parse it into GeometryModel
-        return GeometryModel(**value)
+        return OLD_GeometryModel(**value)
