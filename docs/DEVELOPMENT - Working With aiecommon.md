@@ -9,7 +9,7 @@
 
 ```bash
 cd .venv/src/aiecommon/
-sh scripts/update_version.cmd
+sh scripts/update_version.sh
 ```
 
 It will update the version in `pyproject.toml` file for `aiecommon` and open the `CHANGELOG` file.
@@ -20,7 +20,7 @@ It will update the version in `pyproject.toml` file for `aiecommon` and open the
 
 5. Tag the branch with the version tag:
 ```bash
-sh scripts/tag_branch_wtih_version.cmd
+sh scripts/tag_branch_wtih_version.sh
 ```
 
 5. Push your changes to `main` branch, ensure to push the tags:
