@@ -205,7 +205,7 @@ class GoogleSolarApi(ExternalApiBase):
         dsm_url,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
-        min_result_size : int = 64,
+        min_result_size : int = 1024,
         ignore_cache : bool | None = None,
     ) -> pd.DataFrame | None:
         """
@@ -235,7 +235,7 @@ class GoogleSolarApi(ExternalApiBase):
         mask_url,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
-        min_result_size : int = 64,
+        min_result_size : int = 512,
         ignore_cache : bool | None = None,
     ) -> pd.DataFrame | None:
         """
