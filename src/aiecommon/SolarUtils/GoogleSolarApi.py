@@ -1,3 +1,4 @@
+import io
 import json
 import os
 from urllib.error import HTTPError
@@ -59,7 +60,7 @@ class GoogleSolarApi(ExternalApiBase):
                     return json.load(file)
             case (GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM |
             GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK):
-                with open(cache_file_path, "r") as file:
+                with open(cache_file_path, "rb") as file:
                     return file.read()
             case _:
                 logger.error(f"GoogleSolarApi._read_cache: invalid endpoint_identifier, endpoint_identifier={params['endpoint_identifier']}")
@@ -89,7 +90,8 @@ class GoogleSolarApi(ExternalApiBase):
             case (GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK |
             GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM):
                 try:
-                    with Image.open(file_path) as img:
+                    image_stream = io.BytesIO(cached_result)
+                    with Image.open(image_stream) as img:
                         img.verify()
                     return True
                 except (IOError, SyntaxError) as exception:
