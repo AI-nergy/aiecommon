@@ -1,3 +1,7 @@
+v0.2.0.36
+
+fix GoogleSolarApi, rename scripts from .cmd to .sh
+
 v0.2.0.35
 
 remove EPSG check in RooftopSide
