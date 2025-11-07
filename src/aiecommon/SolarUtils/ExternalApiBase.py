@@ -64,6 +64,21 @@ class ExternalApiBase():
             logger.error(f"ExternalApiBase/{cls.API_IDENTIFIER}: Cannot open {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}, exception={e}")
             return None
 
+    def _get_result_from_cache(self, ignore_cache: bool, api_call_params: dict):
+        if not ignore_cache:
+            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Try to get result from cache, api_call_params={api_call_params}")
+            cached_result = self._get_cache(api_call_params)
+            if cached_result is not None:
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Got result from cache, api_call_params={api_call_params}")
+                if self._check_cache(cached_result, api_call_params):
+                    return cached_result
+                else:
+                    logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER}: cached data exsist but it didn't pass cache check, api_call_params={api_call_params}")
+            else:
+                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, api_call_params={api_call_params}")
+        else:
+            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: ignoring cache, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
+
     def call_api(
         self,
         api_call_function: Callable,
@@ -85,20 +100,13 @@ class ExternalApiBase():
 
         retry_count = 0
 
-        if not ignore_cache:
-            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Try to get result from cache, api_call_params={api_call_params}")
-            cached_result = self._get_cache(api_call_params)
-            if cached_result is not None:
-                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Got result from cache, api_call_params={api_call_params}")
-                if self._check_cache(cached_result, api_call_params):
-                    return cached_result
-                else:
-                    logger.warning(f"ExternalApiBase/{self.API_IDENTIFIER}: cached data exsist but it didn't pass cache check, api_call_params={api_call_params}")
-            else:
-                logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, proceeding with api request, api_call_params={api_call_params}")
-        else:
-            logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: ignoring cache and proceeding with api request, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
+        cached_result = self._get_result_from_cache(ignore_cache, api_call_params)
 
+        if cached_result:
+            return cached_result
+        
+        logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Proceeding with api request, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
+    
         while retry_count <= max_retries:
             try:
                 result_data = api_call_function(max_retries, retry_count, **api_call_params)
