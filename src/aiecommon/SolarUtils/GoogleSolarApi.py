@@ -149,23 +149,32 @@ class GoogleSolarApi(ExternalApiBase):
         else:
             raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
-    def _fetch_dsm(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, dsm_url):
+    # def _fetch_dsm(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, url):
         
-        response = requests.get(url=dsm_url, params={"key": self.API_KEY})
-        if response.status_code == 200:
-            logger.info(f'GoogleSolarApi {retry_count}/{max_retries}: Successfully fetched dsm data')
-            return response.content
-        else:
-            raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_dsm {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
+    #     response = requests.get(url=url, params={"key": self.API_KEY})
+    #     if response.status_code == 200:
+    #         logger.info(f'GoogleSolarApi {retry_count}/{max_retries}: Successfully fetched tiff data')
+    #         return response.content
+    #     else:
+    #         raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_tiff {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
-    def _fetch_mask(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, mask_url):
+    # def _fetch_mask(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, url):
         
-        response = requests.get(url=mask_url, params={"key": self.API_KEY})
+    #     response = requests.get(url=url, params={"key": self.API_KEY})
+    #     if response.status_code == 200:
+    #         logger.info(f'GoogleSolarApi {retry_count}/{max_retries}: Successfully fetched tiff data')
+    #         return response.content
+    #     else:
+    #         raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_tiff {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
+
+    def _fetch_tiff(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, url):
+        
+        response = requests.get(url=url, params={"key": self.API_KEY})
         if response.status_code == 200:
-            logger.info(f'GoogleSolarApi {retry_count}/{max_retries}: Successfully fetched mask data')
+            logger.info(f'GoogleSolarApi {retry_count}/{max_retries}: Successfully fetched tiff data')
             return response.content
         else:
-            raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_mask {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
+            raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_tiff {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
     def get_layers_info(
         self,
@@ -198,27 +207,27 @@ class GoogleSolarApi(ExternalApiBase):
             ignore_cache=ignore_cache,
         )
 
-    def get_dsm(
+    def get_tiff(
         self,
         latitude, longitude,
         radius_meters,
-        dsm_url,
+        url,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
         min_result_size : int = 1024,
         ignore_cache : bool | None = None,
     ) -> pd.DataFrame | None:
         """
-        Retrieve Google Solar API dsm for given dsm url
+        Retrieve Google Solar API tiff for given url
         """
 
         return self.call_api(
-            api_call_function=self. _fetch_dsm,
+            api_call_function=self. _fetch_tiff,
             api_call_params={
                 "latitude": latitude,
                 "longitude": longitude,
                 "radius_meters": radius_meters,
-                "dsm_url": dsm_url,
+                "url": url,
                 "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM,
             },
             get_result_size_function=self._get_result_size,
@@ -227,38 +236,176 @@ class GoogleSolarApi(ExternalApiBase):
             min_result_size=min_result_size,
             ignore_cache=ignore_cache,
         )
-
-    def get_mask(
+    
+    def get_tiff2(
         self,
-        latitude, longitude,
-        radius_meters,
-        mask_url,
+        api_call_params,
         max_retries : int | None = None,
         min_retry_delay : int | None = None,
-        min_result_size : int = 512,
+        min_result_size : int = 1024,
         ignore_cache : bool | None = None,
     ) -> pd.DataFrame | None:
         """
-        Retrieve Google Solar API mask for given mask url
+        Retrieve Google Solar API tiff for given url
         """
 
         return self.call_api(
-            api_call_function=self. _fetch_mask,
-            api_call_params={
-                "latitude": latitude,
-                "longitude": longitude,
-                "radius_meters": radius_meters,
-                "mask_url": mask_url,
-                "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK,
-            },
+            api_call_function=self. _fetch_tiff,
+            api_call_params=api_call_params,
             get_result_size_function=self._get_result_size,
             max_retries=max_retries,
             min_retry_delay=min_retry_delay,
             min_result_size=min_result_size,
             ignore_cache=ignore_cache,
         )
+    
+    # def get_dsm(
+    #     self,
+    #     latitude, longitude,
+    #     radius_meters,
+    #     dsm_url,
+    #     max_retries : int | None = None,
+    #     min_retry_delay : int | None = None,
+    #     min_result_size : int = 1024,
+    #     ignore_cache : bool | None = None,
+    # ) -> pd.DataFrame | None:
+    #     """
+    #     Retrieve Google Solar API dsm for given dsm url
+    #     """
+
+    #     return self.call_api(
+    #         api_call_function=self. _fetch_tiff,
+    #         api_call_params={
+    #             "latitude": latitude,
+    #             "longitude": longitude,
+    #             "radius_meters": radius_meters,
+    #             "url": dsm_url,
+    #             "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM,
+    #         },
+    #         get_result_size_function=self._get_result_size,
+    #         max_retries=max_retries,
+    #         min_retry_delay=min_retry_delay,
+    #         min_result_size=min_result_size,
+    #         ignore_cache=ignore_cache,
+    #     )
+
+    # def get_mask(
+    #     self,
+    #     latitude, longitude,
+    #     radius_meters,
+    #     mask_url,
+    #     max_retries : int | None = None,
+    #     min_retry_delay : int | None = None,
+    #     min_result_size : int = 512,
+    #     ignore_cache : bool | None = None,
+    # ) -> pd.DataFrame | None:
+    #     """
+    #     Retrieve Google Solar API mask for given mask url
+    #     """
+
+    #     return self.call_api(
+    #         api_call_function=self. _fetch_tiff,
+    #         api_call_params={
+    #             "latitude": latitude,
+    #             "longitude": longitude,
+    #             "radius_meters": radius_meters,
+    #             "url": mask_url,
+    #             "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK,
+    #         },
+    #         get_result_size_function=self._get_result_size,
+    #         max_retries=max_retries,
+    #         min_retry_delay=min_retry_delay,
+    #         min_result_size=min_result_size,
+    #         ignore_cache=ignore_cache,
+    #     )
 
 
+    def get_data(
+        self,
+        latitude, longitude,
+        radius_meters,
+        use_google_experimental,
+        endpoint_identifiers: list = [ENDPOINT_IDENTIFIER_DSM, ENDPOINT_IDENTIFIER_MASK],
+        max_retries : int | None = None,
+        min_retry_delay : int | None = None,
+        ignore_cache : bool | None = None,
+    ) -> pd.DataFrame | None:
+        """
+        Retrieve Google Solar API dsm and mask for given latitude and lognitude
+        This function majes three calls:
+            - to data layer to retreive dsm url and mask url - JSON response
+            - to the dsm url retreived from the data layer response - TIFF response
+            - to the mask url retreived from the data layer response - TIFF response
+        """
 
+        endpoint_identifiers_set = set(endpoint_identifiers)
+        api_call_params = {}
 
+        api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK] = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "radius_meters": radius_meters,
+            "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK,
+        },
 
+        api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM] = {
+                "latitude": latitude,
+                "longitude": longitude,
+                "radius_meters": radius_meters,
+                "endpoint_identifier": GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM,
+        },
+
+        if GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM in endpoint_identifiers:
+            cached_dsm_data = self._get_result_from_cache(ignore_cache=ignore_cache, api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM]) 
+            if cached_dsm_data is None:
+                endpoint_identifiers_set.add(GoogleSolarApi.ENDPOINT_IDENTIFIER_DATALAYERS)
+        else:
+            cached_dsm_data = None
+
+        if GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK in endpoint_identifiers:
+            cached_mask_data = self._get_result_from_cache(ignore_cache=ignore_cache, api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK])
+            if cached_mask_data is None:
+                endpoint_identifiers_set.add(GoogleSolarApi.ENDPOINT_IDENTIFIER_DATALAYERS)
+        else:
+            cached_mask_data = None
+
+        
+        if GoogleSolarApi.ENDPOINT_IDENTIFIER_DATALAYERS in endpoint_identifiers:
+            layers_info = self.get_layers_info(
+                latitude=latitude,
+                longitude=longitude,
+                radius_meters=radius_meters,
+                use_google_experimental=use_google_experimental,
+                max_retries = max_retries,
+                min_retry_delay = max_retries,
+                ignore_cache = ignore_cache,
+            )
+            if layers_info:
+                api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM]["url"] = layers_info.get('dsmUrl')
+                api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK]["url"] = layers_info.get('maskUrl')
+                cached_dsm_data = None
+                cached_mask_data = None
+        else:
+            layers_info = None
+
+        if GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM in endpoint_identifiers:
+            dsm_data = cached_dsm_data if cached_dsm_data else self.get_tiff2(
+                api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM],
+                max_retries = max_retries,
+                min_retry_delay = min_retry_delay,
+                ignore_cache = ignore_cache,
+            )
+        else:
+            dsm_data = None
+        
+        if GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK in endpoint_identifiers:
+            mask_data = cached_mask_data if cached_mask_data else self.get_tiff2(
+                api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK],
+                max_retries = max_retries,
+                min_retry_delay = min_retry_delay,
+                ignore_cache = ignore_cache,
+            )
+        else:
+            mask_data = None
+
+        return layers_info, mask_data, dsm_data
