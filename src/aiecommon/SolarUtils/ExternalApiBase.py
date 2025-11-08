@@ -61,7 +61,7 @@ class ExternalApiBase():
             logger.info(f"ExternalApiBase/{cls.API_IDENTIFIER}: Get {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}")
             return cls._read_cache(full_cache_file_path, params)
         except Exception as e:
-            logger.error(f"ExternalApiBase/{cls.API_IDENTIFIER}: Cannot open {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}, exception={e}")
+            logger.error(f"ExternalApiBase/{cls.API_IDENTIFIER}: Cannot read {cls.API_IDENTIFIER} cache file, full_cache_file_path={full_cache_file_path}, exception={e}")
             return None
 
     def _get_result_from_cache(self, ignore_cache: bool, api_call_params: dict):
@@ -78,6 +78,8 @@ class ExternalApiBase():
                 logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: no cached data, api_call_params={api_call_params}")
         else:
             logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: ignoring cache, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
+        
+        return None
 
     def call_api(
         self,
@@ -102,7 +104,7 @@ class ExternalApiBase():
 
         cached_result = self._get_result_from_cache(ignore_cache, api_call_params)
 
-        if cached_result:
+        if cached_result is not None:
             return cached_result
         
         logger.info(f"ExternalApiBase/{self.API_IDENTIFIER}: Proceeding with api request, ignore_cache={ignore_cache}, api_call_params={api_call_params}")
