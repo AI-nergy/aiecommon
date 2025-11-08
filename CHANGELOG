@@ -1,3 +1,7 @@
+v0.2.0.38
+
+ExternalApiBase: fix issue with cached_result and truth value
+
 v0.2.0.37
 
 finish implement get_data in GoogleSolarApi
