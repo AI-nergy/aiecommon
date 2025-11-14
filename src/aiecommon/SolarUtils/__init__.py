@@ -6,6 +6,7 @@ import traceback
 from aiecommon import custom_logger
 logger = custom_logger.get_logger()
 from aiecommon.Exceptions import AieException
+from aiecommon.FileSystem import LocalDataFiles
 
 class SolarUtils:
 
@@ -71,6 +72,7 @@ class SolarUtils:
         """
         Load and return the timezone for a given two-letter country code.
         """
-        with open('modules/aiesolar/optimizer/data/timeZoneFromCountryCode.json', 'r') as f:
-            tzmap = json.load(f)
+        # with open('modules/aiesolar/optimizer/data/timeZoneFromCountryCode.json', 'r') as f:
+        #     tzmap = json.load(f)
+        tzmap = LocalDataFiles.load_json('data/timeZoneFromCountryCode.json', 'aiecommon')
         return tzmap[countyCode]
