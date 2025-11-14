@@ -63,7 +63,7 @@ class PanelInstallationAreaProperties(BaseModel):
     usefulAream2: float
     shadedFraction: float | None = None
     orientationDegrees: float
-    panelInstallationAreaSlopeDegrees: float
+    slopeDegrees: float
 
 
 class PanelInstallationArea(BaseModel):
