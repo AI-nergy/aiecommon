@@ -335,10 +335,16 @@ class GoogleSolarApi(ExternalApiBase):
         dsm_data = cached_dsm_data if cached_dsm_data else None
         mask_data = cached_mask_data if cached_mask_data else None
 
+        if dsm_data is not None:
+            logger.info("GoogleSolarApi: using cached DSM data (no threaded download needed)")
+        if mask_data is not None:
+            logger.info("GoogleSolarApi: using cached MASK data (no threaded download needed)")
+
         # Download DSM and mask in parallel if they are requested and not in cache
         futures = {}
         with ThreadPoolExecutor(max_workers=2) as executor:
             if GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM in endpoint_identifiers_set and dsm_data is None:
+                logger.info("GoogleSolarApi: downloading DSM via _get_tiff in ThreadPoolExecutor")
                 futures["dsm"] = executor.submit(
                     self._get_tiff,
                     api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM],
@@ -347,6 +353,7 @@ class GoogleSolarApi(ExternalApiBase):
                     ignore_cache=ignore_cache,
                 )
             if GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK in endpoint_identifiers_set and mask_data is None:
+                logger.info("GoogleSolarApi: downloading MASK via _get_tiff in ThreadPoolExecutor")
                 futures["mask"] = executor.submit(
                     self._get_tiff,
                     api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK],
@@ -359,8 +366,16 @@ class GoogleSolarApi(ExternalApiBase):
             for key, future in futures.items():
                 if key == "dsm":
                     dsm_data = future.result()
+                    logger.info("GoogleSolarApi: DSM download in thread finished successfully")
                 elif key == "mask":
                     mask_data = future.result()
+                    logger.info("GoogleSolarApi: MASK download in thread finished successfully")
+
+        logger.info(
+            "GoogleSolarApi: completed get_data, DSM=%s, MASK=%s",
+            "threaded" if "dsm" in futures else "cache_or_not_requested",
+            "threaded" if "mask" in futures else "cache_or_not_requested",
+        )
 
         return dict(layers_info=layers_info, mask_data=mask_data, dsm_data=dsm_data)
 
