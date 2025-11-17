@@ -8,6 +8,7 @@ import numpy as np
 import requests
 from requests import Request
 from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
 
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
@@ -330,24 +331,38 @@ class GoogleSolarApi(ExternalApiBase):
         else:
             layers_info = None
 
-        if GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM in endpoint_identifiers_set:
-            dsm_data = cached_dsm_data if cached_dsm_data else self._get_tiff(
-                api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM],
-                max_retries = max_retries,
-                min_retry_delay = min_retry_delay,
-                ignore_cache = ignore_cache,
-            )
-        else:
-            dsm_data = None
-        
-        if GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK in endpoint_identifiers_set:
-            mask_data = cached_mask_data if cached_mask_data else self._get_tiff(
-                api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK],
-                max_retries = max_retries,
-                min_retry_delay = min_retry_delay,
-                ignore_cache = ignore_cache,
-            )
-        else:
-            mask_data = None
+        # Initialize data with any cached values
+        dsm_data = cached_dsm_data if cached_dsm_data else None
+        mask_data = cached_mask_data if cached_mask_data else None
+
+        # Download DSM and mask in parallel if they are requested and not in cache
+        futures = {}
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            if GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM in endpoint_identifiers_set and dsm_data is None:
+                futures["dsm"] = executor.submit(
+                    self._get_tiff,
+                    api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM],
+                    max_retries=max_retries,
+                    min_retry_delay=min_retry_delay,
+                    ignore_cache=ignore_cache,
+                )
+            if GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK in endpoint_identifiers_set and mask_data is None:
+                futures["mask"] = executor.submit(
+                    self._get_tiff,
+                    api_call_params=api_call_params[GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK],
+                    max_retries=max_retries,
+                    min_retry_delay=min_retry_delay,
+                    ignore_cache=ignore_cache,
+                )
+
+            # Collect results
+            for key, future in futures.items():
+                if key == "dsm":
+                    dsm_data = future.result()
+                elif key == "mask":
+                    mask_data = future.result()
 
         return dict(layers_info=layers_info, mask_data=mask_data, dsm_data=dsm_data)
+
+
+    
