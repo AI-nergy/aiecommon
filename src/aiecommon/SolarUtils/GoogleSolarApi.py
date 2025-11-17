@@ -9,6 +9,7 @@ import requests
 from requests import Request
 from PIL import Image
 from concurrent.futures import ThreadPoolExecutor
+import threading
 
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
@@ -378,6 +379,60 @@ class GoogleSolarApi(ExternalApiBase):
         )
 
         return dict(layers_info=layers_info, mask_data=mask_data, dsm_data=dsm_data)
+    
+    def prefetch_shading_data_async(
+        self,
+        latitude: float,
+        longitude: float,
+        use_google_experimental: bool,
+        max_retries: int | None = None,
+        min_retry_delay: int | None = None,
+        ignore_cache: bool | None = None,
+    ) -> None:
+        """
+        Fire-and-forget prefetch for shading analysis.
+
+        - Uses radius_meters = 250
+        - Runs in a background thread
+        - Populates cache for DATALAYERS, DSM and MASK
+        - We do NOT wait for completion
+        """
+
+        def _worker():
+            try:
+                logger.info(
+                    "GoogleSolarApi: starting async shading prefetch (radius=250m) "
+                    f"for lat={latitude}, lon={longitude}"
+                )
+                # This will go through get_layers_info + threaded DSM/MASK downloads
+                # and write everything into the cache.
+                self.get_data(
+                    latitude=latitude,
+                    longitude=longitude,
+                    radius_meters=250,
+                    use_google_experimental=use_google_experimental,
+                    endpoint_identifiers=[
+                        GoogleSolarApi.ENDPOINT_IDENTIFIER_DSM,
+                        GoogleSolarApi.ENDPOINT_IDENTIFIER_MASK,
+                    ],
+                    max_retries=max_retries,
+                    min_retry_delay=min_retry_delay,
+                    ignore_cache=ignore_cache,
+                )
+                logger.info(
+                    "GoogleSolarApi: async shading prefetch finished (radius=250m) "
+                    f"for lat={latitude}, lon={longitude}"
+                )
+            except Exception as e:
+                # We don't want this to crash anything – just log and move on.
+                logger.warning(
+                    "GoogleSolarApi: async shading prefetch failed: %s", e,
+                    exc_info=True,
+                )
+
+        thread_name = f"shading-prefetch-{latitude:.4f}-{longitude:.4f}"
+        t = threading.Thread(target=_worker, name=thread_name, daemon=True)
+        t.start()
 
 
     
