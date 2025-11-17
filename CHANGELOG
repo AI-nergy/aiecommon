@@ -1,3 +1,9 @@
+v0.2.0.41
+
+add google solar api threading 
+add fire and forget threading for googl solar api for shading
+
+
 v0.2.0.40
 
 add timeZoneFromCountryCode.json
