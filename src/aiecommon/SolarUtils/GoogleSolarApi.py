@@ -10,7 +10,6 @@ from requests import Request
 from PIL import Image
 from concurrent.futures import ThreadPoolExecutor
 import threading
-
 import aiecommon.custom_logger as custom_logger
 logger = custom_logger.get_logger()
 from aiecommon import SolarUtils
