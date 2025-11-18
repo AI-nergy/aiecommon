@@ -16,6 +16,7 @@ from aiecommon import SolarUtils
 from aiecommon.SolarUtils.ExternalApiBase import ExternalApiBase
 from aiecommon.Exceptions import AieException
 
+
 class GoogleSolarApi(ExternalApiBase):
     
     STORAGE_FOLDER = 'googlesolarapi'

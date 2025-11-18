@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "aiecommon"
-version = "v0.2.0.43"
+version = "v0.2.0.44"
 description = ""
 authors = [ "Pepe Una <pepe@ai-nergy.net>",]
 readme = "README.md"
