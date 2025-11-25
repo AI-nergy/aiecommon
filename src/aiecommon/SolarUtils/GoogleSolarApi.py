@@ -149,7 +149,8 @@ class GoogleSolarApi(ExternalApiBase):
             data = response.json()
             return data
         else:
-            raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
+            # the real reason for not having 200 is that data does not exist so we need to return house not located so that the user can edit sides manually
+            raise AieException(AieException.HOUSE_NOT_LOCATED, f"GoogleSolarApi {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
     # def _fetch_dsm(self, max_retries, retry_count, endpoint_identifier, latitude, longitude, radius_meters, url):
         
@@ -176,7 +177,8 @@ class GoogleSolarApi(ExternalApiBase):
             logger.info(f'GoogleSolarApi {retry_count}/{max_retries}: Successfully fetched tiff data')
             return response.content
         else:
-            raise AieException(AieException.EXTERNAL_API_FAILED, f"GoogleSolarApi._fetch_tiff {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
+            # the real reason for not having 200 is that data does not exist so we need to return house not located so that the user can edit sides manually
+            raise AieException(AieException.HOUSE_NOT_LOCATED, f"GoogleSolarApi._fetch_tiff {retry_count}/{max_retries}: API call failed, response.status_code={response.status_code}, response.text={response.text}", {"api": self.API_IDENTIFIER, "status_code": response.status_code})
 
     def _get_tiff(
         self,
